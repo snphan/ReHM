@@ -1,6 +1,14 @@
 # ReHM: Remote Health Monitoring
 *A sample implementation of a Remote Health Monitoring system. Allows for the monitoring of patients as well as data collection for experiments.*
 
+## Contributing
+
+* **DO NOT UPLOAD PRIVATE/SECRET KEYS. THESE SHOULD BE SET IN AN ENVIRONMENT VARIABLE.**
+* **DO NOT UPLOAD ANY API ENDPOINTS. THESE SHOULD BE SET IN AN ENVIRONMENT VARIABLE.**
+* **DO NOT UPLOAD ANY DATABASE FILES.**
+* **DO NOT UPLOAD ANY LINKS TO THE APPLICATIONS. ANY DEPLOYED SITES SHOULD BE STORED IN AN ENVIRONMENT VARIABLE.**
+* **DO NOT UPLOAD ANY .ENVS FILES.**
+
 # Screenshots (Figma Mockup)
 
 ![Dashboard (1)](https://user-images.githubusercontent.com/59156097/171966507-e47acbf2-a979-4b66-9829-adbf2b9290b1.png)
