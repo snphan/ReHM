@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get("DJANGO_ALLOWED_HOST")]
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOST").split(",") if os.environ.get("DJANGO_ALLOWED_HOST") else []
 
 
 # Application definition
@@ -75,11 +75,23 @@ WSGI_APPLICATION = "ReHM_dashboard.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+MONGO_DB_USER = os.environ.get("MONGO_DB_USER")
+MONGO_DB_PWD = os.environ.get("MONGO_DB_PWD")
+MONGO_DB_ADDRESS = os.environ.get("MONGO_DB_ADDRESS")
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME': 'ReHMdb',
+            'ENFORCE_SCHEMA': False,
+            'CLIENT': {
+                'host': MONGO_DB_ADDRESS.split(':')[0],
+                'port': int(MONGO_DB_ADDRESS.split(':')[1]),
+                'username': MONGO_DB_USER,
+                'password': MONGO_DB_PWD,
+                'authSource': 'admin',
+                'authMechanism': 'SCRAM-SHA-1'
+            }  
+        }
 }
 
 
