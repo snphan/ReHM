@@ -47,4 +47,7 @@
 | Key | Example |
 |----|-----|
 | SECRET_KEY | "somethingsup#)*&*)*secret" |
-| DJANGO_ALLOWED_HOSTS | "127.0.0.1" |
+| DJANGO_ALLOWED_HOSTS | "127.0.0.1,localhost" |
+| MONGO_DB_USER | "username" |
+| MONGO_DB_PWD | "password" |
+| MONGO_DB_ADDRESS | "127.0.0.1:27017" |
