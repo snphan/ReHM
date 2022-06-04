@@ -49,5 +49,6 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       
       - name: Test Django App
+        working-directory: ./ReHM_dashboard
         run: |
-          python ReHM_dashboard/manage.py test
+          python manage.py test
