@@ -1,6 +1,7 @@
 # General
 .env
 db.sqlite3
+ReHM_dashboard/static
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

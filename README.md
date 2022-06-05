@@ -40,3 +40,14 @@
 | Fitbit Raw Data | Javascript, Fitbit SDK | Send the raw data from the fitbit to the Cloud Message Broker |
 | Pozyx Raw Data | ?????, Python, MQTT | Obtain the positional data from the Pozyx and send it to the cloud Message Broker | 
 
+# Setup
+## ReHM Dashboard
+1. Set the following environment variables up in your OS.
+
+| Key | Example |
+|----|-----|
+| SECRET_KEY | "somethingsup#)*&*)*secret" |
+| DJANGO_ALLOWED_HOSTS | "127.0.0.1,localhost" |
+| MONGO_DB_USER | "username" |
+| MONGO_DB_PWD | "password" |
+| MONGO_DB_ADDRESS | "127.0.0.1:27017" |
