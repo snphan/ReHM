@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -101,21 +102,29 @@ WSGI_APPLICATION = "ReHM_dashboard.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
+if sys.argv[1] == 'test':
+    DATABASES = {
         'default': {
-            'ENGINE': 'djongo',
-            'NAME': 'ReHMdb',
-            'ENFORCE_SCHEMA': False,
-            'CLIENT': {
-                'host': os.environ.get("MONGO_DB_ADDRESS").split(':')[0],
-                'port': int(os.environ.get("MONGO_DB_ADDRESS").split(':')[1]),
-                'username': os.environ.get("MONGO_DB_USER"),
-                'password': os.environ.get("MONGO_DB_PWD"),
-                'authSource': 'admin',
-                'authMechanism': 'SCRAM-SHA-1'
-            }  
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
-}
+    }
+else: 
+    DATABASES = {
+            'default': {
+                'ENGINE': 'djongo',
+                'NAME': 'ReHMdb',
+                'ENFORCE_SCHEMA': False,
+                'CLIENT': {
+                    'host': os.environ.get("MONGO_DB_ADDRESS").split(':')[0],
+                    'port': int(os.environ.get("MONGO_DB_ADDRESS").split(':')[1]),
+                    'username': os.environ.get("MONGO_DB_USER"),
+                    'password': os.environ.get("MONGO_DB_PWD"),
+                    'authSource': 'admin',
+                    'authMechanism': 'SCRAM-SHA-1'
+                }  
+            }
+    }
 
 
 # Password validation

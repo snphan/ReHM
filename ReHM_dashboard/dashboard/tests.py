@@ -12,3 +12,5 @@ class DashboardViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         # Patient selection maybe delegated to the client in an API call in the future
         self.assertEqual(response.context['patient_id'], 'hi')
+
+        
