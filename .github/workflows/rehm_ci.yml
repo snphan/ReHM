@@ -40,6 +40,10 @@ jobs:
           python -m pip install flake8
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      - name: Setup Environment Keys
+        run: |
+          export SECRET_KEY="somethingsup#)*&*)*secret&*7*43"
+
       # Runs a set of commands using the runners shell
       - name: Lint with flake8
         run: |
