@@ -101,19 +101,16 @@ WSGI_APPLICATION = "ReHM_dashboard.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-MONGO_DB_USER = os.environ.get("MONGO_DB_USER")
-MONGO_DB_PWD = os.environ.get("MONGO_DB_PWD")
-MONGO_DB_ADDRESS = os.environ.get("MONGO_DB_ADDRESS")
 DATABASES = {
         'default': {
             'ENGINE': 'djongo',
             'NAME': 'ReHMdb',
             'ENFORCE_SCHEMA': False,
             'CLIENT': {
-                'host': MONGO_DB_ADDRESS.split(':')[0],
-                'port': int(MONGO_DB_ADDRESS.split(':')[1]),
-                'username': MONGO_DB_USER,
-                'password': MONGO_DB_PWD,
+                'host': os.environ.get("MONGO_DB_ADDRESS").split(':')[0],
+                'port': int(os.environ.get("MONGO_DB_ADDRESS").split(':')[1]),
+                'username': os.environ.get("MONGO_DB_USER"),
+                'password': os.environ.get("MONGO_DB_PWD"),
                 'authSource': 'admin',
                 'authMechanism': 'SCRAM-SHA-1'
             }  
