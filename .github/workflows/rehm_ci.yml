@@ -40,10 +40,6 @@ jobs:
           python -m pip install flake8
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Setup Environment Keys
-        run: |
-          export SECRET_KEY="somethingsup#)*&*)*secret&*7*43"
-
       # Runs a set of commands using the runners shell
       - name: Lint with flake8
         run: |
@@ -53,6 +49,8 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       
       - name: Test Django App
+        env: 
+          SECRET_KEY: "qjqzh_k%_0nslqx(hr_4(8__a@xa221zd8*c!emuwcle##akq@"
         working-directory: ./ReHM_dashboard
         run: |
           python manage.py test
