@@ -3,5 +3,7 @@ from django.views.generic import TemplateView
 
 # Create your views here.
 class DashboardView(TemplateView):
-    template_name = "dashboard/index.html"
+    template_name = "dashboard/dashboard.html"
 
+class GotoDashboardView(TemplateView):
+    template_name = "dashboard/index.html"

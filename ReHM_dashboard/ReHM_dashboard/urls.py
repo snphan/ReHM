@@ -20,8 +20,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.views import serve
 
+import accounts.views as accnt_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', accnt_views.LoginView.as_view(), name='login'),
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
