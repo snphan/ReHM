@@ -1,11 +1,17 @@
 {% extends "_base.html" %}
 {% load static %}
-{% load bootstrap5 %}
 
 {% block title %}
 Welcome
 {% endblock title %}
 
 {% block body %}
-<a href="{% url 'dashboard:info' 'hi' %}">Go to hi dashboard</a>
+<div class="container d-flex flex-column">
+    <a href="{% url 'dashboard:info' 'hi' %}">Go to hi dashboard</a>
+    <br>
+    <form action="{% url 'accounts:logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Logout</button>
+    </form>
+</div>
 {% endblock body %}
