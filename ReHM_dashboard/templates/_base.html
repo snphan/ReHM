@@ -15,6 +15,19 @@
     </title>
 </head>
 <body>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+                <div class="alert alert-success">
+                    {{message}}
+                </div> 
+            {% elif message.tags == "warning" %}
+                <div class="alert alert-danger">
+                    {{message}}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     {% block body %}
     {% endblock body %}
 
