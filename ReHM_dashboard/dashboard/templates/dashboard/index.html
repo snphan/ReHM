@@ -7,5 +7,9 @@ Welcome
 {% endblock title %}
 
 {% block body %}
-<a href="{% url 'dashboard:info' 'hi' %}">Go to hi dashboard</a>
+<div class="container d-flex flex-column">
+    <a href="{% url 'dashboard:info' 'hi' %}">Go to hi dashboard</a>
+    <br>
+    <a class="btn btn-primary" href="{% url "accounts:logout" %}">Logout</a>
+</div>
 {% endblock body %}
