@@ -7,18 +7,13 @@ Dashboard
 {% endblock title %}
 
 {% block body %}
-<h1>Patient | {{patient_id}}</h1>
-<textarea id="chat-log" cols="100" rows="20"></textarea><br>
-<input id="chat-message-input" type="text" size="100"><br>
-<input id="chat-message-submit" type="button" value="Send">
-{{ patient_id|json_script:"room-name" }}
-
+{{ patient_id|json_script:"patient_id" }}
 <div id="root"/>
 {% endblock body %}
 
 {% block scripts %}
    <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        {% comment %} const roomName = JSON.parse(document.getElementById('patient_id').textContent);
 
         const chatSocket = new WebSocket(
             'ws://'
@@ -51,7 +46,7 @@ Dashboard
                 'message': message
             }));
             messageInputDom.value = '';
-        };
+        }; {% endcomment %}
     </script>
     <script src="{% static 'dashboard/js/Dashboard-bundle.js' %}"></script>
 {% endblock scripts %}

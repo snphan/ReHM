@@ -10,16 +10,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./ReHM_dashboard/dashboard/src/Dashboard.jsx":
-/*!****************************************************!*\
-  !*** ./ReHM_dashboard/dashboard/src/Dashboard.jsx ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ \"./node_modules/react-dom/client.js\");\n/* harmony import */ var _scss_dashboard_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scss/dashboard.scss */ \"./ReHM_dashboard/dashboard/src/scss/dashboard.scss\");\n\n\n\nvar container = document.getElementById(\"root\");\nvar root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container);\nroot.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(\"h1\", null, \"Hello from React!\"));\n\n//# sourceURL=webpack://rehm/./ReHM_dashboard/dashboard/src/Dashboard.jsx?");
-
-/***/ }),
-
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./ReHM_dashboard/dashboard/src/scss/dashboard.scss":
 /*!***************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./ReHM_dashboard/dashboard/src/scss/dashboard.scss ***!
@@ -188,6 +178,16 @@ eval("\n\n/* istanbul ignore next  */\nfunction apply(styleElement, options, obj
 
 eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElement) {\n  if (styleElement.styleSheet) {\n    styleElement.styleSheet.cssText = css;\n  } else {\n    while (styleElement.firstChild) {\n      styleElement.removeChild(styleElement.firstChild);\n    }\n\n    styleElement.appendChild(document.createTextNode(css));\n  }\n}\n\nmodule.exports = styleTagTransform;\n\n//# sourceURL=webpack://rehm/./node_modules/style-loader/dist/runtime/styleTagTransform.js?");
 
+/***/ }),
+
+/***/ "./ReHM_dashboard/dashboard/src/Dashboard.tsx":
+/*!****************************************************!*\
+  !*** ./ReHM_dashboard/dashboard/src/Dashboard.tsx ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ \"./node_modules/react-dom/client.js\");\n/* harmony import */ var _scss_dashboard_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scss/dashboard.scss */ \"./ReHM_dashboard/dashboard/src/scss/dashboard.scss\");\n\r\n\r\n\r\nfunction Example() {\r\n    var _a = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0), count = _a[0], setCount = _a[1];\r\n    var happy = \"im happy\";\r\n    console.log(happy);\r\n    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement(\"div\", null,\r\n        react__WEBPACK_IMPORTED_MODULE_0___default().createElement(\"p\", null,\r\n            \"You clicked \",\r\n            count,\r\n            \" times. Good job hihi! Wow this is actually working!\"),\r\n        react__WEBPACK_IMPORTED_MODULE_0___default().createElement(\"button\", { className: \"btn btn-primary\", onClick: function () { return setCount(count + 1); } }, \"Click me\")));\r\n}\r\nvar container = document.getElementById(\"root\");\r\nvar root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container);\r\nroot.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Example, null));\r\n\n\n//# sourceURL=webpack://rehm/./ReHM_dashboard/dashboard/src/Dashboard.tsx?");
+
 /***/ })
 
 /******/ 	});
@@ -279,7 +279,7 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElem
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./ReHM_dashboard/dashboard/src/Dashboard.jsx");
+/******/ 	var __webpack_exports__ = __webpack_require__("./ReHM_dashboard/dashboard/src/Dashboard.tsx");
 /******/ 	
 /******/ })()
 ;

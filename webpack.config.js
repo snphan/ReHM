@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   entry: {
     // Add src code here. This is just a test app. As we make more apps, add them here.
-    'ReHM_dashboard/dashboard/static/dashboard/js/Dashboard': './ReHM_dashboard/dashboard/src/Dashboard.jsx'
+    'ReHM_dashboard/dashboard/static/dashboard/js/Dashboard': './ReHM_dashboard/dashboard/src/Dashboard.tsx'
   },
   output: {
     filename: '[name]-bundle.js',
@@ -17,6 +17,11 @@ module.exports = {
         exclude: /node_modules/,
         loader: "babel-loader",
         options: { presets: ["@babel/preset-env", "@babel/preset-react"] }
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        loader: "ts-loader",
       },
       {
         test: /\.css$/,

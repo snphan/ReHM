@@ -26,7 +26,7 @@ TEMPLATE_DIR = BASE_DIR.joinpath("templates")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") if os.environ.get("DJANGO_ALLOWED_HOSTS") else []
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "livereload",
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "livereload.middleware.LiveReloadScript",
 ]
 
 CORS_ORIGIN_WHITELIST = [
