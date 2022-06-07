@@ -13,5 +13,10 @@ Welcome
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Logout</button>
     </form>
+    <div id="root"/>
 </div>
 {% endblock body %}
+
+{% block scripts %}
+    <script src="{% static 'accounts/js/TestApp-bundle.js' %}"></script>
+{% endblock scripts %}
