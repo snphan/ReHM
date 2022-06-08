@@ -1,9 +1,14 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
+import "./react-grid-layout-styles.css"
+import "./react-resizeable-styles.css"
 import "./dashboard.scss";
+import { Responsive, WidthProvider } from "react-grid-layout";
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
+
 Chart.register(CategoryScale);
 
 export default function Dashboard() {
@@ -22,7 +27,15 @@ export default function Dashboard() {
             ]
         }],
     });
+    const [layout, setLayout]  = useState([
+      { i: "a", x: 0, y: 0, w: 3, h: 3 },
+      { i: "b", x: 3, y: 0, w: 3, h: 3 },
+      { i: "c", x: 6, y: 0, w: 3, h: 3 }
+    ]);
 
+    const layouts = {
+        lg: layout,
+    }
 
     const isMobile: boolean = window.innerWidth <= 1024;
     const sidebarWidth: number = 12; // in rem during Desktop
@@ -48,37 +61,25 @@ export default function Dashboard() {
                     <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
                 </div>
-                <div className="graph-container d-flex flex-wrap flex-fill">
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
-                    <div className="m-3" style={{width: "30rem", height: "20rem"}}>
-                        <Line data={testData}/>
-                    </div>
+                <div className="graph-container">
+                    <ResponsiveReactGridLayout
+                        className="layout m-4"
+                        layouts={layouts}
+                        measureBeforeMount={false}
+                        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                        >
+                            <div key="a" className="m-3">
+                                <Line data={testData}/>
+                            </div>
+                            <div key="b" className="m-3">
+                                <Line data={testData}/>
+                            </div>
+                            <div key="c" className="m-3">
+                                <Line data={testData}/>
+                            </div>
+                    </ResponsiveReactGridLayout>
+
                 </div>
             </div>
             <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>

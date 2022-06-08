@@ -7,6 +7,8 @@ import Dashboard from "../dashboard";
 import { render, fireEvent, getByTestId } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
+global.ResizeObserver = require('resize-observer-polyfill');
+
 let container;
 let patient_id;
 
