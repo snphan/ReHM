@@ -11,10 +11,10 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-container d-flex justify-content-between">
-            <div className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
+            <div data-testid="menu" className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
                 <div>menu</div>
             </div>
-            <div className="dashboard-content d-flex flex-fill flex-column" style={
+            <div data-testid="dashboard-content" className="dashboard-content d-flex flex-fill flex-column" style={
                     isMobile ? 
                         {maxHeight: (showLeft && showRight ? `calc(100vh - ${2*sidebarHeight}rem`
                                      : showLeft || showRight ? `calc(100vh - ${sidebarHeight}rem`
@@ -26,14 +26,14 @@ export default function Dashboard() {
                 }>
                 <div className="title d-flex">
                     <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
-                    <button onClick={() => setShowLeft(!showLeft)}>Show left</button>
-                    <button onClick={() => setShowRight(!showRight)}>Show Right</button>
+                    <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
+                    <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
                 </div>
                 <div className="graph-container">
                     content
                 </div>
             </div>
-            <div className={"devices sidebar " + (showRight ? "" : "hidden")}>
+            <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
                 <div>Devices and Search</div>
             </div>
         </div>
