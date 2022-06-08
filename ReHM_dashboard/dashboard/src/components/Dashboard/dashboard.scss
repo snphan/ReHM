@@ -1,0 +1,70 @@
+$sideBarWidth: 12rem; // In Desktop
+$sideBarHeight: 6rem; // In Mobile
+
+#root {
+    height: 100vh;
+    width: 100vw;
+}
+
+// DASHBOARD CONTAINERS 
+.dashboard-container {
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.dashboard-content {
+    transition: all 0.5s ease;
+}
+
+.graph-container {
+    overflow-y: scroll;
+    height: 90%;
+}
+
+.title {
+    height: 10%;
+}
+
+// SIDEBAR CLASSES
+.sidebar {
+    height: $sideBarHeight;
+    overflow: hidden;
+    transition: all 0.5s ease,
+                opacity 0.25s ease;
+}
+
+.hidden {
+    height: 0!important;
+    opacity: 0;
+}
+
+button {
+    height: 3rem;
+}
+
+div {
+    border: 1px solid red;
+}
+
+
+/* Extra big screen devices (1200px and above) */
+@media only screen and (min-width: 1024px) {
+    .dashboard-container {
+        height: 100%;
+        flex-direction: row;
+    }
+
+    .sidebar {
+        width: $sideBarWidth;
+        overflow: hidden;
+        transition: all 0.5s ease,
+                    opacity 0.25s ease;
+    }
+
+    .hidden {
+        width: 0!important;
+        opacity: 0;
+    }
+    
+}
