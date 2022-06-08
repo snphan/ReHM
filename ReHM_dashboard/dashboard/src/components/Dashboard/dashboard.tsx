@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { createRoot } from "react-dom/client";
-import "./scss/dashboard.scss";
 
-function Dashboard() {
+import React, { useState } from "react";
+import "./dashboard.scss";
+
+export default function Dashboard() {
     const [showLeft, setShowLeft] = useState(false);
     const [showRight, setShowRight] = useState(false);
     const isMobile: boolean = window.innerWidth <= 1024;
@@ -39,8 +39,3 @@ function Dashboard() {
         </div>
     )
 }
-
-
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(<Dashboard/>)
