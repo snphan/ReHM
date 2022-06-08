@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block title %}
 Welcome
@@ -13,5 +14,9 @@ Welcome
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Logout</button>
     </form>
+    <div id="root"/>
 </div>
 {% endblock body %}
+
+{% block scripts %}
+{% endblock scripts %}
