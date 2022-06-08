@@ -1,19 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./scss/dashboard.scss";
 
-function Example() {
-    const [count, setCount] = useState(0);
-    let happy: string = "im happy";
-    console.log(happy)
+function Dashboard() {
+    const [showLeft, setShowLeft] = useState(false);
+    const [showRight, setShowRight] = useState(false);
+    const isMobile: boolean = window.innerWidth <= 1024;
+    const sidebarWidth: number = 12; // in rem during Desktop
+    const sidebarHeight: number = 6; // in rem during Desktop
+
     return (
-        <div>
-            <p>You clicked {count} times. Good job hihi! Wow this is actually working!</p>
-            <button
-                className="btn btn-primary" 
-                onClick={() => setCount(count + 1)}>
-                Click me
-            </button>
+        <div className="dashboard-container d-flex justify-content-between">
+            <div className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
+                <div>menu</div>
+            </div>
+            <div className="dashboard-content d-flex flex-fill flex-column" style={
+                    isMobile ? 
+                        {maxHeight: (showLeft && showRight ? `calc(100vh - ${2*sidebarHeight}rem`
+                                     : showLeft || showRight ? `calc(100vh - ${sidebarHeight}rem`
+                                     : "100vh")}
+                    :
+                        {maxWidth: (showLeft && showRight ? `calc(100vw - ${2*sidebarWidth}rem`
+                                     : showLeft || showRight ? `calc(100vw - ${sidebarWidth}rem`
+                                     : "100vw")}
+                }>
+                <div className="title d-flex">
+                    <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
+                    <button onClick={() => setShowLeft(!showLeft)}>Show left</button>
+                    <button onClick={() => setShowRight(!showRight)}>Show Right</button>
+                </div>
+                <div className="graph-container">
+                    content
+                </div>
+            </div>
+            <div className={"devices sidebar " + (showRight ? "" : "hidden")}>
+                <div>Devices and Search</div>
+            </div>
         </div>
     )
 }
@@ -21,4 +43,4 @@ function Example() {
 
 const container = document.getElementById("root");
 const root = createRoot(container);
-root.render(<Example/>)
+root.render(<Dashboard/>)
