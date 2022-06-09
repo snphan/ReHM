@@ -20,6 +20,10 @@ interface LayoutObject {
     static?: boolean
 }
 
+interface Data {
+    [key: string] : any
+}
+
 function toggleStatic(layout: Array<LayoutObject>){
     var newLayout = layout.map(l => {
            return {...l, static: !l.static}
@@ -30,23 +34,49 @@ function toggleStatic(layout: Array<LayoutObject>){
 export default function Dashboard() {
     const [showLeft, setShowLeft] = useState(false);
     const [showRight, setShowRight] = useState(false);
-    const [testData, setTestData] = useState({
-        labels: ['Test'],
-        datasets: [{
-            label: 'HR',
-            data: [
-                {x: '2021-11-06 23:39:30', y: 20},
-                {x: '2021-11-06 23:40:30', y: 20},
-                {x: '2021-11-06 23:41:30', y: 20},
-                {x: '2021-11-06 23:42:30', y: 20},
-                {x: '2021-11-06 23:43:30', y: 20},
-            ]
-        }],
+    const [testData, setTestData] = useState<Data | undefined>({
+        "a": {
+            datasets: [{
+                label: 'HR',
+                data: [
+                    {x: '2021-11-06 23:39:30', y: 20},
+                    {x: '2021-11-06 23:40:30', y: 20},
+                    {x: '2021-11-06 23:41:30', y: 20},
+                    {x: '2021-11-06 23:42:30', y: 20},
+                    {x: '2021-11-06 23:43:30', y: 20},
+                ]
+            }],
+        },
+        "b": {
+            datasets: [{
+                label: 'ACCEL',
+                data: [
+                    {x: '2021-11-06 23:39:30', y: 1},
+                    {x: '2021-11-06 23:40:30', y: 1.2},
+                    {x: '2021-11-06 23:41:30', y: 1.3},
+                    {x: '2021-11-06 23:42:30', y: -1},
+                    {x: '2021-11-06 23:43:30', y: -0.95},
+                ]
+            }],
+        },
+        "c": {
+            datasets: [{
+                label: 'TEMP',
+                data: [
+                    {x: '2021-11-06 23:39:30', y: 20},
+                    {x: '2021-11-06 23:40:30', y: 30},
+                    {x: '2021-11-06 23:41:30', y: 40},
+                    {x: '2021-11-06 23:42:30', y: 50},
+                    {x: '2021-11-06 23:43:30', y: 50},
+                ]
+            }],
+        },
     });
+
     const [layout, setLayout] = useState<Array<LayoutObject> | null>([
       { i: "a", x: 0, y: 0, w: 3, h: 3, static: false },
       { i: "b", x: 3, y: 0, w: 3, h: 3, static: false },
-      { i: "c", x: 6, y: 0, w: 3, h: 3, static: false }
+      { i: "c", x: 6, y: 0, w: 3, h: 3, static: false },
     ]);
 
     const layouts = {
@@ -87,15 +117,12 @@ export default function Dashboard() {
                         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                         >
-                            <div key="a" className="">
-                                <Line data={testData}/>
-                            </div>
-                            <div key="b" className="">
-                                <Line data={testData}/>
-                            </div>
-                            <div key="c" className="">
-                                <Line data={testData}/>
-                            </div>
+                            {layout.map(elem => {
+                                return (
+                                    <div key={elem.i} className="">
+                                        <Line data={testData[elem.i]}/>
+                                    </div>)
+                            })}
                     </ResponsiveReactGridLayout>
 
                 </div>
