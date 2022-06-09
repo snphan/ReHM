@@ -140,7 +140,7 @@ export default function Dashboard() {
                                             options={{
                                                 scales: {
                                                     x: {
-                                                        type: 'timeseries',
+                                                        type: 'time',
                                                         time: {
                                                             unit: 'minute',
                                                         }
