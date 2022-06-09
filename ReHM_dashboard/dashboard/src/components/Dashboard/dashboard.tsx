@@ -1,12 +1,14 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
+import 'chartjs-adapter-moment';
 import "./react-grid-layout-styles.css"
 import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 import { Responsive, WidthProvider } from "react-grid-layout";
+
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 Chart.register(CategoryScale);
@@ -38,36 +40,50 @@ export default function Dashboard() {
         "a": {
             datasets: [{
                 label: 'HR',
+                borderColor: "red",
                 data: [
-                    {x: '2021-11-06 23:39:30', y: 20},
-                    {x: '2021-11-06 23:40:30', y: 20},
-                    {x: '2021-11-06 23:41:30', y: 20},
-                    {x: '2021-11-06 23:42:30', y: 20},
-                    {x: '2021-11-06 23:43:30', y: 20},
+                    {"x": 1647281788963, "y": 22.9}, 
+                    {"x": 1647281994496, "y": 26.9}, 
+                    {"x": 1647282200029, "y": 21.9}, 
+                    {"x": 1647282405562, "y": 24.9}, 
+                    {"x": 1647282611094, "y": 28.9}
                 ]
             }],
         },
         "b": {
             datasets: [{
-                label: 'ACCEL',
+                label: 'ACCEL_X',
+                borderColor: "red",
                 data: [
-                    {x: '2021-11-06 23:39:30', y: 1},
-                    {x: '2021-11-06 23:40:30', y: 1.2},
-                    {x: '2021-11-06 23:41:30', y: 1.3},
-                    {x: '2021-11-06 23:42:30', y: -1},
-                    {x: '2021-11-06 23:43:30', y: -0.95},
+                    {"x": 1647281788963, "y": 22.9}, 
+                    {"x": 1647281994496, "y": 26.9}, 
+                    {"x": 1647282200029, "y": 21.9}, 
+                    {"x": 1647282405562, "y": 24.9}, 
+                    {"x": 1647282611094, "y": 28.9}
+                ]
+            },
+            {
+                label: 'ACCEL_Y',
+                borderColor: "blue",
+                data: [
+                    {"x": 1647281785963, "y": 22.9}, 
+                    {"x": 1647281995496, "y": 26.9}, 
+                    {"x": 1647282205029, "y": 21.9}, 
+                    {"x": 1647282405562, "y": 24.9}, 
+                    {"x": 1647282615094, "y": 28.9}
                 ]
             }],
         },
         "c": {
             datasets: [{
                 label: 'TEMP',
+                borderColor: "red",
                 data: [
-                    {x: '2021-11-06 23:39:30', y: 20},
-                    {x: '2021-11-06 23:40:30', y: 30},
-                    {x: '2021-11-06 23:41:30', y: 40},
-                    {x: '2021-11-06 23:42:30', y: 50},
-                    {x: '2021-11-06 23:43:30', y: 50},
+                    {"x": 1647281788963, "y": 22.9}, 
+                    {"x": 1647281994496, "y": 26.9}, 
+                    {"x": 1647282200029, "y": 21.9}, 
+                    {"x": 1647282405562, "y": 24.9}, 
+                    {"x": 1647282611094, "y": 28.9}
                 ]
             }],
         },
@@ -120,7 +136,17 @@ export default function Dashboard() {
                             {layout.map(elem => {
                                 return (
                                     <div key={elem.i} className="">
-                                        <Line data={testData[elem.i]}/>
+                                        <Line data={testData[elem.i]} 
+                                            options={{
+                                                scales: {
+                                                    x: {
+                                                        type: 'timeseries',
+                                                        time: {
+                                                            unit: 'minute',
+                                                        }
+                                                    }
+                                                }
+                                            }}/>
                                     </div>)
                             })}
                     </ResponsiveReactGridLayout>
