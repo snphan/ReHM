@@ -11,6 +11,22 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 Chart.register(CategoryScale);
 
+interface LayoutObject {
+    i: string,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    static?: boolean
+}
+
+function toggleStatic(layout: Array<LayoutObject>){
+    var newLayout = layout.map(l => {
+           return {...l, static: !l.static}
+    })
+    return newLayout;
+}
+
 export default function Dashboard() {
     const [showLeft, setShowLeft] = useState(false);
     const [showRight, setShowRight] = useState(false);
@@ -27,10 +43,10 @@ export default function Dashboard() {
             ]
         }],
     });
-    const [layout, setLayout]  = useState([
-      { i: "a", x: 0, y: 0, w: 3, h: 3 },
-      { i: "b", x: 3, y: 0, w: 3, h: 3 },
-      { i: "c", x: 6, y: 0, w: 3, h: 3 }
+    const [layout, setLayout] = useState<Array<LayoutObject> | null>([
+      { i: "a", x: 0, y: 0, w: 3, h: 3, static: false },
+      { i: "b", x: 3, y: 0, w: 3, h: 3, static: false },
+      { i: "c", x: 6, y: 0, w: 3, h: 3, static: false }
     ]);
 
     const layouts = {
@@ -60,12 +76,14 @@ export default function Dashboard() {
                     <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
                     <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
+                    <button data-testid="toggle-dashboard-lock" onClick={() => setLayout(toggleStatic(layout))}>Lock/Unlock Dashboard</button>
                 </div>
                 <div className="graph-container">
                     <ResponsiveReactGridLayout
                         className="layout m-4"
                         layouts={layouts}
                         measureBeforeMount={false}
+                        onLayoutChange={(newLayout, newLayouts) => setLayout(newLayout)}
                         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                         >

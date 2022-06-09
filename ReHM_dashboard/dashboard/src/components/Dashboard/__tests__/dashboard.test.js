@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 import "../dashboard.scss";
 import Dashboard from "../dashboard";
 
-import { render, fireEvent, getByTestId } from "@testing-library/react";
+import { render, fireEvent, getByTestId, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 global.ResizeObserver = require('resize-observer-polyfill');
 
 let container;
 let patient_id;
-
 
 beforeEach(() => {
   container = document.createElement('div');
@@ -21,6 +20,9 @@ beforeEach(() => {
   patient_id.innerHTML = "\"hi\"";
   document.body.appendChild(patient_id);
   document.body.appendChild(container);
+  act(() => {
+    ReactDOM.createRoot(container).render(<Dashboard />);
+  });
 });
 
 afterEach(() => {
@@ -30,16 +32,9 @@ afterEach(() => {
   patient_id = null;
 });
 
-it("renders without crashing", () => {
-  act(() => {
-    ReactDOM.createRoot(container).render(<Dashboard />);
-  });
-})
+it("renders without crashing", () => { })
 
 it("renders dashboard-content correctly", () => {
-  act(() => {
-    ReactDOM.createRoot(container).render(<Dashboard />);
-  });
   const dashboardContent = getByTestId(container, "dashboard-content");
 
   // Title should display with the patient_id
@@ -51,9 +46,6 @@ it("renders dashboard-content correctly", () => {
 })
 
 it("shows sidebars correctly", () => {
-  act(() => {
-    ReactDOM.createRoot(container).render(<Dashboard />);
-  });
 
   const menuSidebar = getByTestId(container, "menu");
   const devicesSidebar = getByTestId(container, "devices");
@@ -70,4 +62,15 @@ it("shows sidebars correctly", () => {
 
   expect(menuSidebar).not.toHaveClass("hidden");
   expect(devicesSidebar).not.toHaveClass("hidden");
+})
+
+it("calls lock/unlock dashboard correctly", () => {
+  // Click the toggle lock button
+  const toggleDashboardLockBtn = getByTestId(container, "toggle-dashboard-lock");
+  expect(container.getElementsByClassName("react-grid-item")[0].className).not.toContain("static")
+
+  fireEvent.click(toggleDashboardLockBtn);
+
+  // Check if the dashboard components are locked
+  expect(container.getElementsByClassName("react-grid-item")[0].className).toContain("static")
 })
