@@ -27,6 +27,10 @@
 
 ![ReHM System Architecture (1)](https://user-images.githubusercontent.com/59156097/171967168-25459ab9-d5de-4487-8da5-d590f3bbe70c.jpg)
 
+## Dashboard + DB Sequence Diagram
+
+![ReHM System Architecture-Dashboard App Interaction with Database (2)](https://user-images.githubusercontent.com/59156097/173128029-a7ee3f73-8a3d-4a78-b5ce-865a63177a4a.jpg)
+
 # Apps/Services
 
 |      App      | Tech | Description|
