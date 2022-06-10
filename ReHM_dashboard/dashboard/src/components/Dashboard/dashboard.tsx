@@ -47,53 +47,63 @@ interface DataPoint {
 }
 
 export default function Dashboard() {
+    const isMobile: boolean = window.innerWidth <= 1024;
+    const sidebarWidth: number = 12; // in rem during Desktop
+    const sidebarHeight: number = 6; // in rem during Desktop
+
     const [showLeft, setShowLeft] = useState(false);
     const [showRight, setShowRight] = useState(false);
-    const [testData, setTestData] = useState<ChartData | undefined>({
-        "HR": {
-            datasets: [{
-                label: 'HR',
-                borderColor: "red",
-                data: [
-                ]
-            }],
-        },
-        "ACCEL": {
-            datasets: [{
-                label: 'ACCEL_X',
-                borderColor: "red",
-                data: [
-                ]
-            },
-            {
-                label: 'ACCEL_Y',
-                borderColor: "blue",
-                data: [
-                ]
-            },
-            {
-                label: 'ACCEL_Z',
-                borderColor: "purple",
-                data: [
-                ]
-            },
-        ],
-        },
-        "TEMP": {
-            datasets: [{
-                label: 'TEMP',
-                borderColor: "red",
-                data: [
-                ]
-            }],
-        },
-    });
+    const [allData, setAllData] = useState<ChartData | null>({});
+    const [layout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
 
-    const [layout, setLayout] = useState<Array<LayoutObject> | null>([
-      { i: "HR", x: 0, y: 0, w: 3, h: 3, static: false },
-      { i: "ACCEL", x: 3, y: 0, w: 3, h: 3, static: false },
-      { i: "TEMP", x: 6, y: 0, w: 3, h: 3, static: false },
-    ]);
+    // ComponentDidMount()...
+    useEffect(() => {
+        // TODO: Layout will be set first by an API call given a specific patient.
+        // For now we hardcode it. Need a way to template different datatypes (ACCEL has XYZ and HR only has one.)
+        let myLayout: Array<LayoutObject> = [
+            { i: "HR", x: 0, y: 0, w: 3, h: 3, static: false },
+            { i: "ACCEL", x: 3, y: 0, w: 3, h: 3, static: false },
+            { i: "TEMP", x: 6, y: 0, w: 3, h: 3, static: false },
+        ]
+
+        setGridLayout(myLayout);    // Had an issue with this, it seems like the callback onLayoutChange 
+                                    // took the initial state and overrides this setState.
+                                    // Solution: Call callback only if there are items in the layout.
+
+        // After setting the layout, we need to construct the skeleton for allData State.
+        let allDataSkeleton: ChartData = {};
+        myLayout.forEach((layoutItem) => {
+            if (layoutItem.i === "ACCEL") {
+                allDataSkeleton[layoutItem.i] = {
+                    datasets: [{
+                        label: layoutItem.i+"_X",
+                        borderColor: "red",
+                        data: []
+                    },
+                    {
+                        label: layoutItem.i+"_Y",
+                        borderColor: "green",
+                        data: []
+                    },
+                    {
+                        label: layoutItem.i+"_Z",
+                        borderColor: "blue",
+                        data: []
+                    }]
+                }  
+            } else {
+                allDataSkeleton[layoutItem.i] = {
+                    datasets: [{
+                        label: layoutItem.i,
+                        borderColor: "red",
+                        data: []
+                    }]
+                }  
+            }
+        });
+
+        setAllData(allDataSkeleton);
+    }, []);
 
     // Helper Functions
 
@@ -103,6 +113,7 @@ export default function Dashboard() {
      * @returns new layout with static toggled on or off
      */
     const toggleStatic = (layout: Array<LayoutObject>) => {
+        console.log(layout)
         var newLayout = layout.map(l => {
             return {...l, static: !l.static}
         })
@@ -116,7 +127,7 @@ export default function Dashboard() {
      * @param dataPoints datapoints that conform to the DataPoint format
      */
     const addData = (dataPoints: Array<DataPoint>) => {
-        const newData = JSON.parse(JSON.stringify(testData)); // Make a deep clone so that Chart Js Updates
+        const newData = JSON.parse(JSON.stringify(allData)); // Make a deep clone so that Chart Js Updates
 
         dataPoints.forEach((dataPoint) => {
             dataPoint.dataValues.forEach((value, i) => {
@@ -127,15 +138,9 @@ export default function Dashboard() {
             })
         })
 
-        setTestData(newData);
+        setAllData(newData);
     }
 
-    const layouts = {
-        lg: layout,
-    }
-    const isMobile: boolean = window.innerWidth <= 1024;
-    const sidebarWidth: number = 12; // in rem during Desktop
-    const sidebarHeight: number = 6; // in rem during Desktop
 
     return (
         <div className="dashboard-container d-flex justify-content-between">
@@ -156,21 +161,21 @@ export default function Dashboard() {
                     <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
                     <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
-                    <button data-testid="toggle-dashboard-lock" onClick={() => setLayout(toggleStatic(layout))}>Lock/Unlock Dashboard</button>
+                    <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(layout))}>Lock/Unlock Dashboard</button>
                 </div>
                 <div className="graph-container">
                     <ResponsiveReactGridLayout
                         className="layout m-4"
-                        layouts={layouts}
+                        layouts={{lg: layout}}
                         measureBeforeMount={false}
-                        onLayoutChange={(newLayout, newLayouts) => setLayout(newLayout)}
+                        onLayoutChange={(newLayout, newLayouts) => {newLayout.length ? setGridLayout(newLayout) : null;}}
                         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                         >
-                            {layout.map(elem => {
+                            {layout.length ? layout.map(layoutItem => {
                                 return (
-                                    <div key={elem.i} className="">
-                                        <Line data={testData[elem.i]} 
+                                    <div key={layoutItem.i} className="">
+                                        <Line data={allData[layoutItem.i]} 
                                             options={{
                                                 scales: {
                                                     x: {
@@ -182,11 +187,11 @@ export default function Dashboard() {
                                                 }
                                             }}/>
                                         {/* Won't be a button, but rather a websocket that updates this.*/}
-                                        {elem.i == "ACCEL" ? 
+                                        {layoutItem.i == "ACCEL" ? 
                                             <button onClick={() => {
                                                 let newData: DataPoint = {
                                                     device: "Fitbit",
-                                                    dataType: elem.i,
+                                                    dataType: layoutItem.i,
                                                     timestamp: Date.now(),
                                                     dataValues: [Math.random(), Math.random(), Math.random()],
                                                 }
@@ -196,7 +201,7 @@ export default function Dashboard() {
                                             <button onClick={() => {
                                                 let newData: DataPoint = {
                                                     device: "Fitbit",
-                                                    dataType: elem.i,
+                                                    dataType: layoutItem.i,
                                                     timestamp: Date.now(),
                                                     dataValues: [Math.random()],
                                                 }
@@ -204,7 +209,7 @@ export default function Dashboard() {
                                             }}>Add Data</button>
                                         }
                                     </div>)
-                            })}
+                            }) : null}
                     </ResponsiveReactGridLayout>
 
                 </div>
