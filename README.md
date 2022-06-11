@@ -64,3 +64,21 @@ interface DataPoint {
 | MONGO_DB_USER | "username" |
 | MONGO_DB_PWD | "password" |
 | MONGO_DB_ADDRESS | "127.0.0.1:27017" |
+
+
+2. After Migrating the Database, upgrade the accounts_sensordata to a timeseries collection with metaField: "data_id"
+
+        python manage.py makemigrations
+        python manage.py migrate
+        python manage.py createsuperuser
+        
+        docker exect -it mongodb bash
+        mongosh -u [username] -p
+        
+        // Enter your DB password
+
+        use ReHMdb
+        db.accounts_sensordata.drop()
+        db.createCollection("accounts_sensordata", {timeseries: {timeField: "timestamp", metaField: "data_id"})
+
+
