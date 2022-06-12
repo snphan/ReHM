@@ -15,6 +15,10 @@ from django.contrib import messages
 from django.contrib.auth import logout as auth_logout
 from django.utils.deprecation import RemovedInDjango50Warning
 
+# REST API
+from rest_framework import viewsets
+from . import serializers
+from . import models
 
 # Create your views here.
 class CustomLoginView(SuccessMessageMixin, LoginView):
@@ -50,3 +54,27 @@ class CustomLogoutView(LogoutView):
             messages.success(request, '✅ You have successfully logged out!')
             return HttpResponseRedirect(next_page)
         return super().dispatch(request, *args, **kwargs)
+
+
+# MARK: APIs
+
+class ReHMUserAPIView(viewsets.ModelViewSet):
+    serializer_class = serializers.UserSerializer
+    queryset = models.ReHMUser.objects.all()
+
+class DeviceAPIView(viewsets.ModelViewSet):
+    serializer_class = serializers.DeviceSerializer
+    queryset = models.Device.objects.all()
+
+class DeviceTypeAPIView(viewsets.ModelViewSet):
+    serializer_class = serializers.DeviceTypeSerializer
+    queryset = models.DeviceType.objects.all()
+
+class DataTypeAPIView(viewsets.ModelViewSet):
+    serializer_class = serializers.DataTypeSerializer
+    queryset = models.DataType.objects.all()
+
+class GridLayoutAPIView(viewsets.ModelViewSet):
+    serializer_class = serializers.GridLayoutSerializer
+    queryset = models.GridLayout.objects.all()
+
