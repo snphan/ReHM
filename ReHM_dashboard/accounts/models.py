@@ -82,7 +82,7 @@ class GridLayout(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["provider", "patient"], 
+                fields=["provider", "patient", "i"], 
                 name="unique_provider_patient_combination"
             )
         ]
