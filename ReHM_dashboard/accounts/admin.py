@@ -2,7 +2,9 @@
 from django.contrib import admin
 from django import forms
 from . import models
+
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.forms import UserCreationForm
 # Register your models here.
 
 admin.site.register(models.DataType)
@@ -16,9 +18,9 @@ class DeviceInline(admin.TabularInline):
     model = models.Device
 
 # Custom form to show Reverse Foreign Key.
-class ReHMUserForm(forms.ModelForm):
+class ReHMUserForm(UserCreationForm):
     devices = forms.ModelMultipleChoiceField(
-        queryset=models.Device.objects.all(),
+        queryset=models.Device.objects.filter(user_id__isnull=True),
         widget=FilteredSelectMultiple(verbose_name="devices", is_stacked=False),
         required=False
     )

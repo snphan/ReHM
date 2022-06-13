@@ -59,8 +59,8 @@ class ReHMUser(AbstractBaseUser, PermissionsMixin):
 
 class Device(models.Model):
     serial = models.CharField(null=False, max_length=100)
-    deviceType = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
-    user = models.ForeignKey(ReHMUser, on_delete=models.CASCADE)
+    deviceType = models.ForeignKey(DeviceType, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(ReHMUser, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f'{self.deviceType} | {self.serial}'
