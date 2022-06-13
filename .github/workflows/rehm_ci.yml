@@ -69,4 +69,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+<<<<<<< HEAD
       - run: npm test
+=======
+      - run: npm run test
+>>>>>>> e09b20f617ef24ec0c3e4f4a3809020ea9b71b1b
