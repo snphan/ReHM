@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from . import views
 
@@ -17,5 +17,7 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name="login"),
     path('logout/', views.CustomLogoutView.as_view(), name="logout"),
     path('', views.CustomLoginView.as_view(), name="index"),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/user_info/<int:user_id>/', views.get_user_info)
+
 ]
