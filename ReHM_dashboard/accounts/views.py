@@ -3,6 +3,7 @@ import warnings
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import login_required
 
 # Login/Logout View Source Code imports
 from django.views.decorators.cache import never_cache
@@ -76,42 +77,46 @@ class CustomLogoutView(LogoutView):
 # 
 
 @api_view(["GET"])
+@login_required
 def get_user_info(request, user_id):
-    if request.method == "GET":
+    if request.method != "GET":
+        return Response({"status_code": "400", "detail": f"Method {request.method} Is not available."})
 
-        try:
-            user_info = serializers.UserSerializer(models.ReHMUser.objects.filter(id=user_id)[0]).data
+    if request.user.id != user_id and not request.user.is_staff:
+        return Response({"status_code": "403", "detail": f"You do not have access to this user's information."})
 
-            device_info = [serializers.DeviceSerializer(obj).data 
-                                for obj in models.Device.objects.filter(user_id=user_id)]
+    try:
+        user_info = serializers.UserSerializer(models.ReHMUser.objects.filter(id=user_id)[0]).data
 
-            patient_info = [serializers.GridLayoutSerializer(obj).data 
-                                for obj in models.GridLayout.objects.filter(provider_id=user_id)]
+        device_info = [serializers.DeviceSerializer(obj).data 
+                            for obj in models.Device.objects.filter(user_id=user_id)]
 
-            device_types = set([device['deviceType'] for device in device_info])
+        patient_info = [serializers.GridLayoutSerializer(obj).data 
+                            for obj in models.GridLayout.objects.filter(provider_id=user_id)]
 
-            device_type_info = [serializers.DeviceTypeSerializer(
-                                    models.DeviceType.objects.filter(name=device_type)[0]
-                                ).data for device_type in device_types]
+        device_types = set([device['deviceType'] for device in device_info])
 
-            data_types = []
-            for obj in device_type_info:
-                data_types += obj['dataType']
-            data_types = set(data_types)
+        device_type_info = [serializers.DeviceTypeSerializer(
+                                models.DeviceType.objects.filter(name=device_type)[0]
+                            ).data for device_type in device_types]
 
-            axes_info = {data_type: serializers.DataTypeSerializer(
-                                models.DataType.objects.filter(name=data_type)[0]).data['axes'] 
-                                    for data_type in data_types}
+        data_types = []
+        for obj in device_type_info:
+            data_types += obj['dataType']
+        data_types = set(data_types)
 
-            # Format the response
-            user_info["devices"] = device_info
-            user_info["patients"] = patient_info
-            user_info["available_data"] = axes_info
+        axes_info = {data_type: serializers.DataTypeSerializer(
+                            models.DataType.objects.filter(name=data_type)[0]).data['axes'] 
+                                for data_type in data_types}
 
-            return Response(user_info)
-        except IndexError as e:
-            return Response({"status_code": "400", "detail": f"{e}. user_id = {user_id}."})
-    return Response({"status_code": "400", "detail": f"Method {request.method} Is not available."})
+        # Format the response
+        user_info["devices"] = device_info
+        user_info["patients"] = patient_info
+        user_info["available_datatypes"] = axes_info
+
+        return Response(user_info)
+    except IndexError as e:
+        return Response({"status_code": "400", "detail": f"{e}. user_id = {user_id}."})
 
 class ReHMUserAPIView(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
