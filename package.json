@@ -26,12 +26,18 @@
     "@testing-library/react": "^13.3.0",
     "@types/react": "^18.0.12",
     "@types/react-dom": "^18.0.5",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
     "babel-jest": "^28.1.1",
     "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
+    "eslint": "^8.17.0",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
     "jest-environment-jsdom": "^28.1.1",
     "node-sass": "^7.0.1",
     "react-test-renderer": "^18.1.0",
+    "resize-observer-polyfill": "^1.5.1",
     "sass-loader": "^13.0.0",
     "style-loader": "^3.3.1",
     "ts-jest": "^28.0.4",
@@ -41,10 +47,17 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
+    "@types/react-grid-layout": "^1.3.2",
     "axios": "^0.27.2",
+    "canvas": "^2.9.1",
+    "chart.js": "^3.8.0",
+    "chartjs-adapter-moment": "^1.0.0",
     "jest": "^28.1.1",
+    "moment": "^2.29.3",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-chartjs-2": "^4.2.0",
+    "react-dom": "^18.1.0",
+    "react-grid-layout": "^1.3.4"
   },
   "jest": {
     "transform": {
