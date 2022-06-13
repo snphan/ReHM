@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "livereload",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_filters",
     "corsheaders",
     "bootstrap5",
     "channels",
@@ -79,7 +80,6 @@ CORS_ORIGIN_WHITELIST = [
 # For security (allow access to admins only)
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAdminUser',
     ]
 }
 
