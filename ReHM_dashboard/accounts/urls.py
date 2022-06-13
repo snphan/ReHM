@@ -5,11 +5,12 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'ReHMUsers', views.ReHMUserAPIView, 'rehmuser')
-router.register(r'Devices', views.DeviceAPIView, 'device')
-router.register(r'DeviceTypes', views.DeviceTypeAPIView, 'devicetype')
-router.register(r'DataTypes', views.DataTypeAPIView, 'datatype')
-router.register(r'GridLayout', views.GridLayoutAPIView, 'gridlayouts')
+router.register(r'rehmuser', views.ReHMUserAPIView, 'rehmuser')
+router.register(r'device', views.DeviceAPIView, 'device')
+router.register(r'devicetype', views.DeviceTypeAPIView, 'devicetype')
+router.register(r'datatype', views.DataTypeAPIView, 'datatype')
+router.register(r'gridlayout', views.GridLayoutAPIView, 'gridlayout')
+router.register(r'axes', views.AxesAPIView, 'axes')
 
 app_name = "accounts"
 
@@ -19,5 +20,4 @@ urlpatterns = [
     path('', views.CustomLoginView.as_view(), name="index"),
     path('api/', include(router.urls)),
     path('api/user_info/<int:user_id>/', views.get_user_info)
-
 ]

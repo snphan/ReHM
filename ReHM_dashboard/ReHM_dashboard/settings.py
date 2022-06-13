@@ -119,7 +119,7 @@ else:
             'default': {
                 'ENGINE': 'djongo',
                 'NAME': 'ReHMdb',
-                'ENFORCE_SCHEMA': False,
+                'ENFORCE_SCHEMA': True,
                 'CLIENT': {
                     'host': os.environ.get("MONGO_DB_ADDRESS").split(':')[0],
                     'port': int(os.environ.get("MONGO_DB_ADDRESS").split(':')[1]),

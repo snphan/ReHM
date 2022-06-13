@@ -140,3 +140,8 @@ class GridLayoutAPIView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['i', 'patient', 'provider']
 
+class AxesAPIView(viewsets.ModelViewSet):
+    serializer_class =serializers.AxesSerializer
+    queryset = models.Axes.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']

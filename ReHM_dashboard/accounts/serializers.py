@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, validators
 from . import models
 
 
@@ -46,9 +46,11 @@ class DataTypeSerializer(serializers.ModelSerializer):
         )
 
 class GridLayoutSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.GridLayout
         fields = (
+            'id',
             'provider',
             'patient',
             'i',
@@ -57,4 +59,17 @@ class GridLayoutSerializer(serializers.ModelSerializer):
             'w',
             'h',
             'static'
+        )
+        validators = [
+            validators.UniqueTogetherValidator(
+                queryset=models.GridLayout.objects.all(),
+                fields=['provider', 'patient', 'i']
+            )
+        ]
+
+class AxesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Axes
+        fields = (
+            'name',
         )
