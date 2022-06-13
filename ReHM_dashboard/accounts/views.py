@@ -22,6 +22,7 @@ from rest_framework.response import Response
 from . import serializers
 from . import models
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 # Create your views here.
 class CustomLoginView(SuccessMessageMixin, LoginView):
@@ -117,20 +118,24 @@ class ReHMUserAPIView(viewsets.ModelViewSet):
     queryset = models.ReHMUser.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['email']
+    permission_classes = (IsAdminUser, )
 
 class DeviceAPIView(viewsets.ModelViewSet):
     serializer_class = serializers.DeviceSerializer
     queryset = models.Device.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'serial', 'deviceType']
+    permission_classes = (IsAuthenticated, )
 
 class DeviceTypeAPIView(viewsets.ModelViewSet):
     serializer_class = serializers.DeviceTypeSerializer
     queryset = models.DeviceType.objects.all()
+    permission_classes = (IsAuthenticated, )
 
 class DataTypeAPIView(viewsets.ModelViewSet):
     serializer_class = serializers.DataTypeSerializer
     queryset = models.DataType.objects.all()
+    permission_classes = (IsAuthenticated, )
 
 # Query the provider to get all of the patients and their dashboard settings.
 # curl "http://localhost:8000/accounts/api/GridLayout/?provider=1&patient=1"
@@ -139,9 +144,11 @@ class GridLayoutAPIView(viewsets.ModelViewSet):
     queryset = models.GridLayout.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['i', 'patient', 'provider']
+    permission_classes = (IsAuthenticated, )
 
 class AxesAPIView(viewsets.ModelViewSet):
     serializer_class =serializers.AxesSerializer
     queryset = models.Axes.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
+    permission_classes = (IsAuthenticated, )
