@@ -81,7 +81,7 @@ class APITest(TestCase):
         self.client.post('/accounts/api/device/', {
             'serial': 'APPLE7ABC',
             'deviceType': 'Apple Watch 7',
-            'user': 1
+            'user_id': 1
         })
 
         self.client.post('/accounts/api/gridlayout/', self.gridlayout_data)
@@ -112,7 +112,43 @@ class APITest(TestCase):
         self.assertIn('name', response_content[0])
         self.assertEquals('test', response_content[0]['name'])
 
+    def test_datatype_created(self):
+        """Check if the DataType object was created Successfully
+        """
+        self.setUp()
+
+        response = self.client.get('/accounts/api/datatype/')
+        response_content = json.loads(response.content)
+
+        self.assertEquals(['test'], response_content[0]['axes'])
+        self.assertEquals('BPM', response_content[0]['units'])
+        self.assertEquals('HR', response_content[0]['name'])
+
+    def test_devicetype_created(self):
+        """Check if the devicetype object was created Successfully
+        """
+        self.setUp()
+
+        response = self.client.get('/accounts/api/devicetype/')
+        response_content = json.loads(response.content)
+
+        self.assertEquals('Apple Watch 7', response_content[0]['name'])
+        self.assertEquals(['HR'], response_content[0]['dataType'])
+
+    def test_device_created(self):
+        """Check if the device object was created Successfully
+        """
+        self.setUp()
+
+        response = self.client.get('/accounts/api/device/')
+        response_content = json.loads(response.content)
+
+        self.assertEquals('Apple Watch 7', response_content[0]['deviceType'])
+        self.assertEquals(1, response_content[0]['user_id'])
+
     def test_gridlayout_created(self):
+        """Check if the gridlayout object was created Successfully
+        """
         self.setUp()
         response = self.client.get('/accounts/api/gridlayout/')
         response_data = json.loads(response.content)[0]
@@ -123,4 +159,11 @@ class APITest(TestCase):
         self.assertEqual(response_data['y'], self.gridlayout_data['y'])
         self.assertEqual(response_data['w'], self.gridlayout_data['w'])
         self.assertEqual(response_data['h'], self.gridlayout_data['h'])
+    
+    def test_duplicate_gridlayout_create(self):
+        """Check if the gridlayout unique constraint works
+        """
+        self.setUp()
+        response = self.client.post('/accounts/api/gridlayout/', self.gridlayout_data)
+        self.assertEqual(response.status_code, 400)
 
