@@ -1,24 +1,25 @@
 from django.test import TestCase, Client
 from django.test.utils import setup_test_environment
 from django.urls import reverse, reverse_lazy
-from django.contrib.auth.models import User
+from accounts import models as account_models
 from django.contrib.auth import (
-    BACKEND_SESSION_KEY, REDIRECT_FIELD_NAME, SESSION_KEY,
+    SESSION_KEY
 )
 
 
 # Create your tests here.
 class DashboardViewTests(TestCase):
 
-    def login(self, username='testinguser', password='password'):
-        self.user = User.objects.create(username=username)
+    def login(self, email='testinguser@gmail.com', password='password'):
+        self.user = account_models.ReHMUser.objects.create(email=email)
         self.user.set_password(password)
         self.user.save()
 
         response = self.client.post(reverse_lazy("accounts:login"), {
-            'username': username,
+            'username': email,
             'password': password,
         })
+
         self.assertIn(SESSION_KEY, self.client.session)
         return response
 

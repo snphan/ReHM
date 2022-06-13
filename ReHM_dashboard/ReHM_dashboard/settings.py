@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "livereload",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_filters",
     "corsheaders",
     "bootstrap5",
     "channels",
@@ -79,7 +80,6 @@ CORS_ORIGIN_WHITELIST = [
 # For security (allow access to admins only)
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAdminUser',
     ]
 }
 
@@ -119,7 +119,7 @@ else:
             'default': {
                 'ENGINE': 'djongo',
                 'NAME': 'ReHMdb',
-                'ENFORCE_SCHEMA': False,
+                'ENFORCE_SCHEMA': True,
                 'CLIENT': {
                     'host': os.environ.get("MONGO_DB_ADDRESS").split(':')[0],
                     'port': int(os.environ.get("MONGO_DB_ADDRESS").split(':')[1]),
@@ -187,3 +187,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = reverse_lazy("dashboard:index")
 LOGOUT_REDIRECT_URL = reverse_lazy("index")
 LOGIN_URL = reverse_lazy("accounts:login")
+
+AUTH_USER_MODEL = 'accounts.ReHMUser'
