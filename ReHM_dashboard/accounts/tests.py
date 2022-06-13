@@ -1,4 +1,6 @@
+import json
 from django.test import TestCase, Client
+from rest_framework.test import APIRequestFactory
 from . import models
 from django.contrib.auth import (
     SESSION_KEY,
@@ -51,3 +53,74 @@ class AuthorizationTest(TestCase):
         self.assertIn("already", str(response.context["messages"]._loaded_messages[0]).lower())
         
     
+class APITest(TestCase):
+    gridlayout_data = {
+            'provider': 1,
+            'patient': 1,
+            'i': 'HR',
+            'x': 0,
+            'y': 0,
+            'w': 3,
+            'h': 3
+        }
+
+    def setUp(self):
+        self.login()
+        self.client.post('/accounts/api/axes/', {
+            'name': 'test'
+        })
+        self.client.post('/accounts/api/datatype/', {
+            'name': 'HR',
+            'units': 'BPM',
+            'axes': 'test'
+        })
+        self.client.post('/accounts/api/devicetype/', {
+            'name': 'Apple Watch 7',
+            'dataType': 'HR',
+        })
+        self.client.post('/accounts/api/device/', {
+            'serial': 'APPLE7ABC',
+            'deviceType': 'Apple Watch 7',
+            'user': 1
+        })
+
+        self.client.post('/accounts/api/gridlayout/', self.gridlayout_data)
+
+    def login(self, email='testinguser@gmail.com', password='password'):
+        self.user = models.ReHMUser.objects.get_or_create(email=email)
+        if self.user[1]:
+            self.user[0].set_password(password)
+            self.user[0].save()
+
+        self.user = self.user[0]
+        response = self.client.post(reverse_lazy("accounts:login"), {
+            'username': email,
+            'password': password,
+        }, follow=True)
+
+        self.assertIn(SESSION_KEY, self.client.session)
+        return response
+
+    def test_new_axis_created(self):
+        """Check if Axis is successfully created
+        """
+        self.setUp()
+
+        response = self.client.get('/accounts/api/axes/')
+        response_content = json.loads(response.content)
+
+        self.assertIn('name', response_content[0])
+        self.assertEquals('test', response_content[0]['name'])
+
+    def test_gridlayout_created(self):
+        self.setUp()
+        response = self.client.get('/accounts/api/gridlayout/')
+        response_data = json.loads(response.content)[0]
+        self.assertEqual(response_data['provider'], self.gridlayout_data['provider'])
+        self.assertEqual(response_data['patient'], self.gridlayout_data['patient'])
+        self.assertEqual(response_data['i'], self.gridlayout_data['i'])
+        self.assertEqual(response_data['x'], self.gridlayout_data['x'])
+        self.assertEqual(response_data['y'], self.gridlayout_data['y'])
+        self.assertEqual(response_data['w'], self.gridlayout_data['w'])
+        self.assertEqual(response_data['h'], self.gridlayout_data['h'])
+
