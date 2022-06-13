@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
-from django.contrib.auth.models import User
+from . import models
 from django.contrib.auth import (
-    BACKEND_SESSION_KEY, REDIRECT_FIELD_NAME, SESSION_KEY,
+    SESSION_KEY,
 )
 from django.urls import reverse_lazy
 
@@ -12,17 +12,18 @@ class BasicMathTest(TestCase):
 
 class AuthorizationTest(TestCase):
 
-    def login(self, username='testinguser', password='password'):
-        self.user = User.objects.get_or_create(username=username)
+    def login(self, email='testinguser@gmail.com', password='password'):
+        self.user = models.ReHMUser.objects.get_or_create(email=email)
         if self.user[1]:
             self.user[0].set_password(password)
             self.user[0].save()
 
         self.user = self.user[0]
         response = self.client.post(reverse_lazy("accounts:login"), {
-            'username': username,
+            'username': email,
             'password': password,
         }, follow=True)
+
         self.assertIn(SESSION_KEY, self.client.session)
         return response
 
