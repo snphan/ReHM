@@ -167,3 +167,11 @@ class APITest(TestCase):
         response = self.client.post('/accounts/api/gridlayout/', self.gridlayout_data)
         self.assertEqual(response.status_code, 400)
 
+    def test_prevent_nonadmin_access_to_usermodel(self):
+        """Non admin users shouldn't be able to see the list of all users.
+        """
+        self.setUp()
+        response = self.client.get('/accounts/api/rehmuser/')
+        response_data = json.loads(response.content)
+
+        self.assertIn("do not have permission", response_data['detail'])
