@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useMeasure } from "react-use";
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import 'chartjs-adapter-moment';
-import { Responsive, WidthProvider } from "react-grid-layout";
+import { Responsive as ResponsiveReactGridLayout } from "react-grid-layout";
 import axios from "axios";
 
 import "./react-grid-layout-styles.css"
@@ -11,7 +12,6 @@ import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 Chart.register(CategoryScale);
 
@@ -56,6 +56,8 @@ export default function Dashboard() {
     const sidebarWidth: number = 12; // in rem during Desktop
     const sidebarHeight: number = 6; // in rem during Desktop
     const plotColors: Array<string> = ["#ff64bd", "#b887ff", "#8be9fd", "#50fa7b", "#ffb86c"];
+
+    const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
 
     const [showLeft, setShowLeft] = useState<boolean>(false);
     const [showRight, setShowRight] = useState<boolean>(false);
@@ -102,6 +104,7 @@ export default function Dashboard() {
     const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
     const [allUserInfo, setAllUserInfo] = useState(null);
     useEffect(() => {
+
         if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
             // After setting the layout, we need to construct the skeleton for allData State.
             // Available Datatypes contains Axis information for each datatype.
@@ -111,6 +114,7 @@ export default function Dashboard() {
                 let currentDataType = layoutItem.i;
                 allDataSkeleton[currentDataType] = {datasets: []}
                 available_datatypes[currentDataType].forEach((axis: String, ind: number) => {
+
                     allDataSkeleton[currentDataType]["datasets"].push(
                         {
                             label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()),
@@ -133,7 +137,6 @@ export default function Dashboard() {
      * @returns new layout with static toggled on or off
      */
     const toggleStatic = (layout: Array<LayoutObject>) => {
-        console.log(layout)
         var newLayout = layout.map(l => {
             return {...l, static: !l.static}
         })
@@ -182,56 +185,55 @@ export default function Dashboard() {
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
                     <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(gridLayout))}>Lock/Unlock Dashboard</button>
                 </div>
-                <div className="graph-container">
-                    
-                    <ResponsiveReactGridLayout
-                        className="layout m-4"
-                        layouts={{lg: gridLayout}}
-                        measureBeforeMount={false}
-                        onLayoutChange={(newLayout, newLayouts) => {newLayout.length ? setGridLayout(newLayout) : null;}}
-                        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-                        >
-                            {gridLayout.length && Object.keys(allData).length ? gridLayout.map(layoutItem => {
-                                return (
-                                    <div key={layoutItem.i} className="">
-                                        <Line data={allData[layoutItem.i]} 
-                                            options={{
-                                                scales: {
-                                                    x: {
-                                                        type: 'time',
-                                                        time: {
-                                                            unit: 'second',
+                <div ref={gridContainerTarget} className="graph-container">
+                        <ResponsiveReactGridLayout
+                            className="layout m-4"
+                            layouts={{lg: gridLayout}}
+                            width={width - 56} // TODO: Currently Bandaid patch small screen vs large screen gridcontainer width
+                            onLayoutChange={(newLayout, newLayouts) => { 
+                                newLayout.length ? setGridLayout(newLayout) : null; 
+                            }}
+                            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                            cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                            >
+                                {gridLayout.length && Object.keys(allData).length ? gridLayout.map(layoutItem => {
+                                    return (
+                                        <div key={layoutItem.i} className="" data-testid="one-graph">
+                                            <Line data={allData[layoutItem.i]} 
+                                                options={{
+                                                    scales: {
+                                                        x: {
+                                                            type: 'time',
+                                                            time: {
+                                                                unit: 'second',
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            }}/>
-                                        {/* Won't be a button, but rather a websocket that updates this.*/}
-                                        {layoutItem.i == "ACCEL" ? 
-                                            <button onClick={() => {
-                                                let newData: DataPoint = {
-                                                    device: "Fitbit",
-                                                    dataType: layoutItem.i,
-                                                    timestamp: Date.now(),
-                                                    dataValues: [Math.random(), Math.random(), Math.random()],
-                                                }
-                                                addData([newData]);
-                                            }}>Add Data</button>
-                                        :
-                                            <button onClick={() => {
-                                                let newData: DataPoint = {
-                                                    device: "Fitbit",
-                                                    dataType: layoutItem.i,
-                                                    timestamp: Date.now(),
-                                                    dataValues: [Math.random()],
-                                                }
-                                                addData([newData]);
-                                            }}>Add Data</button>
-                                        }
-                                    </div>)
-                            }) : null}
-                    </ResponsiveReactGridLayout>
-
+                                                }}/>
+                                            {layoutItem.i == "ACCEL" ? 
+                                                <button onClick={() => {
+                                                    let newData: DataPoint = {
+                                                        device: "Fitbit",
+                                                        dataType: layoutItem.i,
+                                                        timestamp: Date.now(),
+                                                        dataValues: [Math.random(), Math.random(), Math.random()],
+                                                    }
+                                                    addData([newData]);
+                                                }}>Add Data</button>
+                                            :
+                                                <button onClick={() => {
+                                                    let newData: DataPoint = {
+                                                        device: "Fitbit",
+                                                        dataType: layoutItem.i,
+                                                        timestamp: Date.now(),
+                                                        dataValues: [Math.random()],
+                                                    }
+                                                    addData([newData]);
+                                                }}>Add Data</button>
+                                            }
+                                        </div>)
+                                }) : null}
+                        </ResponsiveReactGridLayout>
                 </div>
             </div>
             <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
