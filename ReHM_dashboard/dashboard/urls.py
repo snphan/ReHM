@@ -6,5 +6,5 @@ app_name = "dashboard"
 
 urlpatterns = [
     path('', views.GotoDashboardView.as_view(), name="index"),
-    path('<str:patient_id>/', views.DashboardView.as_view(), name="info"),
+    path('<int:patient_id>/', views.DashboardView.as_view(), name="info"),
 ]

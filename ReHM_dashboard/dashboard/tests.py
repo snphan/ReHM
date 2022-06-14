@@ -13,6 +13,7 @@ class DashboardViewTests(TestCase):
     def login(self, email='testinguser@gmail.com', password='password'):
         self.user = account_models.ReHMUser.objects.create(email=email)
         self.user.set_password(password)
+        self.user.is_superuser = True
         self.user.save()
 
         response = self.client.post(reverse_lazy("accounts:login"), {
@@ -28,8 +29,8 @@ class DashboardViewTests(TestCase):
         """
         self.login()
 
-        response = self.client.get(reverse('dashboard:info', args=['hi']))
+        response = self.client.get(reverse('dashboard:info', args=[1]))
         self.assertEqual(response.status_code, 200)
         # Patient selection maybe delegated to the client in an API call in the future
-        self.assertEqual(response.context['patient_id'], 'hi')
+        self.assertEqual(response.context['patient_id'], 1)
 

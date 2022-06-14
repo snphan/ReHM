@@ -7,14 +7,26 @@ Welcome
 {% endblock title %}
 
 {% block body %}
-<div class="container d-flex flex-column">
-    <a href="{% url 'dashboard:info' 'hi' %}">Go to hi dashboard</a>
-    <br>
+<div class="container d-flex flex-column m-4">
     <form action="{% url 'accounts:logout' %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Logout</button>
     </form>
-    <div id="root"/>
+    <hr>
+    <br>
+    <h1>Welcome {{user.first_name}} {{user.last_name}}</h1>
+    <div class="container d-flex">
+        {% for patient in patients %}
+        <div class="card m-3" style="width: 15%;box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.25);">
+            <div class="card-body">
+                <h5 class="card-title">Patient | {{patient}}</h5>
+                <p>Healthy Patient</p>
+                <a href="{% url 'dashboard:info' patient %}" class="btn btn-secondary">Patient | {{patient}}</a> 
+            </div>
+        </div>
+        {% endfor %}    
+    </div>
+    <br>
 </div>
 {% endblock body %}
 

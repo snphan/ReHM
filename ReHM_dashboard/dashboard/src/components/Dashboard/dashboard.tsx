@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useMeasure } from "react-use";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
+import Chart from "chart.js/auto";
 import 'chartjs-adapter-moment';
+import { Responsive as ResponsiveReactGridLayout } from "react-grid-layout";
+import axios from "axios";
+
 import "./react-grid-layout-styles.css"
 import "./react-resizeable-styles.css"
 import "./dashboard.scss";
-import { Responsive, WidthProvider } from "react-grid-layout";
 
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
+axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 Chart.register(CategoryScale);
 
 interface LayoutObject {
@@ -24,12 +26,15 @@ interface LayoutObject {
 
 interface ChartData {
     [key: string] : {
-        datasets: Array<{
-            label: string,
-            borderColor?: string,
-            data: Array<{x: number, y: number}>
-        }>
+        datasets: Array<ChartDataset> | null
     }
+}
+
+interface ChartDataset {
+    label: string,
+    borderColor?: string,
+    backgroundColor?: string,
+    data: Array<{x: number, y: number}>
 }
 
 /**
@@ -40,70 +45,89 @@ interface ChartData {
  *          For Heart rate: [0.1]
  */     
 interface DataPoint {
-    device: string,         // Apple Watch, Fitbit, Polar, Pozxy 
-    dataType: string,       // HR, RR, ACCEL, GYRO, POS
-    timestamp: number,      // UNIX TIMESTAMP
-    dataValues: Array<number>          // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
+    device: string,             // Apple Watch, Fitbit, Polar, Pozxy 
+    dataType: string,           // HR, RR, ACCEL, GYRO, POS
+    timestamp: number,          // UNIX TIMESTAMP
+    dataValues: Array<number>   // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
 }
 
 export default function Dashboard() {
     const isMobile: boolean = window.innerWidth <= 1024;
     const sidebarWidth: number = 12; // in rem during Desktop
     const sidebarHeight: number = 6; // in rem during Desktop
+    const plotColors: Array<string> = ["#ff64bd", "#b887ff", "#8be9fd", "#50fa7b", "#ffb86c"];
 
-    const [showLeft, setShowLeft] = useState(false);
-    const [showRight, setShowRight] = useState(false);
-    const [allData, setAllData] = useState<ChartData | null>({});
-    const [layout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
 
-    // ComponentDidMount()...
+    const [showLeft, setShowLeft] = useState<boolean>(false);
+    const [showRight, setShowRight] = useState<boolean>(false);
+
+    const [currentProvider, setCurrentProvider] = useState(null)
+    const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
     useEffect(() => {
-        // TODO: Layout will be set first by an API call given a specific patient.
-        // For now we hardcode it. Need a way to template different datatypes (ACCEL has XYZ and HR only has one.)
-        let myLayout: Array<LayoutObject> = [
-            { i: "HR", x: 0, y: 0, w: 3, h: 3, static: false },
-            { i: "ACCEL", x: 3, y: 0, w: 3, h: 3, static: false },
-            { i: "TEMP", x: 6, y: 0, w: 3, h: 3, static: false },
-        ]
+        setCurrentPatient(parseInt(document.getElementById("patient_id").textContent));        
+        setCurrentProvider(parseInt(document.getElementById("user_id").textContent));        
+    }, [])
+    useEffect(() => {
+        // Get the layout information from the provider_id, and patient_id query.
+        if (currentProvider && currentPatient) {
+            axios
+                .get(`/accounts/api/gridlayout/?provider=${currentProvider}&patient=${currentPatient}`)
+                .then((res) => {
+                    let cleanedLayout: LayoutObject[] = [];
+                    res.data.forEach((gridLayoutData: any) => {
+                        cleanedLayout.push(
+                            {
+                                i: gridLayoutData.i,
+                                x: gridLayoutData.x,
+                                y: gridLayoutData.y,
+                                w: gridLayoutData.w,
+                                h: gridLayoutData.h,
+                                static: gridLayoutData.static,
+                            }
+                        )
+                    })
+                    setGridLayout(cleanedLayout);
+                    // Had an issue with this, it seems like the callback onLayoutChange 
+                    // took the initial state and overrides this setState.
+                    // Solution: Call callback only if there are items in the layout.
+                });
+            axios
+                .get(`/accounts/api/user_info/${currentProvider}/`)
+                .then((res) => {
+                    setAllUserInfo(res.data);
+                })
+        }
+    }, [currentPatient, currentProvider])
 
-        setGridLayout(myLayout);    // Had an issue with this, it seems like the callback onLayoutChange 
-                                    // took the initial state and overrides this setState.
-                                    // Solution: Call callback only if there are items in the layout.
+    const [allData, setAllData] = useState<ChartData | null>({});
+    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [allUserInfo, setAllUserInfo] = useState(null);
+    useEffect(() => {
 
-        // After setting the layout, we need to construct the skeleton for allData State.
-        let allDataSkeleton: ChartData = {};
-        myLayout.forEach((layoutItem) => {
-            if (layoutItem.i === "ACCEL") {
-                allDataSkeleton[layoutItem.i] = {
-                    datasets: [{
-                        label: layoutItem.i+"_X",
-                        borderColor: "red",
-                        data: []
-                    },
-                    {
-                        label: layoutItem.i+"_Y",
-                        borderColor: "green",
-                        data: []
-                    },
-                    {
-                        label: layoutItem.i+"_Z",
-                        borderColor: "blue",
-                        data: []
-                    }]
-                }  
-            } else {
-                allDataSkeleton[layoutItem.i] = {
-                    datasets: [{
-                        label: layoutItem.i,
-                        borderColor: "red",
-                        data: []
-                    }]
-                }  
-            }
-        });
+        if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
+            // After setting the layout, we need to construct the skeleton for allData State.
+            // Available Datatypes contains Axis information for each datatype.
+            const  { available_datatypes } = allUserInfo
+            let allDataSkeleton: ChartData = {};
+            gridLayout.forEach((layoutItem) => {
+                let currentDataType = layoutItem.i;
+                allDataSkeleton[currentDataType] = {datasets: []}
+                available_datatypes[currentDataType].forEach((axis: String, ind: number) => {
 
-        setAllData(allDataSkeleton);
-    }, []);
+                    allDataSkeleton[currentDataType]["datasets"].push(
+                        {
+                            label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()),
+                            borderColor: plotColors[ind],
+                            backgroundColor: plotColors[ind] + "80", // 50% transparency for hexadecimal
+                            data: []
+                        }
+                    )
+                })
+            })
+            setAllData(allDataSkeleton);
+        }
+    }, [gridLayout, allUserInfo]);
 
     // Helper Functions
 
@@ -113,7 +137,6 @@ export default function Dashboard() {
      * @returns new layout with static toggled on or off
      */
     const toggleStatic = (layout: Array<LayoutObject>) => {
-        console.log(layout)
         var newLayout = layout.map(l => {
             return {...l, static: !l.static}
         })
@@ -141,7 +164,6 @@ export default function Dashboard() {
         setAllData(newData);
     }
 
-
     return (
         <div className="dashboard-container d-flex justify-content-between">
             <div data-testid="menu" className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
@@ -161,57 +183,57 @@ export default function Dashboard() {
                     <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
                     <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
-                    <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(layout))}>Lock/Unlock Dashboard</button>
+                    <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(gridLayout))}>Lock/Unlock Dashboard</button>
                 </div>
-                <div className="graph-container">
-                    <ResponsiveReactGridLayout
-                        className="layout m-4"
-                        layouts={{lg: layout}}
-                        measureBeforeMount={false}
-                        onLayoutChange={(newLayout, newLayouts) => {newLayout.length ? setGridLayout(newLayout) : null;}}
-                        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-                        >
-                            {layout.length ? layout.map(layoutItem => {
-                                return (
-                                    <div key={layoutItem.i} className="">
-                                        <Line data={allData[layoutItem.i]} 
-                                            options={{
-                                                scales: {
-                                                    x: {
-                                                        type: 'time',
-                                                        time: {
-                                                            unit: 'second',
+                <div ref={gridContainerTarget} className="graph-container">
+                        <ResponsiveReactGridLayout
+                            className="layout m-4"
+                            layouts={{lg: gridLayout}}
+                            width={width - 56} // TODO: Currently Bandaid patch small screen vs large screen gridcontainer width
+                            onLayoutChange={(newLayout, newLayouts) => { 
+                                newLayout.length ? setGridLayout(newLayout) : null; 
+                            }}
+                            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                            cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                            >
+                                {gridLayout.length && Object.keys(allData).length ? gridLayout.map(layoutItem => {
+                                    return (
+                                        <div key={layoutItem.i} className="" data-testid="one-graph">
+                                            <Line data={allData[layoutItem.i]} 
+                                                options={{
+                                                    scales: {
+                                                        x: {
+                                                            type: 'time',
+                                                            time: {
+                                                                unit: 'second',
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            }}/>
-                                        {/* Won't be a button, but rather a websocket that updates this.*/}
-                                        {layoutItem.i == "ACCEL" ? 
-                                            <button onClick={() => {
-                                                let newData: DataPoint = {
-                                                    device: "Fitbit",
-                                                    dataType: layoutItem.i,
-                                                    timestamp: Date.now(),
-                                                    dataValues: [Math.random(), Math.random(), Math.random()],
-                                                }
-                                                addData([newData]);
-                                            }}>Add Data</button>
-                                        :
-                                            <button onClick={() => {
-                                                let newData: DataPoint = {
-                                                    device: "Fitbit",
-                                                    dataType: layoutItem.i,
-                                                    timestamp: Date.now(),
-                                                    dataValues: [Math.random()],
-                                                }
-                                                addData([newData]);
-                                            }}>Add Data</button>
-                                        }
-                                    </div>)
-                            }) : null}
-                    </ResponsiveReactGridLayout>
-
+                                                }}/>
+                                            {layoutItem.i == "ACCEL" ? 
+                                                <button onClick={() => {
+                                                    let newData: DataPoint = {
+                                                        device: "Fitbit",
+                                                        dataType: layoutItem.i,
+                                                        timestamp: Date.now(),
+                                                        dataValues: [Math.random(), Math.random(), Math.random()],
+                                                    }
+                                                    addData([newData]);
+                                                }}>Add Data</button>
+                                            :
+                                                <button onClick={() => {
+                                                    let newData: DataPoint = {
+                                                        device: "Fitbit",
+                                                        dataType: layoutItem.i,
+                                                        timestamp: Date.now(),
+                                                        dataValues: [Math.random()],
+                                                    }
+                                                    addData([newData]);
+                                                }}>Add Data</button>
+                                            }
+                                        </div>)
+                                }) : null}
+                        </ResponsiveReactGridLayout>
                 </div>
             </div>
             <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
