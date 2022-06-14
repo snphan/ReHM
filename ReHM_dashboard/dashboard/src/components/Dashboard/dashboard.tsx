@@ -26,12 +26,15 @@ interface LayoutObject {
 
 interface ChartData {
     [key: string] : {
-        datasets: Array<{
-            label: string,
-            borderColor?: string,
-            data: Array<{x: number, y: number}>
-        }>
+        datasets: Array<ChartDataset> | null
     }
+}
+
+interface ChartDataset {
+    label: string,
+    borderColor?: string,
+    backgroundColor?: string,
+    data: Array<{x: number, y: number}>
 }
 
 /**
@@ -42,34 +45,29 @@ interface ChartData {
  *          For Heart rate: [0.1]
  */     
 interface DataPoint {
-    device: string,         // Apple Watch, Fitbit, Polar, Pozxy 
-    dataType: string,       // HR, RR, ACCEL, GYRO, POS
-    timestamp: number,      // UNIX TIMESTAMP
-    dataValues: Array<number>          // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
+    device: string,             // Apple Watch, Fitbit, Polar, Pozxy 
+    dataType: string,           // HR, RR, ACCEL, GYRO, POS
+    timestamp: number,          // UNIX TIMESTAMP
+    dataValues: Array<number>   // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
 }
 
 export default function Dashboard() {
     const isMobile: boolean = window.innerWidth <= 1024;
     const sidebarWidth: number = 12; // in rem during Desktop
     const sidebarHeight: number = 6; // in rem during Desktop
+    const plotColors: Array<string> = ["#ff64bd", "#b887ff", "#8be9fd", "#50fa7b", "#ffb86c"];
+
+    const [showLeft, setShowLeft] = useState<boolean>(false);
+    const [showRight, setShowRight] = useState<boolean>(false);
 
     const [currentProvider, setCurrentProvider] = useState(null)
     const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
-    const [showLeft, setShowLeft] = useState<boolean>(false);
-    const [showRight, setShowRight] = useState<boolean>(false);
-    const [allData, setAllData] = useState<ChartData | null>({});
-    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
-    const [allUserInfo, setAllUserInfo] = useState(null);
-
-    // ComponentDidMount()...
     useEffect(() => {
         setCurrentPatient(parseInt(document.getElementById("patient_id").textContent));        
         setCurrentProvider(parseInt(document.getElementById("user_id").textContent));        
     }, [])
-
     useEffect(() => {
         // Get the layout information from the provider_id, and patient_id query.
-        console.log(currentProvider, currentPatient);
         if (currentProvider && currentPatient) {
             axios
                 .get(`/accounts/api/gridlayout/?provider=${currentProvider}&patient=${currentPatient}`)
@@ -98,48 +96,35 @@ export default function Dashboard() {
                     setAllUserInfo(res.data);
                 })
         }
-    }, [currentPatient])
+    }, [currentPatient, currentProvider])
 
+    const [allData, setAllData] = useState<ChartData | null>({});
+    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [allUserInfo, setAllUserInfo] = useState(null);
     useEffect(() => {
-        if (gridLayout) {
+        if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
             // After setting the layout, we need to construct the skeleton for allData State.
+            // Available Datatypes contains Axis information for each datatype.
+            const  { available_datatypes } = allUserInfo
             let allDataSkeleton: ChartData = {};
             gridLayout.forEach((layoutItem) => {
-                if (layoutItem.i === "ACCEL") {
-                    allDataSkeleton[layoutItem.i] = {
-                        datasets: [{
-                            label: layoutItem.i+"_X",
-                            borderColor: "red",
-                            data: []
-                        },
+                let currentDataType = layoutItem.i;
+                allDataSkeleton[currentDataType] = {datasets: []}
+                available_datatypes[currentDataType].forEach((axis: String, ind: number) => {
+                    allDataSkeleton[currentDataType]["datasets"].push(
                         {
-                            label: layoutItem.i+"_Y",
-                            borderColor: "green",
+                            label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()),
+                            borderColor: plotColors[ind],
+                            backgroundColor: plotColors[ind] + "80", // 50% transparency for hexadecimal
                             data: []
-                        },
-                        {
-                            label: layoutItem.i+"_Z",
-                            borderColor: "blue",
-                            data: []
-                        }]
-                    }  
-                } else {
-                    allDataSkeleton[layoutItem.i] = {
-                        datasets: [{
-                            label: layoutItem.i,
-                            borderColor: "red",
-                            data: []
-                        }]
-                    }  
-                }
-            });
+                        }
+                    )
+                })
+            })
             setAllData(allDataSkeleton);
         }
-    }, [gridLayout]);
+    }, [gridLayout, allUserInfo]);
 
-    useEffect(() => {
-        console.log(allUserInfo);
-    }, [allUserInfo])
     // Helper Functions
 
     /**
@@ -175,7 +160,6 @@ export default function Dashboard() {
 
         setAllData(newData);
     }
-
 
     return (
         <div className="dashboard-container d-flex justify-content-between">
