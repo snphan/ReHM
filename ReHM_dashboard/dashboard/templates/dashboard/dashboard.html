@@ -7,7 +7,8 @@ Dashboard
 {% endblock title %}
 
 {% block body %}
-{{ patient_id|json_script:"patient_id" }}
+{{ patient_id | json_script:"patient_id" }}
+{{ user.id | json_script:"user_id" }}
 <div id="root"/>
 {% endblock body %}
 

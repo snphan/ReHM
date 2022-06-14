@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
+import Chart from "chart.js/auto";
 import 'chartjs-adapter-moment';
+import { Responsive, WidthProvider } from "react-grid-layout";
+import axios from "axios";
+
 import "./react-grid-layout-styles.css"
 import "./react-resizeable-styles.css"
 import "./dashboard.scss";
-import { Responsive, WidthProvider } from "react-grid-layout";
 
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
+axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 Chart.register(CategoryScale);
 
 interface LayoutObject {
@@ -51,60 +53,93 @@ export default function Dashboard() {
     const sidebarWidth: number = 12; // in rem during Desktop
     const sidebarHeight: number = 6; // in rem during Desktop
 
-    const [showLeft, setShowLeft] = useState(false);
-    const [showRight, setShowRight] = useState(false);
+    const [currentProvider, setCurrentProvider] = useState(null)
+    const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
+    const [showLeft, setShowLeft] = useState<boolean>(false);
+    const [showRight, setShowRight] = useState<boolean>(false);
     const [allData, setAllData] = useState<ChartData | null>({});
-    const [layout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [allUserInfo, setAllUserInfo] = useState(null);
 
     // ComponentDidMount()...
     useEffect(() => {
-        // TODO: Layout will be set first by an API call given a specific patient.
-        // For now we hardcode it. Need a way to template different datatypes (ACCEL has XYZ and HR only has one.)
-        let myLayout: Array<LayoutObject> = [
-            { i: "HR", x: 0, y: 0, w: 3, h: 3, static: false },
-            { i: "ACCEL", x: 3, y: 0, w: 3, h: 3, static: false },
-            { i: "TEMP", x: 6, y: 0, w: 3, h: 3, static: false },
-        ]
+        setCurrentPatient(parseInt(document.getElementById("patient_id").textContent));        
+        setCurrentProvider(parseInt(document.getElementById("user_id").textContent));        
+    }, [])
 
-        setGridLayout(myLayout);    // Had an issue with this, it seems like the callback onLayoutChange 
-                                    // took the initial state and overrides this setState.
-                                    // Solution: Call callback only if there are items in the layout.
+    useEffect(() => {
+        // Get the layout information from the provider_id, and patient_id query.
+        console.log(currentProvider, currentPatient);
+        if (currentProvider && currentPatient) {
+            axios
+                .get(`/accounts/api/gridlayout/?provider=${currentProvider}&patient=${currentPatient}`)
+                .then((res) => {
+                    let cleanedLayout: LayoutObject[] = [];
+                    res.data.forEach((gridLayoutData: any) => {
+                        cleanedLayout.push(
+                            {
+                                i: gridLayoutData.i,
+                                x: gridLayoutData.x,
+                                y: gridLayoutData.y,
+                                w: gridLayoutData.w,
+                                h: gridLayoutData.h,
+                                static: gridLayoutData.static,
+                            }
+                        )
+                    })
+                    setGridLayout(cleanedLayout);
+                    // Had an issue with this, it seems like the callback onLayoutChange 
+                    // took the initial state and overrides this setState.
+                    // Solution: Call callback only if there are items in the layout.
+                });
+            axios
+                .get(`/accounts/api/user_info/${currentProvider}/`)
+                .then((res) => {
+                    setAllUserInfo(res.data);
+                })
+        }
+    }, [currentPatient])
 
-        // After setting the layout, we need to construct the skeleton for allData State.
-        let allDataSkeleton: ChartData = {};
-        myLayout.forEach((layoutItem) => {
-            if (layoutItem.i === "ACCEL") {
-                allDataSkeleton[layoutItem.i] = {
-                    datasets: [{
-                        label: layoutItem.i+"_X",
-                        borderColor: "red",
-                        data: []
-                    },
-                    {
-                        label: layoutItem.i+"_Y",
-                        borderColor: "green",
-                        data: []
-                    },
-                    {
-                        label: layoutItem.i+"_Z",
-                        borderColor: "blue",
-                        data: []
-                    }]
-                }  
-            } else {
-                allDataSkeleton[layoutItem.i] = {
-                    datasets: [{
-                        label: layoutItem.i,
-                        borderColor: "red",
-                        data: []
-                    }]
-                }  
-            }
-        });
+    useEffect(() => {
+        if (gridLayout) {
+            // After setting the layout, we need to construct the skeleton for allData State.
+            let allDataSkeleton: ChartData = {};
+            gridLayout.forEach((layoutItem) => {
+                if (layoutItem.i === "ACCEL") {
+                    allDataSkeleton[layoutItem.i] = {
+                        datasets: [{
+                            label: layoutItem.i+"_X",
+                            borderColor: "red",
+                            data: []
+                        },
+                        {
+                            label: layoutItem.i+"_Y",
+                            borderColor: "green",
+                            data: []
+                        },
+                        {
+                            label: layoutItem.i+"_Z",
+                            borderColor: "blue",
+                            data: []
+                        }]
+                    }  
+                } else {
+                    allDataSkeleton[layoutItem.i] = {
+                        datasets: [{
+                            label: layoutItem.i,
+                            borderColor: "red",
+                            data: []
+                        }]
+                    }  
+                }
+            });
+            setAllData(allDataSkeleton);
+        }
+    }, [gridLayout]);
 
-        setAllData(allDataSkeleton);
-    }, []);
-
+    useEffect(() => {
+        console.log(allUserInfo);
+    }, [allUserInfo])
     // Helper Functions
 
     /**
@@ -161,18 +196,19 @@ export default function Dashboard() {
                     <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
                     <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
-                    <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(layout))}>Lock/Unlock Dashboard</button>
+                    <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(gridLayout))}>Lock/Unlock Dashboard</button>
                 </div>
                 <div className="graph-container">
+                    
                     <ResponsiveReactGridLayout
                         className="layout m-4"
-                        layouts={{lg: layout}}
+                        layouts={{lg: gridLayout}}
                         measureBeforeMount={false}
                         onLayoutChange={(newLayout, newLayouts) => {newLayout.length ? setGridLayout(newLayout) : null;}}
                         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                         >
-                            {layout.length ? layout.map(layoutItem => {
+                            {gridLayout.length && Object.keys(allData).length ? gridLayout.map(layoutItem => {
                                 return (
                                     <div key={layoutItem.i} className="">
                                         <Line data={allData[layoutItem.i]} 
