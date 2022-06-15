@@ -11,6 +11,8 @@ import "./react-grid-layout-styles.css"
 import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
+import { LineChart } from "../LineChart/lineChart";
+
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
 const csrftoken = document.cookie.match(csrftokenPattern) ? 
@@ -116,7 +118,7 @@ export default function Dashboard() {
                     setAllUserInfo(res.data);
                 })
 
-        // Upgrade to websocket
+        // Upgrade to websocket after currentPatient has been set.
         setDataSocket(new WebSocket(
                 'ws://'
                 + window.location.host
@@ -167,11 +169,13 @@ export default function Dashboard() {
                     layoutToSave['static'] = true; // static is reserved so we can't unpack
                     layoutToSave['patient'] = currentPatient;
                     layoutToSave['provider'] = currentProvider;
-
-                    const layoutId = allUserInfo.patients.filter((obj: { provider: number; patient: number; i: string; })  => {
-                        return obj.provider === currentProvider && obj.patient === currentPatient && obj.i === layout.i
+                        
+                    console.log(layout);
+                    console.log(allUserInfo.patients);
+                    const layoutId = allUserInfo.patients.filter((obj: { provider_id: number; patient_id: number; i_id: string; })  => {
+                        return obj.provider_id === currentProvider && obj.patient_id === currentPatient && obj.i_id === layout.i
                     })[0].id
-                
+
                     axios.put(`/accounts/api/gridlayout/${layoutId}/`, layoutToSave, {
                         headers: {
                             'X-CSRFToken': csrftoken,
@@ -262,40 +266,10 @@ export default function Dashboard() {
                                 >
                                     {gridLayout.map(layoutItem => {
                                         return (
-                                            <div key={layoutItem.i} className="" data-testid="one-graph">
-                                                <Line data={allData[layoutItem.i]} 
-                                                    options={{
-                                                        scales: {
-                                                            x: {
-                                                                type: 'time',
-                                                                time: {
-                                                                    unit: 'second',
-                                                                }
-                                                            }
-                                                        }
-                                                    }}/>
-                                                {layoutItem.i == "ACCEL" ? 
-                                                    <button onClick={() => {
-                                                        let newData: DataPoint = {
-                                                            device: "Fitbit",
-                                                            dataType: layoutItem.i,
-                                                            timestamp: Date.now(),
-                                                            dataValues: [Math.random(), Math.random(), Math.random()],
-                                                        }
-                                                        addData([newData]);
-                                                    }}>Add Data</button>
-                                                :
-                                                    <button onClick={() => {
-                                                        let newData: DataPoint = {
-                                                            device: "Fitbit",
-                                                            dataType: layoutItem.i,
-                                                            timestamp: Date.now(),
-                                                            dataValues: [Math.random()],
-                                                        }
-                                                        addData([newData]);
-                                                    }}>Add Data</button>
-                                                }
-                                            </div>)
+                                            <div key={layoutItem.i}>
+                                                <LineChart layoutItem={layoutItem} allData={allData} addData={addData}/>
+                                            </div>
+                                        )
                                     })}
                             </ResponsiveReactGridLayout>
                         : null}
