@@ -1,7 +1,3 @@
-import warnings
-
-from django.shortcuts import render
-from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 
@@ -10,7 +6,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect, QueryDict
+from django.http import HttpResponseRedirect
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages 
 from django.contrib.auth import logout as auth_logout
@@ -88,29 +84,27 @@ def get_user_info(request, user_id):
     try:
         user_info = serializers.UserSerializer(models.ReHMUser.objects.filter(id=user_id)[0]).data
 
-        device_info = [serializers.DeviceSerializer(obj).data 
-                            for obj in models.Device.objects.filter(user_id=user_id)]
+        patient_info = list(models.GridLayout.objects.filter(provider_id=user_id).values())
 
-        patient_info = [serializers.GridLayoutSerializer(obj).data 
-                            for obj in models.GridLayout.objects.filter(provider_id=user_id)]
+        device_info = list(models.Device.objects.filter(user_id=user_id).values())
 
-        device_types = set([device['deviceType'] for device in device_info])
+        device_types = set([device['deviceType_id'] for device in device_info])
 
+        db_device_types = models.DeviceType.objects.all()
+
+        # Serialize to get the many to many fields
         device_type_info = [serializers.DeviceTypeSerializer(
-                                models.DeviceType.objects.filter(name=device_type)[0]
+                                db_device_types.filter(name=device_type)[0]
                             ).data for device_type in device_types]
 
-        data_types = []
-        for obj in device_type_info:
-            data_types += obj['dataType']
-        data_types = set(data_types)
+        data_types = set([dataType for obj in device_type_info for dataType in obj['dataType']])
 
+        # Serialize to get the many to many fields
+        db_datatypes = models.DataType.objects.filter()
         axes_info = {data_type: serializers.DataTypeSerializer(
-                            models.DataType.objects.filter(name=data_type)[0]).data['axes'] 
+                            db_datatypes.filter(name=data_type)[0]).data['axes'] 
                                 for data_type in data_types}
 
-        # Format the response
-        user_info["devices"] = device_info
         user_info["patients"] = patient_info
         user_info["available_datatypes"] = axes_info
 
