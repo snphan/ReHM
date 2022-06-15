@@ -11,9 +11,6 @@ import "./react-grid-layout-styles.css"
 import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
-
-
-
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
 const csrftoken = document.cookie.match(csrftokenPattern) ? 
@@ -62,8 +59,23 @@ export default function Dashboard() {
     const sidebarWidth: number = 12; // in rem during Desktop
     const sidebarHeight: number = 6; // in rem during Desktop
     const plotColors: Array<string> = ["#ff64bd", "#b887ff", "#8be9fd", "#50fa7b", "#ffb86c"];
-
+    
     const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
+
+    // The Websocket to listen for data coming in to the current patient
+    const [dataSocket, setDataSocket] = useState<WebSocket | null>(null)
+    useEffect(() => {
+        if (dataSocket) {
+            dataSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log(data);
+            }
+
+            dataSocket.onclose = function(e) {
+                // console.error("Data Socket closed unexpectedly");
+            }
+        }
+    }, [dataSocket])
 
     const [showLeft, setShowLeft] = useState<boolean>(false);
     const [showRight, setShowRight] = useState<boolean>(false);
@@ -103,6 +115,16 @@ export default function Dashboard() {
                 .then((res) => {
                     setAllUserInfo(res.data);
                 })
+
+        // Upgrade to websocket
+        setDataSocket(new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/data/'
+                + currentPatient
+                + '/'
+            ));
+
         }
     }, [currentPatient, currentProvider])
 
@@ -191,7 +213,13 @@ export default function Dashboard() {
             dataPoint.dataValues.forEach((value, i) => {
                 // User should only see the data that there is a graph for.
                 if (dataPoint.dataType in newData) {
-                    newData[dataPoint.dataType].datasets[i].data.push({x: dataPoint.timestamp, y: value});
+                    let oneDataPoint = {x: dataPoint.timestamp, y: value}
+                    newData[dataPoint.dataType].datasets[i].data.push(oneDataPoint);
+
+                    // DEBUG WEBSOCKET
+                    if (dataSocket !== null) {
+                        dataSocket.send(JSON.stringify({'message': oneDataPoint}))
+                    }
                 }
             })
         })

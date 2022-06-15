@@ -26,8 +26,6 @@ let mockUserInfo = {
   }
 }
 
-
-
 jest.mock("axios");
 
 beforeEach(async () => {
