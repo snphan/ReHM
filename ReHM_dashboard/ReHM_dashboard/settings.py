@@ -80,7 +80,7 @@ CORS_ORIGIN_WHITELIST = [
 # For security (allow access to admins only)
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-    ]
+    ],
 }
 
 ROOT_URLCONF = "ReHM_dashboard.urls"

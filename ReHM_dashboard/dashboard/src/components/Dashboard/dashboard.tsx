@@ -12,7 +12,13 @@ import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
 
+
+
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
+const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
+const csrftoken = document.cookie.match(csrftokenPattern) ? 
+                    document.cookie.match(csrftokenPattern)[0].replace('csrftoken=', ''): null;
+
 Chart.register(CategoryScale);
 
 interface LayoutObject {
@@ -129,6 +135,35 @@ export default function Dashboard() {
         }
     }, [gridLayout, allUserInfo]);
 
+    
+    // Update configuration after locking
+    const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
+    useEffect(() => {
+        if (saveLayout) {
+            if (allUserInfo.patients) {
+                gridLayout.forEach(layout => {
+                    let layoutToSave: any = (({i, x, y, w, h}) => ({i, x, y, w, h}))(layout)
+                    layoutToSave['static'] = true; // static is reserved so we can't unpack
+                    layoutToSave['patient'] = currentPatient;
+                    layoutToSave['provider'] = currentProvider;
+
+                    const layoutId = allUserInfo.patients.filter((obj: { provider: number; patient: number; i: string; })  => {
+                        return obj.provider === currentProvider && obj.patient === currentPatient && obj.i === layout.i
+                    })[0].id
+                
+                    axios.put(`/accounts/api/gridlayout/${layoutId}/`, layoutToSave, {
+                        headers: {
+                            'X-CSRFToken': csrftoken,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                })
+            }
+        }
+    }, [saveLayout])
+
+
+
     // Helper Functions
 
     /**
@@ -137,9 +172,10 @@ export default function Dashboard() {
      * @returns new layout with static toggled on or off
      */
     const toggleStatic = (layout: Array<LayoutObject>) => {
-        var newLayout = layout.map(l => {
+        let newLayout = layout.map(l => {
             return {...l, static: !l.static}
         })
+        if (newLayout) setSaveLayout(newLayout[0].static);
         return newLayout;
     }
 
