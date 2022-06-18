@@ -73,6 +73,8 @@ class GridLayoutSerializer(serializers.ModelSerializer):
             'id',
             'provider',
             'patient',
+            'deviceType',
+            'show',
             'i',
             'x',
             'y',

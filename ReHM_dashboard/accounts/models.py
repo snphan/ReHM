@@ -72,6 +72,8 @@ class GridLayout(models.Model):
     patient = models.ForeignKey(ReHMUser, 
                                 on_delete=models.CASCADE,
                                 related_name="patient")
+    deviceType = models.ForeignKey(DeviceType, on_delete=models.SET_NULL, null=True)
+    show = models.BooleanField()
     i = models.ForeignKey(DataType, on_delete=models.CASCADE)
     x = models.IntegerField()
     y = models.IntegerField()
