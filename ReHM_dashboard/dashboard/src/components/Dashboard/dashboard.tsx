@@ -262,9 +262,7 @@ export default function Dashboard() {
     return (
         <div className="dashboard-container d-flex justify-content-between">
             <div data-testid="menu" className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
-                <div>
-                    <NavBar items={navBarItems}></NavBar>
-                </div>
+                <NavBar items={navBarItems}></NavBar>
             </div>
             <div data-testid="dashboard-content" className="dashboard-content d-flex flex-fill flex-column" style={
                     isMobile ? 
@@ -278,7 +276,11 @@ export default function Dashboard() {
                 }>
                 <div className="title d-flex align-items-center">
                     <button data-testid="show-menu" className="noformat" onClick={() => setShowLeft(!showLeft)}>
-                        <img className="navbar-toggle-icon" src="/static/dashboard/pictures/menu.svg" alt="" />
+                        {!showLeft ?
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/menu.svg" alt="" />
+                        :
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/close.svg" alt="" />
+                        }
                     </button>
                     <h1 className="title-text">Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
