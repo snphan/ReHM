@@ -11,7 +11,8 @@ import "./react-grid-layout-styles.css"
 import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
-import { LineChart } from "../LineChart/lineChart";
+import { LineChart } from "../LineChart/linechart";
+import { NavBar } from "../NavBar/navbar"
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
@@ -56,11 +57,38 @@ interface DataPoint {
     dataValues: Array<number>   // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
 }
 
+interface NavBarItem {
+    title: string,
+    imgSource: string,
+    link: string
+}
 export default function Dashboard() {
     const isMobile: boolean = window.innerWidth <= 1024;
     const sidebarWidth: number = 12; // in rem during Desktop
     const sidebarHeight: number = 6; // in rem during Desktop
     const plotColors: Array<string> = ["#ff64bd", "#b887ff", "#8be9fd", "#50fa7b", "#ffb86c"];
+    const navBarItems: NavBarItem[] = [
+        {
+            imgSource:"/static/dashboard/pictures/home.svg/",
+            link: "/dashboard/",
+            title: "Home"
+        },
+        {
+            imgSource:"/static/dashboard/pictures/settings.svg/",
+            link: "/dashboard/",
+            title: "Settings"
+        },
+        {
+            imgSource:"/static/dashboard/pictures/profile.svg/",
+            link: "/dashboard/",
+            title: "Profile"
+        },
+        {
+            imgSource:"/static/dashboard/pictures/list.svg/",
+            link: "/dashboard/",
+            title: "Patients"
+        },
+    ]
     
     const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
 
@@ -234,7 +262,9 @@ export default function Dashboard() {
     return (
         <div className="dashboard-container d-flex justify-content-between">
             <div data-testid="menu" className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
-                <div>menu</div>
+                <div>
+                    <NavBar items={navBarItems}></NavBar>
+                </div>
             </div>
             <div data-testid="dashboard-content" className="dashboard-content d-flex flex-fill flex-column" style={
                     isMobile ? 
@@ -246,9 +276,11 @@ export default function Dashboard() {
                                      : showLeft || showRight ? `calc(100vw - ${sidebarWidth}rem`
                                      : "100vw")}
                 }>
-                <div className="title d-flex">
-                    <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
-                    <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
+                <div className="title d-flex align-items-center">
+                    <button data-testid="show-menu" className="noformat" onClick={() => setShowLeft(!showLeft)}>
+                        <img className="navbar-toggle-icon" src="/static/dashboard/pictures/menu.svg" alt="" />
+                    </button>
+                    <h1 className="title-text">Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
                     <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
                     <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(gridLayout))}>Lock/Unlock Dashboard</button>
                 </div>

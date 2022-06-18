@@ -27,7 +27,30 @@ $sideBarHeight: 6rem; // In Mobile
     height: 10%;
 }
 
+.title-text {
+    margin-bottom: 0;
+}
+
+.noformat {
+    background-color: transparent;
+    border: none;
+}
 // SIDEBAR CLASSES
+.navbar-toggle-icon {
+    // position: absolute;
+    // top: 1em;
+    // left: 1em;
+    height: 2rem;
+    width: 2rem;
+    margin-right: 2rem;
+    margin-left: 1rem;
+}
+
+.menu {
+    background-color: #F9F9F9;
+    box-shadow: 1px 1px 20px 1px rgba(0,0,0,0.1);
+}
+
 .sidebar {
     height: $sideBarHeight;
     overflow: hidden;
@@ -49,6 +72,7 @@ div {
 }
 
 
+
 /* Extra big screen devices (1200px and above) */
 @media only screen and (min-width: 1024px) {
     .dashboard-container {
@@ -58,6 +82,7 @@ div {
 
     .sidebar {
         width: $sideBarWidth;
+        height: 100%;
         overflow: hidden;
         transition: all 0.5s ease,
                     opacity 0.25s ease;
@@ -66,6 +91,7 @@ div {
     .hidden {
         width: 0!important;
         opacity: 0;
+        height: 100%!important;
     }
     
 }
