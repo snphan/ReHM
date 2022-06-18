@@ -12,6 +12,7 @@ import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
 import { LineChart } from "../LineChart/linechart";
+import { DevicesBar } from "../DevicesBar/devicesbar";
 import { NavBar } from "../NavBar/navbar"
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
@@ -89,7 +90,39 @@ export default function Dashboard() {
             title: "Patients"
         },
     ]
-    
+    const mockDevices: any = [
+                    {
+                        name: "Fitbit Versa 3",
+                        dataType: [
+                            {
+                                name: "HR",
+                                units: "BPM",
+                                axes: ["none"]
+                            },
+                            {
+                                name: "ACCEL",
+                                units: "g",
+                                axes: ["x", "y", "z"]
+                            }
+                        ]
+                    },
+                    {
+                        name: "Apple Watch 7",
+                        dataType: [
+                            {
+                                name: "HR",
+                                units: "BPM",
+                                axes: ["none"]
+                            },
+                            {
+                                name: "ACCEL",
+                                units: "g",
+                                axes: ["x", "y", "z"]
+                            }
+                        ]
+                    },
+                ]    
+
     const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
 
     // The Websocket to listen for data coming in to the current patient
@@ -310,7 +343,10 @@ export default function Dashboard() {
                 </div>
             </div>
             <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
-                <div>Devices and Search</div>
+
+                <DevicesBar
+                    devices={mockDevices}
+                ></DevicesBar>
             </div>
         </div>
     )
