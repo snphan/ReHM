@@ -289,6 +289,22 @@ export default function Dashboard() {
         }
     }
 
+    const downloadChartData = () => {
+        var data = JSON.stringify(allData, null, 2);
+        const blob = new Blob([data], { type: "octet_stream" });
+        const href = URL.createObjectURL(blob);
+
+        const a = Object.assign(document.createElement('a'), { 
+            href, 
+            style: "display:none", 
+            download: "myData.json" });
+        
+            document.body.appendChild(a);
+            a.click();
+        URL.revokeObjectURL(href)
+        a.remove();
+    }
+
     return (
         <div className="dashboard-container d-flex justify-content-between">
             <div data-testid="menu" className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
@@ -313,7 +329,10 @@ export default function Dashboard() {
                         }
                     </button>
                     <h1 className="title-text m-4">Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
-                    <button data-testid="toggle-dashboard-lock" className="noformat ms-auto me-3" onClick={() => setGridLayout(toggleStatic(gridLayout))}>
+                    <button data-testid="download-btn" className="noformat ms-auto me-3" onClick={() => downloadChartData()}>
+                        <img className="navbar-toggle-icon" src="/static/dashboard/pictures/download.svg" alt="" />
+                    </button>
+                    <button data-testid="toggle-dashboard-lock" className="noformat mx-3" onClick={() => setGridLayout(toggleStatic(gridLayout))}>
                         {gridIsLocked ?
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/locked.svg" alt="" />
                         :
