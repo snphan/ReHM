@@ -22,13 +22,15 @@ const csrftoken = document.cookie.match(csrftokenPattern) ?
 
 Chart.register(CategoryScale);
 
-interface LayoutObject {
+export interface LayoutObject {
     i: string,
     x: number,
     y: number,
     w: number,
     h: number,
     static?: boolean
+    deviceType: string,
+    show: boolean
 }
 
 interface ChartData {
@@ -90,40 +92,16 @@ export default function Dashboard() {
             title: "Patients"
         },
     ]
-    const mockDevices: any = [
-                    {
-                        name: "Fitbit Versa 3",
-                        dataType: [
-                            {
-                                name: "HR",
-                                units: "BPM",
-                                axes: ["none"]
-                            },
-                            {
-                                name: "ACCEL",
-                                units: "g",
-                                axes: ["x", "y", "z"]
-                            }
-                        ]
-                    },
-                    {
-                        name: "Apple Watch 7",
-                        dataType: [
-                            {
-                                name: "HR",
-                                units: "BPM",
-                                axes: ["none"]
-                            },
-                            {
-                                name: "ACCEL",
-                                units: "g",
-                                axes: ["x", "y", "z"]
-                            }
-                        ]
-                    },
-                ]    
 
+    const [showLeft, setShowLeft] = useState<boolean>(false);
+    const [showRight, setShowRight] = useState<boolean>(false);
     const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
+    const [currentProvider, setCurrentProvider] = useState(null)
+    const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
+    const [allData, setAllData] = useState<ChartData | null>({});
+    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [allUserInfo, setAllUserInfo] = useState(null);
+    const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
 
     // The Websocket to listen for data coming in to the current patient
     const [dataSocket, setDataSocket] = useState<WebSocket | null>(null)
@@ -140,11 +118,6 @@ export default function Dashboard() {
         }
     }, [dataSocket])
 
-    const [showLeft, setShowLeft] = useState<boolean>(false);
-    const [showRight, setShowRight] = useState<boolean>(false);
-
-    const [currentProvider, setCurrentProvider] = useState(null)
-    const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
     useEffect(() => {
         setCurrentPatient(parseInt(document.getElementById("patient_id").textContent));        
         setCurrentProvider(parseInt(document.getElementById("user_id").textContent));        
@@ -156,6 +129,7 @@ export default function Dashboard() {
                 .get(`/accounts/api/gridlayout/?provider=${currentProvider}&patient=${currentPatient}`)
                 .then((res) => {
                     let cleanedLayout: LayoutObject[] = [];
+                    // Data for the Grid Layout
                     res.data.forEach((gridLayoutData: any) => {
                         cleanedLayout.push(
                             {
@@ -165,6 +139,8 @@ export default function Dashboard() {
                                 w: gridLayoutData.w,
                                 h: gridLayoutData.h,
                                 static: gridLayoutData.static,
+                                deviceType: gridLayoutData.deviceType,
+                                show: gridLayoutData.show
                             }
                         )
                     })
@@ -191,9 +167,6 @@ export default function Dashboard() {
         }
     }, [currentPatient, currentProvider])
 
-    const [allData, setAllData] = useState<ChartData | null>({});
-    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
-    const [allUserInfo, setAllUserInfo] = useState(null);
     useEffect(() => {
         if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
             // After setting the layout, we need to construct the skeleton for allData State.
@@ -221,13 +194,12 @@ export default function Dashboard() {
 
     
     // Update configuration after locking
-    const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
     useEffect(() => {
         if (saveLayout) {
             if (allUserInfo.patients) {
                 gridLayout.forEach(layout => {
-                    let layoutToSave: any = (({i, x, y, w, h}) => ({i, x, y, w, h}))(layout)
-                    layoutToSave['static'] = true; // static is reserved so we can't unpack
+                    let layoutToSave: any = (({i, x, y, w, h, show, deviceType}) => ({i, x, y, w, h, show, deviceType}))(layout)
+                    layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
                     layoutToSave['patient'] = currentPatient;
                     layoutToSave['provider'] = currentProvider;
                         
@@ -247,8 +219,6 @@ export default function Dashboard() {
             }
         }
     }, [saveLayout])
-
-
 
     // Helper Functions
 
@@ -288,8 +258,29 @@ export default function Dashboard() {
                 }
             })
         })
-
         setAllData(newData);
+    }
+
+    const handleLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
+
+        if (newLayout.length) {
+            let layoutToSet: LayoutObject[] = []
+            newLayout.forEach((layout, index) => {
+                // Relies on the gridlayout indexing to be same as newLayout indexing
+                let layoutObj = {
+                    i: layout.i,
+                    x: layout.x,
+                    y: layout.y,
+                    w: layout.w,
+                    h: layout.h,
+                    static: layout.static,
+                    deviceType: gridLayout[index].deviceType, 
+                    show: gridLayout[index].show
+                }
+                layoutToSet.push(layoutObj);
+            })
+            setGridLayout(layoutToSet);
+        }
     }
 
     return (
@@ -325,9 +316,7 @@ export default function Dashboard() {
                                 className="layout m-4"
                                 layouts={{lg: gridLayout}}
                                 width={width - 56} // TODO: Currently Bandaid patch small screen vs large screen gridcontainer width
-                                onLayoutChange={(newLayout, newLayouts) => { 
-                                    newLayout.length ? setGridLayout(newLayout) : null; 
-                                }}
+                                onLayoutChange={handleLayoutChange}
                                 breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                                 cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                                 >
@@ -344,9 +333,14 @@ export default function Dashboard() {
             </div>
             <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
 
+                {gridLayout.length == 0 ?
+                null
+                : 
                 <DevicesBar
-                    devices={mockDevices}
+                    gridLayout={gridLayout}
+                    setGridLayout={setGridLayout}
                 ></DevicesBar>
+                }
             </div>
         </div>
     )
