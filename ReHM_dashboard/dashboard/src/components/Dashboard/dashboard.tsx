@@ -100,6 +100,7 @@ export default function Dashboard() {
     const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
     const [allData, setAllData] = useState<ChartData | null>({});
     const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [gridIsLocked, setGridIsLocked] = useState<boolean | null>(false);
     const [allUserInfo, setAllUserInfo] = useState(null);
     const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
 
@@ -136,6 +137,8 @@ export default function Dashboard() {
                     // Had an issue with this, it seems like the callback onLayoutChange 
                     // took the initial state and overrides this setState.
                     // Solution: Call callback only if there are items in the layout.
+
+                    cleanedLayout.length > 0 ? setGridIsLocked(cleanedLayout[0].static): null;
                 });
             axios
                 .get(`/accounts/api/user_info/${currentProvider}/`)
@@ -196,7 +199,8 @@ export default function Dashboard() {
         }
     }, [dataSocket])
     
-    // Update configuration after locking
+    // Update configuration after locking, Save layout is separate from gridLayout because we don't want to save
+    // on every gridLayout Update.
     useEffect(() => {
         if (saveLayout) {
             if (allUserInfo.patients) {
@@ -205,9 +209,7 @@ export default function Dashboard() {
                     layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
                     layoutToSave['patient'] = currentPatient;
                     layoutToSave['provider'] = currentProvider;
-                        
-                    console.log(layout);
-                    console.log(allUserInfo.patients);
+
                     const layoutId = allUserInfo.patients.filter((obj: { provider_id: number; patient_id: number; i_id: string; })  => {
                         return obj.provider_id === currentProvider && obj.patient_id === currentPatient && obj.i_id === layout.i
                     })[0].id
@@ -235,6 +237,7 @@ export default function Dashboard() {
             return {...l, static: !l.static}
         })
         if (newLayout) setSaveLayout(newLayout[0].static);
+        if (newLayout) setGridIsLocked(newLayout[0].static);
         return newLayout;
     }
 
@@ -301,17 +304,29 @@ export default function Dashboard() {
                                      : showLeft || showRight ? `calc(100vw - ${sidebarWidth}rem`
                                      : "100vw")}
                 }>
-                <div className="title d-flex align-items-center">
-                    <button data-testid="show-menu" className="noformat" onClick={() => setShowLeft(!showLeft)}>
+                <div className="title d-flex align-items-center mt-3">
+                    <button data-testid="show-menu" className="noformat mx-3" onClick={() => setShowLeft(!showLeft)}>
                         {!showLeft ?
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/menu.svg" alt="" />
                         :
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/close.svg" alt="" />
                         }
                     </button>
-                    <h1 className="title-text">Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
-                    <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
-                    <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(gridLayout))}>Lock/Unlock Dashboard</button>
+                    <h1 className="title-text m-4">Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
+                    <button data-testid="toggle-dashboard-lock" className="noformat ms-auto me-3" onClick={() => setGridLayout(toggleStatic(gridLayout))}>
+                        {gridIsLocked ?
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/locked.svg" alt="" />
+                        :
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/lockopen.svg" alt="" />
+                        }
+                    </button>
+                    <button data-testid="show-devices" className="noformat mx-3" onClick={() => setShowRight(!showRight)}>
+                        {!showRight ?
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/watch.svg" alt="" />
+                        :
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/close.svg" alt="" />
+                        }
+                    </button>
                 </div>
                 <div ref={gridContainerTarget} className="graph-container">
                         {gridLayout.length && Object.keys(allData).length ?
