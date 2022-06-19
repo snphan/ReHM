@@ -103,21 +103,9 @@ export default function Dashboard() {
     const [allUserInfo, setAllUserInfo] = useState(null);
     const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
 
-    // The Websocket to listen for data coming in to the current patient
-    const [dataSocket, setDataSocket] = useState<WebSocket | null>(null)
-    useEffect(() => {
-        if (dataSocket) {
-            dataSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                console.log(data);
-            }
 
-            dataSocket.onclose = function(e) {
-                // console.error("Data Socket closed unexpectedly");
-            }
-        }
-    }, [dataSocket])
-
+    //----------------------------------------------------------------------------------------------------
+    // MARK: Initial Setup
     useEffect(() => {
         setCurrentPatient(parseInt(document.getElementById("patient_id").textContent));        
         setCurrentProvider(parseInt(document.getElementById("user_id").textContent));        
@@ -191,7 +179,22 @@ export default function Dashboard() {
             setAllData(allDataSkeleton);
         }
     }, [gridLayout, allUserInfo]);
+    //---------------------------------------------------------------------------------------------------- 
 
+    // The Websocket to listen for data coming in to the current patient
+    const [dataSocket, setDataSocket] = useState<WebSocket | null>(null)
+    useEffect(() => {
+        if (dataSocket) {
+            dataSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log(data);
+            }
+
+            dataSocket.onclose = function(e) {
+                // console.error("Data Socket closed unexpectedly");
+            }
+        }
+    }, [dataSocket])
     
     // Update configuration after locking
     useEffect(() => {
@@ -322,7 +325,7 @@ export default function Dashboard() {
                                 >
                                     {gridLayout.map(layoutItem => {
                                         return (
-                                            <div key={layoutItem.i}>
+                                            <div key={layoutItem.i} className={layoutItem.show ? "" : "hidden"}>
                                                 <LineChart layoutItem={layoutItem} allData={allData} addData={addData}/>
                                             </div>
                                         )
