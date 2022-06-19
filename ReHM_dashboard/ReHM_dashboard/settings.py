@@ -30,7 +30,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") if os.environ.get("DJANGO_ALLOWED_HOSTS") else []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -80,7 +79,7 @@ CORS_ORIGIN_WHITELIST = [
 # For security (allow access to admins only)
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-    ]
+    ],
 }
 
 ROOT_URLCONF = "ReHM_dashboard.urls"

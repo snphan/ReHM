@@ -11,17 +11,26 @@ import "./react-grid-layout-styles.css"
 import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
+import { LineChart } from "../LineChart/linechart";
+import { DevicesBar } from "../DevicesBar/devicesbar";
+import { NavBar } from "../NavBar/navbar"
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
+const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
+const csrftoken = document.cookie.match(csrftokenPattern) ? 
+                    document.cookie.match(csrftokenPattern)[0].replace('csrftoken=', ''): null;
+
 Chart.register(CategoryScale);
 
-interface LayoutObject {
+export interface LayoutObject {
     i: string,
     x: number,
     y: number,
     w: number,
     h: number,
     static?: boolean
+    deviceType: string,
+    show: boolean
 }
 
 interface ChartData {
@@ -51,19 +60,53 @@ interface DataPoint {
     dataValues: Array<number>   // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
 }
 
+interface NavBarItem {
+    title: string,
+    imgSource: string,
+    link: string
+}
 export default function Dashboard() {
     const isMobile: boolean = window.innerWidth <= 1024;
     const sidebarWidth: number = 12; // in rem during Desktop
     const sidebarHeight: number = 6; // in rem during Desktop
     const plotColors: Array<string> = ["#ff64bd", "#b887ff", "#8be9fd", "#50fa7b", "#ffb86c"];
-
-    const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
+    const navBarItems: NavBarItem[] = [
+        {
+            imgSource:"/static/dashboard/pictures/home.svg/",
+            link: "/dashboard/",
+            title: "Home"
+        },
+        {
+            imgSource:"/static/dashboard/pictures/settings.svg/",
+            link: "/dashboard/",
+            title: "Settings"
+        },
+        {
+            imgSource:"/static/dashboard/pictures/profile.svg/",
+            link: "/dashboard/",
+            title: "Profile"
+        },
+        {
+            imgSource:"/static/dashboard/pictures/list.svg/",
+            link: "/dashboard/",
+            title: "Patients"
+        },
+    ]
 
     const [showLeft, setShowLeft] = useState<boolean>(false);
     const [showRight, setShowRight] = useState<boolean>(false);
-
+    const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
     const [currentProvider, setCurrentProvider] = useState(null)
     const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
+    const [allData, setAllData] = useState<ChartData | null>({});
+    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
+    const [gridIsLocked, setGridIsLocked] = useState<boolean | null>(false);
+    const [allUserInfo, setAllUserInfo] = useState(null);
+    const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
+
+
+    //----------------------------------------------------------------------------------------------------
+    // MARK: Initial Setup
     useEffect(() => {
         setCurrentPatient(parseInt(document.getElementById("patient_id").textContent));        
         setCurrentProvider(parseInt(document.getElementById("user_id").textContent));        
@@ -75,6 +118,7 @@ export default function Dashboard() {
                 .get(`/accounts/api/gridlayout/?provider=${currentProvider}&patient=${currentPatient}`)
                 .then((res) => {
                     let cleanedLayout: LayoutObject[] = [];
+                    // Data for the Grid Layout
                     res.data.forEach((gridLayoutData: any) => {
                         cleanedLayout.push(
                             {
@@ -84,6 +128,8 @@ export default function Dashboard() {
                                 w: gridLayoutData.w,
                                 h: gridLayoutData.h,
                                 static: gridLayoutData.static,
+                                deviceType: gridLayoutData.deviceType,
+                                show: gridLayoutData.show
                             }
                         )
                     })
@@ -91,20 +137,28 @@ export default function Dashboard() {
                     // Had an issue with this, it seems like the callback onLayoutChange 
                     // took the initial state and overrides this setState.
                     // Solution: Call callback only if there are items in the layout.
+
+                    cleanedLayout.length > 0 ? setGridIsLocked(cleanedLayout[0].static): null;
                 });
             axios
                 .get(`/accounts/api/user_info/${currentProvider}/`)
                 .then((res) => {
                     setAllUserInfo(res.data);
                 })
+
+        // Upgrade to websocket after currentPatient has been set.
+        setDataSocket(new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/data/'
+                + currentPatient
+                + '/'
+            ));
+
         }
     }, [currentPatient, currentProvider])
 
-    const [allData, setAllData] = useState<ChartData | null>({});
-    const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
-    const [allUserInfo, setAllUserInfo] = useState(null);
     useEffect(() => {
-
         if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
             // After setting the layout, we need to construct the skeleton for allData State.
             // Available Datatypes contains Axis information for each datatype.
@@ -128,6 +182,48 @@ export default function Dashboard() {
             setAllData(allDataSkeleton);
         }
     }, [gridLayout, allUserInfo]);
+    //---------------------------------------------------------------------------------------------------- 
+
+    // The Websocket to listen for data coming in to the current patient
+    const [dataSocket, setDataSocket] = useState<WebSocket | null>(null)
+    useEffect(() => {
+        if (dataSocket) {
+            dataSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log(data);
+            }
+
+            dataSocket.onclose = function(e) {
+                // console.error("Data Socket closed unexpectedly");
+            }
+        }
+    }, [dataSocket])
+    
+    // Update configuration after locking, Save layout is separate from gridLayout because we don't want to save
+    // on every gridLayout Update.
+    useEffect(() => {
+        if (saveLayout) {
+            if (allUserInfo.patients) {
+                gridLayout.forEach(layout => {
+                    let layoutToSave: any = (({i, x, y, w, h, show, deviceType}) => ({i, x, y, w, h, show, deviceType}))(layout)
+                    layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
+                    layoutToSave['patient'] = currentPatient;
+                    layoutToSave['provider'] = currentProvider;
+
+                    const layoutId = allUserInfo.patients.filter((obj: { provider_id: number; patient_id: number; i_id: string; })  => {
+                        return obj.provider_id === currentProvider && obj.patient_id === currentPatient && obj.i_id === layout.i
+                    })[0].id
+
+                    axios.put(`/accounts/api/gridlayout/${layoutId}/`, layoutToSave, {
+                        headers: {
+                            'X-CSRFToken': csrftoken,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                })
+            }
+        }
+    }, [saveLayout])
 
     // Helper Functions
 
@@ -137,9 +233,11 @@ export default function Dashboard() {
      * @returns new layout with static toggled on or off
      */
     const toggleStatic = (layout: Array<LayoutObject>) => {
-        var newLayout = layout.map(l => {
+        let newLayout = layout.map(l => {
             return {...l, static: !l.static}
         })
+        if (newLayout) setSaveLayout(newLayout[0].static);
+        if (newLayout) setGridIsLocked(newLayout[0].static);
         return newLayout;
     }
 
@@ -156,18 +254,45 @@ export default function Dashboard() {
             dataPoint.dataValues.forEach((value, i) => {
                 // User should only see the data that there is a graph for.
                 if (dataPoint.dataType in newData) {
-                    newData[dataPoint.dataType].datasets[i].data.push({x: dataPoint.timestamp, y: value});
+                    let oneDataPoint = {x: dataPoint.timestamp, y: value}
+                    newData[dataPoint.dataType].datasets[i].data.push(oneDataPoint);
+
+                    // DEBUG WEBSOCKET
+                    if (dataSocket !== null) {
+                        dataSocket.send(JSON.stringify({'message': oneDataPoint}))
+                    }
                 }
             })
         })
-
         setAllData(newData);
+    }
+
+    const handleLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
+
+        if (newLayout.length) {
+            let layoutToSet: LayoutObject[] = []
+            newLayout.forEach((layout, index) => {
+                // Relies on the gridlayout indexing to be same as newLayout indexing
+                let layoutObj = {
+                    i: layout.i,
+                    x: layout.x,
+                    y: layout.y,
+                    w: layout.w,
+                    h: layout.h,
+                    static: layout.static,
+                    deviceType: gridLayout[index].deviceType, 
+                    show: gridLayout[index].show
+                }
+                layoutToSet.push(layoutObj);
+            })
+            setGridLayout(layoutToSet);
+        }
     }
 
     return (
         <div className="dashboard-container d-flex justify-content-between">
             <div data-testid="menu" className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
-                <div>menu</div>
+                <NavBar items={navBarItems}></NavBar>
             </div>
             <div data-testid="dashboard-content" className="dashboard-content d-flex flex-fill flex-column" style={
                     isMobile ? 
@@ -179,65 +304,61 @@ export default function Dashboard() {
                                      : showLeft || showRight ? `calc(100vw - ${sidebarWidth}rem`
                                      : "100vw")}
                 }>
-                <div className="title d-flex">
-                    <h1>Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
-                    <button data-testid="show-menu" onClick={() => setShowLeft(!showLeft)}>Show left</button>
-                    <button data-testid="show-devices" onClick={() => setShowRight(!showRight)}>Show Right</button>
-                    <button data-testid="toggle-dashboard-lock" onClick={() => setGridLayout(toggleStatic(gridLayout))}>Lock/Unlock Dashboard</button>
+                <div className="title d-flex align-items-center mt-3">
+                    <button data-testid="show-menu" className="noformat mx-3" onClick={() => setShowLeft(!showLeft)}>
+                        {!showLeft ?
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/menu.svg" alt="" />
+                        :
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/close.svg" alt="" />
+                        }
+                    </button>
+                    <h1 className="title-text m-4">Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
+                    <button data-testid="toggle-dashboard-lock" className="noformat ms-auto me-3" onClick={() => setGridLayout(toggleStatic(gridLayout))}>
+                        {gridIsLocked ?
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/locked.svg" alt="" />
+                        :
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/lockopen.svg" alt="" />
+                        }
+                    </button>
+                    <button data-testid="show-devices" className="noformat mx-3" onClick={() => setShowRight(!showRight)}>
+                        {!showRight ?
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/watch.svg" alt="" />
+                        :
+                            <img className="navbar-toggle-icon" src="/static/dashboard/pictures/close.svg" alt="" />
+                        }
+                    </button>
                 </div>
                 <div ref={gridContainerTarget} className="graph-container">
-                        <ResponsiveReactGridLayout
-                            className="layout m-4"
-                            layouts={{lg: gridLayout}}
-                            width={width - 56} // TODO: Currently Bandaid patch small screen vs large screen gridcontainer width
-                            onLayoutChange={(newLayout, newLayouts) => { 
-                                newLayout.length ? setGridLayout(newLayout) : null; 
-                            }}
-                            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                            cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-                            >
-                                {gridLayout.length && Object.keys(allData).length ? gridLayout.map(layoutItem => {
-                                    return (
-                                        <div key={layoutItem.i} className="" data-testid="one-graph">
-                                            <Line data={allData[layoutItem.i]} 
-                                                options={{
-                                                    scales: {
-                                                        x: {
-                                                            type: 'time',
-                                                            time: {
-                                                                unit: 'second',
-                                                            }
-                                                        }
-                                                    }
-                                                }}/>
-                                            {layoutItem.i == "ACCEL" ? 
-                                                <button onClick={() => {
-                                                    let newData: DataPoint = {
-                                                        device: "Fitbit",
-                                                        dataType: layoutItem.i,
-                                                        timestamp: Date.now(),
-                                                        dataValues: [Math.random(), Math.random(), Math.random()],
-                                                    }
-                                                    addData([newData]);
-                                                }}>Add Data</button>
-                                            :
-                                                <button onClick={() => {
-                                                    let newData: DataPoint = {
-                                                        device: "Fitbit",
-                                                        dataType: layoutItem.i,
-                                                        timestamp: Date.now(),
-                                                        dataValues: [Math.random()],
-                                                    }
-                                                    addData([newData]);
-                                                }}>Add Data</button>
-                                            }
-                                        </div>)
-                                }) : null}
-                        </ResponsiveReactGridLayout>
+                        {gridLayout.length && Object.keys(allData).length ?
+                            <ResponsiveReactGridLayout
+                                className="layout m-4"
+                                layouts={{lg: gridLayout}}
+                                width={width - 56} // TODO: Currently Bandaid patch small screen vs large screen gridcontainer width
+                                onLayoutChange={handleLayoutChange}
+                                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                                >
+                                    {gridLayout.map(layoutItem => {
+                                        return (
+                                            <div key={layoutItem.i} className={layoutItem.show ? "" : "hidden"}>
+                                                <LineChart layoutItem={layoutItem} allData={allData} addData={addData}/>
+                                            </div>
+                                        )
+                                    })}
+                            </ResponsiveReactGridLayout>
+                        : null}
                 </div>
             </div>
             <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
-                <div>Devices and Search</div>
+
+                {gridLayout.length == 0 ?
+                null
+                : 
+                <DevicesBar
+                    gridLayout={gridLayout}
+                    setGridLayout={setGridLayout}
+                ></DevicesBar>
+                }
             </div>
         </div>
     )
