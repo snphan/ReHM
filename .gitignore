@@ -3,6 +3,7 @@
 db.sqlite3
 ReHM_dashboard/static/*
 !ReHM_dashboard/static/css
+node_modules
 
 
 # Byte-compiled / optimized / DLL files
