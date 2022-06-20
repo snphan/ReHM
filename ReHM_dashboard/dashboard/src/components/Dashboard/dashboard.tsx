@@ -14,6 +14,7 @@ import "./dashboard.scss";
 import { LineChart } from "../LineChart/linechart";
 import { DevicesBar } from "../DevicesBar/devicesbar";
 import { NavBar } from "../NavBar/navbar"
+import { scryRenderedDOMComponentsWithClass } from "react-dom/test-utils";
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
@@ -60,6 +61,15 @@ interface DataPoint {
     dataValues: Array<number>   // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
 }
 
+const isDataPoint = (object: any): object is DataPoint => {
+    return (
+        'device' in object &&
+        'dataType' in object &&
+        'timestamp' in object &&
+        'dataValues' in object
+    )
+} 
+
 interface NavBarItem {
     title: string,
     imgSource: string,
@@ -103,6 +113,7 @@ export default function Dashboard() {
     const [gridIsLocked, setGridIsLocked] = useState<boolean | null>(false);
     const [allUserInfo, setAllUserInfo] = useState(null);
     const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
+    const dataSocket = useRef(null);
 
 
     //----------------------------------------------------------------------------------------------------
@@ -146,15 +157,15 @@ export default function Dashboard() {
                     setAllUserInfo(res.data);
                 })
 
-        // Upgrade to websocket after currentPatient has been set.
-        setDataSocket(new WebSocket(
+            dataSocket.current = new WebSocket(
                 'ws://'
                 + window.location.host
                 + '/ws/data/'
                 + currentPatient
-                + '/'
-            ));
-
+                + '/')
+            dataSocket.current.onclose = function(e: any) {
+                // console.error("Data Socket closed unexpectedly");
+            }
         }
     }, [currentPatient, currentProvider])
 
@@ -182,23 +193,30 @@ export default function Dashboard() {
             setAllData(allDataSkeleton);
         }
     }, [gridLayout, allUserInfo]);
+
+    // We need to Update the DataSocket onmessage function everytime with the new 
+    // allData or else allData will always be initial state of {}.
+    useEffect(() => {
+        if (dataSocket.current) {
+            dataSocket.current.onmessage = handleInsertData;
+        }
+    }, [allData])
     //---------------------------------------------------------------------------------------------------- 
 
-    // The Websocket to listen for data coming in to the current patient
-    const [dataSocket, setDataSocket] = useState<WebSocket | null>(null)
-    useEffect(() => {
-        if (dataSocket) {
-            dataSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                console.log(data);
+    const handleInsertData = (e:any) => {
+                const data: Array<DataPoint> = JSON.parse(e.data)["message"];
+                if (data.length === 0 || !data[0]) {
+                    console.log("No data")
+                    return
+                } 
+
+                if (isDataPoint(data[0])) {
+                    addData(data);
+                } else {
+                    console.log("Not a datapoint");
+                }
             }
 
-            dataSocket.onclose = function(e) {
-                // console.error("Data Socket closed unexpectedly");
-            }
-        }
-    }, [dataSocket])
-    
     // Update configuration after locking, Save layout is separate from gridLayout because we don't want to save
     // on every gridLayout Update.
     useEffect(() => {
@@ -256,11 +274,6 @@ export default function Dashboard() {
                 if (dataPoint.dataType in newData) {
                     let oneDataPoint = {x: dataPoint.timestamp, y: value}
                     newData[dataPoint.dataType].datasets[i].data.push(oneDataPoint);
-
-                    // DEBUG WEBSOCKET
-                    if (dataSocket !== null) {
-                        dataSocket.send(JSON.stringify({'message': oneDataPoint}))
-                    }
                 }
             })
         })
