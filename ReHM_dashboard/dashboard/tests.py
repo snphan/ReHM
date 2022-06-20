@@ -16,6 +16,31 @@ class DashboardViewTests(TestCase):
         self.user.is_superuser = True
         self.user.save()
 
+        self.axes = account_models.Axes.objects.create(name="none")
+        self.axes.save()
+
+        self.datatype = account_models.DataType.objects.create(name="HR", 
+                                                                units="BPM")
+        self.datatype.save()
+        self.datatype.axes.add(self.axes)
+
+        self.devicetype = account_models.DeviceType.objects.create(name="Apple Watch")
+        self.devicetype.save()
+        self.devicetype.dataType.add(self.datatype)
+
+        self.gridlayout = account_models.GridLayout.objects.create(
+                        provider=self.user, 
+                        patient=self.user,
+                        deviceType=self.devicetype,
+                        show=True,
+                        i=self.datatype,
+                        x=0,
+                        y=0,
+                        w=3,
+                        h=3,
+                        static=True)
+        self.gridlayout.save()
+
         response = self.client.post(reverse_lazy("accounts:login"), {
             'username': email,
             'password': password,
