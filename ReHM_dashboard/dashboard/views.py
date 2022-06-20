@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts import models as account_models
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.shortcuts import redirect
 
 import json
 import channels
@@ -12,6 +13,14 @@ from asgiref.sync import async_to_sync
 # Create your views here.
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard/dashboard.html"
+    def dispatch(self, request, *args, **kwargs):
+        patients = account_models.GridLayout.objects.filter(provider=request.user.id).values()
+        patient_ids = set([patient['patient_id'] for patient in patients])
+        if kwargs['patient_id'] not in patient_ids:
+            return redirect("dashboard:index")
+
+
+        return super(DashboardView, self).dispatch(request, *args, **kwargs)
 
 class GotoDashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard/index.html"
@@ -19,7 +28,6 @@ class GotoDashboardView(LoginRequiredMixin, TemplateView):
     # Override the dashboard view
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        all_users = account_models.ReHMUser.objects.all()
         patients = account_models.GridLayout.objects.filter(provider=request.user.id).values()
         patient_ids = set([patient['patient_id'] for patient in patients])
         
