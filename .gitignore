@@ -5,6 +5,8 @@ ReHM_dashboard/static/*
 !ReHM_dashboard/static/css
 BROKER_cloud/static/*
 !BROKER_cloud/static/css
+node_modules
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
