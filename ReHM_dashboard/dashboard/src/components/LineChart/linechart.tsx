@@ -32,26 +32,5 @@ export function LineChart(props: LineChartProps) {
                         }
                     }
                 }}/>
-            {props.layoutItem.i == "ACCEL" ? 
-                <button onClick={() => {
-                    let newData: DataPoint = {
-                        device: "Fitbit",
-                        dataType: props.layoutItem.i,
-                        timestamp: Date.now(),
-                        dataValues: [Math.random(), Math.random(), Math.random()],
-                    }
-                    props.addData([newData]);
-                }}>Add Data</button>
-            :
-                <button onClick={() => {
-                    let newData: DataPoint = {
-                        device: "Fitbit",
-                        dataType: props.layoutItem.i,
-                        timestamp: Date.now(),
-                        dataValues: [Math.random()],
-                    }
-                    props.addData([newData]);
-                }}>Add Data</button>
-            }
         </div>)
 }
