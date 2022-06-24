@@ -17,7 +17,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 
 import dashboard.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ReHM_dashboard.settings')
 django.setup()
 
 application = ProtocolTypeRouter({
