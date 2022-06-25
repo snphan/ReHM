@@ -61,7 +61,6 @@ html = """
 async def add_data(data: Data):
     conn = await get_redis_pool()
     await conn.publish("chat:c", data.json())
-
     return {"message": "data added successfully!"}
 
 @app.get("/")
@@ -76,6 +75,7 @@ async def get(room_name: str):
 @app.websocket("/ws/{room_name}")
 async def websocket_endpoint(websocket: WebSocket, room_name):
     await websocket.accept()
+    await websocket.send_json({"msg": "Connected"})
     await redis_connector(websocket)
 
 async def redis_connector(websocket: WebSocket):
@@ -103,10 +103,10 @@ async def redis_connector(websocket: WebSocket):
     conn = await get_redis_pool()
     pubsub = conn.pubsub()
 
-    consumer_task = consumer_handler(conn=conn, ws=websocket)
-    producer_task = producer_handler(pubsub=pubsub, ws=websocket)
+    consumer_task = asyncio.create_task(consumer_handler(conn=conn, ws=websocket))
+    producer_task = asyncio.create_task(producer_handler(pubsub=pubsub, ws=websocket))
     done, pending = await asyncio.wait(
-        [consumer_task, producer_task], return_when=asyncio.FIRST_COMPLETED,
+        {consumer_task, producer_task}, return_when=asyncio.FIRST_COMPLETED,
     )
     logger.debug(f"Done task: {done}")
     for task in pending:

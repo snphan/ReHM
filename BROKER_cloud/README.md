@@ -7,6 +7,8 @@ After installing the dependencies, run the following command in the current dire
 
     uvicorn main:app --reload --host localhost --port 8000
 
+Also setup a "REDIS_URL" in the environment variable to "redis://localhost:6379"
+
 # Running on Heroku
 
 Login to heroku and create a new app
