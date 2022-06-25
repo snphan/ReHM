@@ -2,6 +2,19 @@
 
 A lightweight API to route data from remote sensors, external to the local network, to the internal network. The API exposes an "add_data" endpoint for devices to POST data to. The internal server will connect to this "BROKER" through a WebSocket. Any POSTed data will be received by the internal server and processed accordingly.
 
+Post to:
+
+    /data/add_data
+
+The data should have the format:
+
+| Field | Type |
+|-|-|
+|device_serial | string|
+| timestamp | int |
+| data_type | string |
+| val | float|
+
 # Running the API in DEV
 After installing the dependencies, run the following command in the current directory (runs the "app" in main.py).
 
