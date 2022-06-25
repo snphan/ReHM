@@ -14,8 +14,8 @@ import asyncio
 class Data(BaseModel):
     device_serial: str
     timestamp: int
-    data_type: str
-    val: float
+    dataType: str
+    dataValues: list[float]
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ html = """
 </html>
 """
 
-# curl -d "{\"device_serial\": \"Apple Watch\",\"data_type\": \"HR\", \"timestamp\": 16660999878, \"val\": 120}" -H "Content-Type: application/json" -X POST http://localhost:8000/data/add_data
+# curl -d "{\"device_serial\": \"Apple Watch\",\"dataType\": \"HR\", \"timestamp\": 16660999878, \"dataValues\": [120]}" -H "Content-Type: application/json" -X POST http://localhost:8000/data/add_data
 @app.post("/data/add_data")
 async def add_data(data: Data):
     conn = await get_redis_pool()
