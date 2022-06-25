@@ -6,6 +6,9 @@ import * as document from "document";
 import { Gyroscope } from "gyroscope";
 import { HeartRateSensor } from "heart-rate";
 import { OrientationSensor } from "orientation";
+import { me } from "appbit";
+
+me.appTimeoutEnable = false;
 
 const accelLabel = document.getElementById("accel-label");
 const accelData = document.getElementById("accel-data");
