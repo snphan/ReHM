@@ -108,5 +108,7 @@ jobs:
       
       - name: Test BROKER CLOUD
         working-directory: ./BROKER_cloud
+        env: 
+          REDIS_URL: "redis://localhost:6379"
         run: |
           pytest tests.py
