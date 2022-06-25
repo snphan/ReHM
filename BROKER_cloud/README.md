@@ -12,8 +12,8 @@ The data should have the format:
 |-|-|
 |device_serial | string|
 | timestamp | int |
-| data_type | string |
-| val | float|
+| dataType | string |
+| dataValues | float[] |
 
 # Running the API in DEV
 After installing the dependencies, run the following command in the current directory (runs the "app" in main.py).
