@@ -15,6 +15,27 @@ The data should have the format:
 | dataType | string |
 | dataValues | float[] |
 
+This data should be placed in an object with a "data" field, and contained as a list. An example data structure is as follows:
+
+```json
+{
+  data: [
+    {
+      device_serial: "APPLE712345",
+      timestamp: 1600000789,
+      dataType: "HR",
+      dataValues: [120]
+    },
+    {
+      device_serial: "APPLE712345",
+      timestamp: 1600000790,
+      dataType: "HR",
+      dataValues: [121]
+    }
+  ]
+}
+```
+
 # Running the API in DEV
 After installing the dependencies, run the following command in the current directory (runs the "app" in main.py).
 
