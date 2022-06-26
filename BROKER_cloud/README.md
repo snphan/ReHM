@@ -17,7 +17,7 @@ The data should have the format:
 
 This data should be placed in an object with a "data" field, and contained as a list. An example data structure is as follows:
 
-```json
+```javascript
 {
   data: [
     {
