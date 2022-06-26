@@ -17,6 +17,9 @@ class Data(BaseModel):
     dataType: str
     dataValues: list[float]
 
+class DataPacket(BaseModel):
+    data: list[Data]
+
 app = FastAPI()
 logger = logging.getLogger(__name__)
 
@@ -56,11 +59,11 @@ html = """
 </html>
 """
 
-# curl -d "{\"device_serial\": \"Apple Watch\",\"dataType\": \"HR\", \"timestamp\": 16660999878, \"dataValues\": [120]}" -H "Content-Type: application/json" -X POST http://localhost:8000/data/add_data
+# curl -d "{\"data\" : [{\"device_serial\": \"Apple Watch\",\"dataType\": \"HR\", \"timestamp\": 16660999878, \"dataValues\": [120]}]}" -H "Content-Type: application/json" -X POST http://localhost:8000/data/add_data
 @app.post("/data/add_data")
-async def add_data(data: Data):
+async def add_data(datapacket: DataPacket):
     conn = await get_redis_pool()
-    await conn.publish("chat:c", data.json())
+    await conn.publish("chat:c", datapacket.json())
     return {"message": "data added successfully!"}
 
 @app.get("/")
