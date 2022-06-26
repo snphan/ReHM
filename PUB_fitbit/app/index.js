@@ -6,9 +6,23 @@ import * as document from "document";
 import { Gyroscope } from "gyroscope";
 import { HeartRateSensor } from "heart-rate";
 import { OrientationSensor } from "orientation";
+import { peerSocket } from "messaging";
 import { me } from "appbit";
 
-me.appTimeoutEnable = false;
+me.appTimeoutEnabled = false;
+
+function sendMessage(data_type, val) {
+  const data = {
+    device_serial: "12345",
+    timestamp: Date.now(),
+    dataType: data_type,
+    dataValues: val
+  };
+
+  if (peerSocket.readyState === peerSocket.OPEN) {
+    peerSocket.send(data);
+  }
+}
 
 const accelLabel = document.getElementById("accel-label");
 const accelData = document.getElementById("accel-data");
@@ -31,13 +45,18 @@ const orientationData = document.getElementById("orientation-data");
 const sensors = [];
 
 if (Accelerometer) {
-  const accel = new Accelerometer({ frequency: 1 });
+  const accel = new Accelerometer({ frequency: 3 });
   accel.addEventListener("reading", () => {
     accelData.text = JSON.stringify({
       x: accel.x ? accel.x.toFixed(1) : 0,
       y: accel.y ? accel.y.toFixed(1) : 0,
       z: accel.z ? accel.z.toFixed(1) : 0
     });
+    sendMessage("ACCEL", [
+      accel.x ? parseFloat(accel.x.toFixed(1)) : 0,
+      accel.y ? parseFloat(accel.y.toFixed(1)) : 0,
+      accel.z ? parseFloat(accel.z.toFixed(1)) : 0,
+    ]);
   });
   sensors.push(accel);
   accel.start();
@@ -96,6 +115,7 @@ if (HeartRateSensor) {
     hrmData.text = JSON.stringify({
       heartRate: hrm.heartRate ? hrm.heartRate : 0
     });
+    sendMessage("HR", [hrm.heartRate ? hrm.heartRate : 0]);
   });
   sensors.push(hrm);
   hrm.start();
@@ -120,5 +140,5 @@ if (OrientationSensor) {
 
 display.addEventListener("change", () => {
   // Automatically stop all sensors when the screen is off to conserve battery
-  display.on ? sensors.map(sensor => sensor.start()) : sensors.map(sensor => sensor.stop());
+  // display.on ? sensors.map(sensor => sensor.start()) : sensors.map(sensor => sensor.stop());
 });
