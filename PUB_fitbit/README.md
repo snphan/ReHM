@@ -8,7 +8,7 @@ Install the necessary node modules
 
     npm install
 
-After you create the Cloud Heroku app, you need to point to it in a .env file. Create a .env file in this project and name it accordingly:
+After you create the Cloud Heroku app, you need to point to it in a env.js file. Create a env.js file in this project and name it accordingly:
 
 **/PUB_fitbit/env.js**
 
