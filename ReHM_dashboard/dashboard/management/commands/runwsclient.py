@@ -4,6 +4,10 @@ import websockets
 import os
 
 
+# Test sending data
+"""
+curl -d "{\"data\": [{\"device_serial\": \"Fitbit12334\", \"timestamp\": 1656356068080, \"dataType\": \"HR\", \"dataValues\": [65.0]}]}" -H "Content-Type: application/json" -X POST https://localhost:8000/data/add_data
+"""
 async def client(uri):
     async for websocket in websockets.connect(uri):
         print("Connected to websocket server")

@@ -64,6 +64,8 @@ interface DataPoint {
 | MONGO_DB_USER | "username" |
 | MONGO_DB_PWD | "password" |
 | MONGO_DB_ADDRESS | "127.0.0.1:27017" |
+| REHM_CLOUD_HOST | "iceland-walrus-552423.herokuapp.com" |
+| REDIS_URL | "redis://localhost:6379" |
 
 
 2. After Migrating the Database, upgrade the accounts_sensordata to a timeseries collection with metaField: "data_id"
