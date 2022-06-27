@@ -31,6 +31,11 @@ const orientationData = document.getElementById("orientation-data");
 
 const sensors = [];
 
+let accelDataHandler = undefined;
+let hrDataHandler = undefined;
+
+
+
 /**
  * Data handler class to collect data and send the data to the companion app.
  */
@@ -40,6 +45,10 @@ class DataHandler {
     this.frequency = frequency;
     this.dataType = dataType
     this.serial = serial
+  }
+
+  setSerial(newSerial) {
+    this.serial = newSerial;
   }
 
   addData(val) {
@@ -69,9 +78,25 @@ class DataHandler {
 
 }
 
+/**
+ * Set the serial of the device based on the settings
+ * @param {*} evt Message from the companion
+ */
+peerSocket.onmessage = (evt) => {
+  if (evt.data.key === "serial") {
+    let newSerial = JSON.parse(evt.data.newValue)["name"];
+    if (accelDataHandler) {
+      accelDataHandler.setSerial(newSerial);
+    }
+    if (hrDataHandler) {
+      hrDataHandler.setSerial(newSerial);
+    }
+  }
+}
+
 if (Accelerometer) {
   const accel = new Accelerometer({ frequency: 3 });
-  const accelDataHandler = new DataHandler(accel.frequency, "ACCEL")
+  accelDataHandler = new DataHandler(accel.frequency, "ACCEL")
   accel.addEventListener("reading", () => {
     accelData.text = JSON.stringify({
       x: accel.x ? accel.x.toFixed(1) : 0,
@@ -138,7 +163,7 @@ if (Gyroscope) {
 
 if (HeartRateSensor) {
   const hrm = new HeartRateSensor({ frequency: 1 });
-  const hrDataHandler = new DataHandler(hrm.frequency, "HR")
+  hrDataHandler = new DataHandler(hrm.frequency, "HR")
   hrm.addEventListener("reading", () => {
     hrmData.text = JSON.stringify({
       heartRate: hrm.heartRate ? hrm.heartRate : 0
