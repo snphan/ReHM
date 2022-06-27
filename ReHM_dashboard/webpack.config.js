@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   entry: {
     // Add src code here. This is just a test app. As we make more apps, add them here.
-    'ReHM_dashboard/dashboard/static/dashboard/js/Dashboard': './ReHM_dashboard/dashboard/src/main.tsx'
+    '/dashboard/static/dashboard/js/Dashboard': './dashboard/src/main.tsx'
   },
   output: {
     filename: '[name]-bundle.js',
