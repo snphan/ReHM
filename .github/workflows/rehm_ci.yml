@@ -67,12 +67,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        working-directory: ./ReHM_dashboard
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm test
+
+      - name: Setup ci
+        working-directory: ./ReHM_dashboard
+        run: npm ci
+
+      - name: Run Dashboard React Test Suite
+        working-directory: ./ReHM_dashboard
+        run: npm test
       
   test_cloud_broker:
       # The type of runner that the job will run on
@@ -114,3 +119,4 @@ jobs:
           REDIS_URL: "redis://localhost:6379"
         run: |
           pytest tests.py
+
