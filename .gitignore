@@ -3,6 +3,10 @@
 db.sqlite3
 ReHM_dashboard/static/*
 !ReHM_dashboard/static/css
+BROKER_cloud/static/*
+!BROKER_cloud/static/css
+env.js
+node_modules
 
 
 # Byte-compiled / optimized / DLL files
