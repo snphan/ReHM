@@ -18,8 +18,7 @@ import { scryRenderedDOMComponentsWithClass } from "react-dom/test-utils";
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
-const csrftoken = document.cookie.match(csrftokenPattern) ? 
-                    document.cookie.match(csrftokenPattern)[0].replace('csrftoken=', ''): null;
+const csrftoken = document.cookie.match(csrftokenPattern)?.at(0)?.replace('csrftoken=', ''); // use .at(ind) for optional chaining
 
 Chart.register(CategoryScale);
 
@@ -75,6 +74,11 @@ interface NavBarItem {
     imgSource: string,
     link: string
 }
+
+interface AvailableDatatypes {
+    [key: string] : Array<string>
+}
+
 export default function Dashboard() {
     const isMobile: boolean = window.innerWidth <= 1024;
     const sidebarWidth: number = 12; // in rem during Desktop
@@ -82,22 +86,22 @@ export default function Dashboard() {
     const plotColors: Array<string> = ["#ff64bd", "#b887ff", "#8be9fd", "#50fa7b", "#ffb86c"];
     const navBarItems: NavBarItem[] = [
         {
-            imgSource:"/static/dashboard/pictures/home.svg/",
+            imgSource:"/static/dashboard/pictures/home.svg",
             link: "/dashboard/",
             title: "Home"
         },
         {
-            imgSource:"/static/dashboard/pictures/settings.svg/",
+            imgSource:"/static/dashboard/pictures/settings.svg",
             link: "/dashboard/",
             title: "Settings"
         },
         {
-            imgSource:"/static/dashboard/pictures/profile.svg/",
+            imgSource:"/static/dashboard/pictures/profile.svg",
             link: "/dashboard/",
             title: "Profile"
         },
         {
-            imgSource:"/static/dashboard/pictures/list.svg/",
+            imgSource:"/static/dashboard/pictures/list.svg",
             link: "/dashboard/",
             title: "Patients"
         },
@@ -105,22 +109,22 @@ export default function Dashboard() {
 
     const [showLeft, setShowLeft] = useState<boolean>(false);
     const [showRight, setShowRight] = useState<boolean>(false);
-    const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure();
-    const [currentProvider, setCurrentProvider] = useState(null)
-    const [currentPatient, setCurrentPatient] = useState<number>(null); // Patient selection may be lumped into SPA
-    const [allData, setAllData] = useState<ChartData | null>({});
+    const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure<HTMLDivElement>();
+    const [currentProvider, setCurrentProvider] = useState<number | null>(null)
+    const [currentPatient, setCurrentPatient] = useState<number | null>(null); // Patient selection may be lumped into SPA
+    const [allData, setAllData] = useState<ChartData | Object>({});
     const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
     const [gridIsLocked, setGridIsLocked] = useState<boolean | null>(false);
-    const [allUserInfo, setAllUserInfo] = useState(null);
+    const [allUserInfo, setAllUserInfo] = useState<any | null>(null);
     const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
-    const dataSocket = useRef(null);
+    const dataSocket = useRef<WebSocket | null>(null);
 
 
     //----------------------------------------------------------------------------------------------------
     // MARK: Initial Setup
     useEffect(() => {
-        setCurrentPatient(parseInt(document.getElementById("patient_id").textContent));        
-        setCurrentProvider(parseInt(document.getElementById("user_id").textContent));        
+        setCurrentPatient(parseInt(document.getElementById("patient_id")?.textContent!));        
+        setCurrentProvider(parseInt(document.getElementById("user_id")?.textContent!));        
     }, [])
     useEffect(() => {
         // Get the layout information from the provider_id, and patient_id query.
@@ -149,7 +153,7 @@ export default function Dashboard() {
                     // took the initial state and overrides this setState.
                     // Solution: Call callback only if there are items in the layout.
 
-                    cleanedLayout.length > 0 ? setGridIsLocked(cleanedLayout[0].static): null;
+                    setGridIsLocked(cleanedLayout[0]?.static!);
                 });
             axios
                 .get(`/accounts/api/user_info/${currentProvider}/`)
@@ -173,14 +177,14 @@ export default function Dashboard() {
         if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
             // After setting the layout, we need to construct the skeleton for allData State.
             // Available Datatypes contains Axis information for each datatype.
-            const  { available_datatypes } = allUserInfo
+            const { available_datatypes }: {available_datatypes: AvailableDatatypes} = allUserInfo
             let allDataSkeleton: ChartData = {};
             gridLayout.forEach((layoutItem) => {
                 let currentDataType = layoutItem.i;
                 allDataSkeleton[currentDataType] = {datasets: []}
                 available_datatypes[currentDataType].forEach((axis: String, ind: number) => {
 
-                    allDataSkeleton[currentDataType]["datasets"].push(
+                    allDataSkeleton[currentDataType]["datasets"]!.push(
                         {
                             label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()),
                             borderColor: plotColors[ind],
@@ -222,7 +226,7 @@ export default function Dashboard() {
     useEffect(() => {
         if (saveLayout) {
             if (allUserInfo.patients) {
-                gridLayout.forEach(layout => {
+                gridLayout!.forEach(layout => {
                     let layoutToSave: any = (({i, x, y, w, h, show, deviceType}) => ({i, x, y, w, h, show, deviceType}))(layout)
                     layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
                     layoutToSave['patient'] = currentPatient;
@@ -234,7 +238,7 @@ export default function Dashboard() {
 
                     axios.put(`/accounts/api/gridlayout/${layoutId}/`, layoutToSave, {
                         headers: {
-                            'X-CSRFToken': csrftoken,
+                            'X-CSRFToken': csrftoken!,
                             'Content-Type': 'application/json'
                         }
                     });
@@ -293,8 +297,8 @@ export default function Dashboard() {
                     w: layout.w,
                     h: layout.h,
                     static: layout.static,
-                    deviceType: gridLayout[index].deviceType, 
-                    show: gridLayout[index].show
+                    deviceType: gridLayout![index].deviceType, 
+                    show: gridLayout![index].show
                 }
                 layoutToSet.push(layoutObj);
             })
@@ -341,11 +345,11 @@ export default function Dashboard() {
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/close.svg" alt="" />
                         }
                     </button>
-                    <h1 className="title-text m-4">Patient | {JSON.parse(document.getElementById("patient_id").textContent)}</h1>
+                    <h1 className="title-text m-4">Patient | {JSON.parse(document.getElementById("patient_id")?.textContent!)}</h1>
                     <button data-testid="download-btn" className="noformat ms-auto me-3" onClick={() => downloadChartData()}>
                         <img className="navbar-toggle-icon" src="/static/dashboard/pictures/download.svg" alt="" />
                     </button>
-                    <button data-testid="toggle-dashboard-lock" className="noformat mx-3" onClick={() => setGridLayout(toggleStatic(gridLayout))}>
+                    <button data-testid="toggle-dashboard-lock" className="noformat mx-3" onClick={() => setGridLayout(toggleStatic(gridLayout!))}>
                         {gridIsLocked ?
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/locked.svg" alt="" />
                         :
@@ -361,16 +365,16 @@ export default function Dashboard() {
                     </button>
                 </div>
                 <div ref={gridContainerTarget} className="graph-container">
-                        {gridLayout.length && Object.keys(allData).length ?
+                        {gridLayout!.length && Object.keys(allData).length ?
                             <ResponsiveReactGridLayout
                                 className="layout m-4"
-                                layouts={{lg: gridLayout}}
+                                layouts={{lg: gridLayout!}}
                                 width={width - 56} // TODO: Currently Bandaid patch small screen vs large screen gridcontainer width
                                 onLayoutChange={handleLayoutChange}
                                 breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                                 cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                                 >
-                                    {gridLayout.map(layoutItem => {
+                                    {gridLayout!.map(layoutItem => {
                                         return (
                                             <div key={layoutItem.i} className={layoutItem.show ? "" : "hidden"}>
                                                 <LineChart layoutItem={layoutItem} allData={allData} addData={addData}/>
@@ -383,7 +387,7 @@ export default function Dashboard() {
             </div>
             <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
 
-                {gridLayout.length == 0 ?
+                {gridLayout!.length == 0 ?
                 null
                 : 
                 <DevicesBar

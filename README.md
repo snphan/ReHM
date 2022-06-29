@@ -64,14 +64,20 @@ interface DataPoint {
 | MONGO_DB_USER | "username" |
 | MONGO_DB_PWD | "password" |
 | MONGO_DB_ADDRESS | "127.0.0.1:27017" |
+| REHM_CLOUD_HOST | "iceland-walrus-552423.herokuapp.com" |
+| REDIS_URL | "redis://localhost:6379" |
 
+1. Create a Redis (https://collabnix.com/how-to-setup-and-run-redis-in-a-docker-container/) and MongoDB container in Docker (https://medium.com/@anuradhs/how-to-start-a-mongo-database-with-authentication-using-docker-container-8ce63da47a71). 
 
-2. After Migrating the Database, upgrade the accounts_sensordata to a timeseries collection with metaField: "data_id"
+1. Migrate the database and create a superuser with
 
         python manage.py makemigrations
         python manage.py migrate
         python manage.py createsuperuser
-        
+
+1. After Migrating the Database, upgrade the accounts_sensordata to a timeseries collection with metaField: "data_id"
+
+
         docker exect -it mongodb bash
         mongosh -u [username] -p
         
@@ -81,4 +87,19 @@ interface DataPoint {
         db.accounts_sensordata.drop()
         db.createCollection("accounts_sensordata", {timeseries: {timeField: "timestamp", metaField: "data_id"})
 
+1. Run the data ingestion script, replace <YOUR_HOST> with the host and port you will post incoming data to.
 
+        python manage.py run_data_ingest http://<YOUR_HOST>
+
+1. Run the server with Daphne. Example:
+
+        daphne -b 0.0.0.0 -p 8001 django_project.asgi:application
+
+# Debugging
+
+## Curls
+Some data flow debugging curls. Replace <> with your version of the required parameter. 
+
+### Send data to the Cloud Broker
+
+    curl -d "{\"data\": [{\"device_serial\": \"Fitbit12334\", \"timestamp\": 1656356068080, \"dataType\": \"HR\", \"dataValues\": [65.0]}]}" -H "Content-Type: application/json" -X POST https://<HOST_ADDRESS>/data/add_data

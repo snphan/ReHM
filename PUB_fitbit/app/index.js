@@ -11,19 +11,6 @@ import { me } from "appbit";
 
 me.appTimeoutEnabled = false;
 
-function sendMessage(data_type, val) {
-  const data = {
-    device_serial: "12345",
-    timestamp: Date.now(),
-    dataType: data_type,
-    dataValues: val
-  };
-
-  if (peerSocket.readyState === peerSocket.OPEN) {
-    peerSocket.send(data);
-  }
-}
-
 const accelLabel = document.getElementById("accel-label");
 const accelData = document.getElementById("accel-data");
 
@@ -44,19 +31,84 @@ const orientationData = document.getElementById("orientation-data");
 
 const sensors = [];
 
+let accelDataHandler = undefined;
+let hrDataHandler = undefined;
+
+
+
+/**
+ * Data handler class to collect data and send the data to the companion app.
+ */
+class DataHandler {
+  constructor(frequency, dataType, serial = "12345") {
+    this.dataQueue = [];
+    this.frequency = frequency;
+    this.dataType = dataType
+    this.serial = serial
+  }
+
+  setSerial(newSerial) {
+    this.serial = newSerial;
+  }
+
+  addData(val) {
+    const data = {
+      device_serial: this.serial,
+      timestamp: Date.now(),
+      dataType: this.dataType,
+      dataValues: val
+    };
+    this.dataQueue.push(data)
+    // Send data to companion every second
+    if (this.dataQueue.length >= this.frequency) {
+      this.sendMessage();
+      this.dataQueue = []
+    }
+  }
+
+  sendMessage() {
+    const datapacket = {
+      data: this.dataQueue
+    };
+
+    if (peerSocket.readyState === peerSocket.OPEN) {
+      peerSocket.send(datapacket);
+    }
+  }
+
+}
+
+/**
+ * Set the serial of the device based on the settings
+ * @param {*} evt Message from the companion
+ */
+peerSocket.onmessage = (evt) => {
+  if (evt.data.key === "serial") {
+    let newSerial = JSON.parse(evt.data.newValue)["name"];
+    if (accelDataHandler) {
+      accelDataHandler.setSerial(newSerial);
+    }
+    if (hrDataHandler) {
+      hrDataHandler.setSerial(newSerial);
+    }
+  }
+}
+
 if (Accelerometer) {
   const accel = new Accelerometer({ frequency: 3 });
+  accelDataHandler = new DataHandler(accel.frequency, "ACCEL")
   accel.addEventListener("reading", () => {
     accelData.text = JSON.stringify({
       x: accel.x ? accel.x.toFixed(1) : 0,
       y: accel.y ? accel.y.toFixed(1) : 0,
       z: accel.z ? accel.z.toFixed(1) : 0
     });
-    sendMessage("ACCEL", [
+    let data = [
       accel.x ? parseFloat(accel.x.toFixed(1)) : 0,
       accel.y ? parseFloat(accel.y.toFixed(1)) : 0,
       accel.z ? parseFloat(accel.z.toFixed(1)) : 0,
-    ]);
+    ];
+    accelDataHandler.addData(data)
   });
   sensors.push(accel);
   accel.start();
@@ -111,11 +163,13 @@ if (Gyroscope) {
 
 if (HeartRateSensor) {
   const hrm = new HeartRateSensor({ frequency: 1 });
+  hrDataHandler = new DataHandler(hrm.frequency, "HR")
   hrm.addEventListener("reading", () => {
     hrmData.text = JSON.stringify({
       heartRate: hrm.heartRate ? hrm.heartRate : 0
     });
-    sendMessage("HR", [hrm.heartRate ? hrm.heartRate : 0]);
+    let data = [hrm.heartRate ? hrm.heartRate : 0];
+    hrDataHandler.addData(data);
   });
   sensors.push(hrm);
   hrm.start();
