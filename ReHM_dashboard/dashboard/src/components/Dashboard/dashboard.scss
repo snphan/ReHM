@@ -1,5 +1,6 @@
 $sideBarWidth: 12rem; // In Desktop
 $sideBarHeight: 6rem; // In Mobile
+$titleHeight: 5rem;
 
 #root {
     height: 100vh;
@@ -24,7 +25,7 @@ $sideBarHeight: 6rem; // In Mobile
 }
 
 .title {
-    height: 10%;
+    height: $titleHeight;
 }
 
 .title-text {
@@ -37,11 +38,16 @@ $sideBarHeight: 6rem; // In Mobile
 }
 // SIDEBAR CLASSES
 .navbar-toggle-icon {
-    // position: absolute;
-    // top: 1em;
-    // left: 1em;
     height: 2rem;
     width: 2rem;
+}
+
+.navbar {
+    margin-top: $titleHeight;
+}
+
+.devices-bar {
+    margin-top: $titleHeight + 1rem;
 }
 
 .menu {
@@ -49,7 +55,15 @@ $sideBarHeight: 6rem; // In Mobile
     box-shadow: 1px 1px 20px 1px rgba(0,0,0,0.1);
 }
 
+.devices {
+    right:0;
+    background-color: #F9F9F9;
+    box-shadow: 1px 1px 20px 1px rgba(0,0,0,0.1);
+}
+
 .sidebar {
+    position: absolute;
+    z-index: 100;
     height: $sideBarHeight;
     overflow: hidden;
     transition: all 0.5s ease,
@@ -63,6 +77,10 @@ $sideBarHeight: 6rem; // In Mobile
 
 button {
     height: 3rem;
+}
+
+.sidebar-toggle {
+    z-index: 200;
 }
 
 div {

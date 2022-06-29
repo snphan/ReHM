@@ -9,7 +9,7 @@ interface NavBarItem {
 
 export function NavBar(props: any){
     return (
-        <ul className="navbar mt-2">
+        <ul className="navbar">
         {props.items.map((item: NavBarItem, index: number) => {
             return (
                 <li key={index} className="">

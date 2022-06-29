@@ -33,7 +33,7 @@ export function DevicesBar(props: any) {
     }, [props.gridLayout])
 
     return (
-        <div>
+        <div className="devices-bar">
         {currentDevices ? Object.keys(currentDevices).map((deviceName: string, index: number) => {
             return (    
             <div key={index} className="d-flex flex-column align-items-left m-2">

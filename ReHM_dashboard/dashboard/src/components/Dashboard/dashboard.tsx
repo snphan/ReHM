@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useMeasure } from "react-use";
-import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import 'chartjs-adapter-moment';
@@ -14,7 +13,6 @@ import "./dashboard.scss";
 import { LineChart } from "../LineChart/linechart";
 import { DevicesBar } from "../DevicesBar/devicesbar";
 import { NavBar } from "../NavBar/navbar"
-import { scryRenderedDOMComponentsWithClass } from "react-dom/test-utils";
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
 const csrftokenPattern = /(csrftoken=[\d\w]+);?/g;
@@ -324,21 +322,17 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-container d-flex justify-content-between">
+            {/* Menu Sidebar */}
             <div data-testid="menu" className={"menu sidebar "+ (showLeft ? "" : "hidden")}>
                 <NavBar items={navBarItems}></NavBar>
             </div>
-            <div data-testid="dashboard-content" className="dashboard-content d-flex flex-fill flex-column" style={
-                    isMobile ? 
-                        {maxHeight: (showLeft && showRight ? `calc(100vh - ${2*sidebarHeight}rem`
-                                     : showLeft || showRight ? `calc(100vh - ${sidebarHeight}rem`
-                                     : "100vh")}
-                    :
-                        {maxWidth: (showLeft && showRight ? `calc(100vw - ${2*sidebarWidth}rem`
-                                     : showLeft || showRight ? `calc(100vw - ${sidebarWidth}rem`
-                                     : "100vw")}
-                }>
+
+            {/* Main content */}
+            <div data-testid="dashboard-content" className="dashboard-content d-flex flex-fill flex-column">
+
+                {/* Title Components */}
                 <div className="title d-flex align-items-center mt-3">
-                    <button data-testid="show-menu" className="noformat mx-3" onClick={() => setShowLeft(!showLeft)}>
+                    <button data-testid="show-menu" className="sidebar-toggle noformat mx-3" onClick={() => setShowLeft(!showLeft)}>
                         {!showLeft ?
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/menu.svg" alt="" />
                         :
@@ -356,7 +350,7 @@ export default function Dashboard() {
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/lockopen.svg" alt="" />
                         }
                     </button>
-                    <button data-testid="show-devices" className="noformat mx-3" onClick={() => setShowRight(!showRight)}>
+                    <button data-testid="show-devices" className="sidebar-toggle noformat mx-3" onClick={() => setShowRight(!showRight)}>
                         {!showRight ?
                             <img className="navbar-toggle-icon" src="/static/dashboard/pictures/watch.svg" alt="" />
                         :
@@ -364,6 +358,8 @@ export default function Dashboard() {
                         }
                     </button>
                 </div>
+
+                {/* Graph Components */}
                 <div ref={gridContainerTarget} className="graph-container">
                         {gridLayout!.length && Object.keys(allData).length ?
                             <ResponsiveReactGridLayout
@@ -385,8 +381,9 @@ export default function Dashboard() {
                         : null}
                 </div>
             </div>
-            <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
 
+            {/* Device Selection Bar */}
+            <div data-testid="devices" className={"devices sidebar " + (showRight ? "" : "hidden")}>
                 {gridLayout!.length == 0 ?
                 null
                 : 
