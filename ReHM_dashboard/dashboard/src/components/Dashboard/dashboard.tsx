@@ -242,14 +242,12 @@ export default function Dashboard() {
   // on every gridLayout Update.
   useEffect(() => {
     if (saveLayout) {
-      console.log("save Layout")
       gridLayout!.forEach(layout => {
         let layoutToSave: any = (({ id, i, x, y, w, h, show }) => ({ id, i, x, y, w, h, show }))(layout)
         layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
         layoutToSave['patient'] = currentPatient;
         layoutToSave['provider'] = currentProvider;
 
-        console.log(layoutToSave.id)
         axios.put(`/accounts/api/gridlayout/${layoutToSave.id}/`, layoutToSave, {
           headers: {
             'X-CSRFToken': csrftoken!,
