@@ -21,6 +21,7 @@ const csrftoken = document.cookie.match(csrftokenPattern)?.at(0)?.replace('csrft
 Chart.register(CategoryScale);
 
 export interface LayoutObject {
+    id: number,
     i: string,
     x: number,
     y: number,
@@ -74,6 +75,11 @@ interface NavBarItem {
 
 interface AvailableDatatypes {
     [key: string] : Array<string>
+}
+
+interface DeviceTypes {
+    dataType: Array<string>,
+    name: string
 }
 
 export default function Dashboard() {
@@ -133,6 +139,7 @@ export default function Dashboard() {
                     res.data.forEach((gridLayoutData: any) => {
                         cleanedLayout.push(
                             {
+                                id: gridLayoutData.id,
                                 i: gridLayoutData.i,
                                 x: gridLayoutData.x,
                                 y: gridLayoutData.y,
@@ -173,24 +180,35 @@ export default function Dashboard() {
         if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
             // After setting the layout, we need to construct the skeleton for allData State.
             // Available Datatypes contains Axis information for each datatype.
-            const { available_datatypes }: {available_datatypes: AvailableDatatypes} = allUserInfo
+            const { available_datatypes, device_types }: 
+                {available_datatypes: AvailableDatatypes, device_types: DeviceTypes[]} = allUserInfo
             let allDataSkeleton: ChartData = {};
-            gridLayout.forEach((layoutItem) => {
-                let currentDataType = layoutItem.i;
-                
-                if (!allDataSkeleton[currentDataType]) {
-                    allDataSkeleton[currentDataType] = {datasets: []};
-                }
-                available_datatypes[currentDataType].forEach((axis: string) => {
-                    let color = plotColors[allDataSkeleton[currentDataType]["datasets"].length]
-                    allDataSkeleton[currentDataType]["datasets"]!.push(
-                        {
-                            label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()),
-                            borderColor: color,
-                            backgroundColor: color + "80", // 50% transparency for hexadecimal
-                            data: []
-                        }
-                    )
+            // Initialize an empty dataset
+            Object.keys(available_datatypes).forEach((dataType) => {
+                allDataSkeleton[dataType] = {datasets: []};
+            })
+
+            // Use device_types to create plots for each Devices' datatype
+            device_types.forEach((device) => {
+                const { dataType, name } = device;
+                dataType.forEach((currentDataType) => {
+                    available_datatypes[currentDataType].forEach((axis: string) => {
+                        let color = plotColors[allDataSkeleton[currentDataType]["datasets"].length] // Color selected depends on length of dataset
+                        let device_initials = name
+                            .split(' ')
+                            .map(word => word[0])
+                            .join('');
+                        allDataSkeleton[currentDataType]["datasets"]!.push(
+                            {
+                                label: currentDataType 
+                                        + (axis === "none" ? '' : `_${axis}`.toUpperCase()) 
+                                        + `_${device_initials}`,
+                                borderColor: color,
+                                backgroundColor: color + "80", // 50% transparency for hexadecimal
+                                data: []
+                            }
+                        )
+                    })
                 })
             })
             setAllData(allDataSkeleton);
@@ -224,25 +242,21 @@ export default function Dashboard() {
     // on every gridLayout Update.
     useEffect(() => {
         if (saveLayout) {
-            if (allUserInfo.patients) {
-                gridLayout!.forEach(layout => {
-                    let layoutToSave: any = (({i, x, y, w, h, show}) => ({i, x, y, w, h, show}))(layout)
-                    layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
-                    layoutToSave['patient'] = currentPatient;
-                    layoutToSave['provider'] = currentProvider;
+            console.log("save Layout")
+            gridLayout!.forEach(layout => {
+                let layoutToSave: any = (({id, i, x, y, w, h, show}) => ({id, i, x, y, w, h, show}))(layout)
+                layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
+                layoutToSave['patient'] = currentPatient;
+                layoutToSave['provider'] = currentProvider;
 
-                    const layoutId = allUserInfo.patients.filter((obj: { provider_id: number; patient_id: number; i_id: string; })  => {
-                        return obj.provider_id === currentProvider && obj.patient_id === currentPatient && obj.i_id === layout.i
-                    })[0].id
-
-                    axios.put(`/accounts/api/gridlayout/${layoutId}/`, layoutToSave, {
-                        headers: {
-                            'X-CSRFToken': csrftoken!,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                })
-            }
+                console.log(layoutToSave.id)
+                axios.put(`/accounts/api/gridlayout/${layoutToSave.id}/`, layoutToSave, {
+                    headers: {
+                        'X-CSRFToken': csrftoken!,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            })
         }
     }, [saveLayout])
 
@@ -290,6 +304,7 @@ export default function Dashboard() {
             newLayout.forEach((layout, index) => {
                 // Relies on the gridlayout indexing to be same as newLayout indexing
                 let layoutObj = {
+                    id: gridLayout![index].id,
                     i: layout.i,
                     x: layout.x,
                     y: layout.y,

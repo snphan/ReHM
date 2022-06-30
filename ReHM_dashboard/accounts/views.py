@@ -72,6 +72,7 @@ class CustomLogoutView(LogoutView):
 #      -X PUT http://localhost:8000/accounts/api/Devices/3/
 # 
 
+# TODO: Optimize the query, too many calls to the DB.
 @api_view(["GET"])
 @login_required
 def get_user_info(request, provider_id, patient_id):
@@ -79,7 +80,6 @@ def get_user_info(request, provider_id, patient_id):
         return Response({"status_code": "400", "detail": f"Method {request.method} Is not available."})
 
     try:
-        user_info = serializers.UserSerializer(models.ReHMUser.objects.filter(id=provider_id)[0]).data
         patient_info = serializers.UserSerializer(models.ReHMUser.objects.filter(id=patient_id)[0]).data 
         patient_layout = list(models.GridLayout.objects.filter(provider_id=provider_id).values())
         patients = [layout['patient_id'] for layout in patient_layout]
@@ -108,7 +108,7 @@ def get_user_info(request, provider_id, patient_id):
                                 for data_type in data_types}
 
         patient_info["device_types"] = device_type_info
-        patient_info["available_patients"] = patients
+        patient_info["available_patients"] = set(patients)
         patient_info["available_datatypes"] = axes_info
 
         return Response(patient_info)
