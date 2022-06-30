@@ -19,5 +19,5 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(), name="logout"),
     path('', views.CustomLoginView.as_view(), name="index"),
     path('api/', include(router.urls)),
-    path('api/user_info/<int:user_id>/', views.get_user_info)
+    path('api/user_info/<int:provider_id>/<int:patient_id>/', views.get_user_info)
 ]

@@ -23,7 +23,11 @@ let mockUserInfo = {
   available_datatypes: {
     HR: ["none"],
     ACCEL: ["x", "y", "z"]
-  }
+  },
+  device_types: [
+    { dataType: ["ACCEL", "HR"], name: "Fitbit Versa 3" },
+    { dataType: ["ACCEL", "HR"], name: "Apple Watch 7" },
+  ]
 }
 
 jest.mock("axios");

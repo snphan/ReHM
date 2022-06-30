@@ -9,8 +9,6 @@ class UserSerializer(serializers.ModelSerializer):
                     'email',
                     'first_name', 
                     'last_name', 
-                    'is_active',
-                    'is_staff',
                 )
 
 class DeviceSerializer(serializers.ModelSerializer):
@@ -73,7 +71,6 @@ class GridLayoutSerializer(serializers.ModelSerializer):
             'id',
             'provider',
             'patient',
-            'deviceType',
             'show',
             'i',
             'x',
