@@ -110,13 +110,12 @@ export default function Dashboard() {
     const [gridContainerTarget, {x, y, width, height, top, right, bottom, left}] = useMeasure<HTMLDivElement>();
     const [currentProvider, setCurrentProvider] = useState<number | null>(null)
     const [currentPatient, setCurrentPatient] = useState<number | null>(null); // Patient selection may be lumped into SPA
-    const [allData, setAllData] = useState<ChartData | Object>({});
+    const [allData, setAllData] = useState<ChartData>({});
     const [gridLayout, setGridLayout] = useState<Array<LayoutObject> | null>([]);
     const [gridIsLocked, setGridIsLocked] = useState<boolean | null>(false);
     const [allUserInfo, setAllUserInfo] = useState<any | null>(null);
     const [saveLayout, setSaveLayout] = useState<boolean | null>(false);
     const dataSocket = useRef<WebSocket | null>(null);
-
 
     //----------------------------------------------------------------------------------------------------
     // MARK: Initial Setup
@@ -171,6 +170,7 @@ export default function Dashboard() {
         }
     }, [currentPatient, currentProvider])
 
+    // Construct the data structure for Chart.js
     useEffect(() => {
         if (gridLayout && allUserInfo && Object.keys(allData).length === 0) {
             // After setting the layout, we need to construct the skeleton for allData State.
@@ -179,14 +179,21 @@ export default function Dashboard() {
             let allDataSkeleton: ChartData = {};
             gridLayout.forEach((layoutItem) => {
                 let currentDataType = layoutItem.i;
-                allDataSkeleton[currentDataType] = {datasets: []}
-                available_datatypes[currentDataType].forEach((axis: String, ind: number) => {
-
+                let currentDeviceType = layoutItem.deviceType
+                    .split(' ')
+                    .map(word => word[0])
+                    .join('');
+                
+                if (!allDataSkeleton[currentDataType]) {
+                    allDataSkeleton[currentDataType] = {datasets: []};
+                }
+                available_datatypes[currentDataType].forEach((axis: string) => {
+                    let color = plotColors[allDataSkeleton[currentDataType]["datasets"].length]
                     allDataSkeleton[currentDataType]["datasets"]!.push(
                         {
-                            label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()),
-                            borderColor: plotColors[ind],
-                            backgroundColor: plotColors[ind] + "80", // 50% transparency for hexadecimal
+                            label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()) + `_${currentDeviceType}`,
+                            borderColor: color,
+                            backgroundColor: color + "80", // 50% transparency for hexadecimal
                             data: []
                         }
                     )
@@ -371,9 +378,10 @@ export default function Dashboard() {
                                 cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                                 >
                                     {gridLayout!.map(layoutItem => {
+                                        let dataType: string = layoutItem.i
                                         return (
                                             <div key={layoutItem.i} className={layoutItem.show ? "" : "hidden"}>
-                                                <LineChart layoutItem={layoutItem} allData={allData} addData={addData}/>
+                                                <LineChart allData={allData[dataType]} addData={addData}/>
                                             </div>
                                         )
                                     })}

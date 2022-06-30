@@ -13,7 +13,6 @@ interface DataPoint {
 }
 
 interface LineChartProps {
-    layoutItem: any,
     allData: any,
     addData: any
 }
@@ -21,7 +20,7 @@ interface LineChartProps {
 export function LineChart(props: LineChartProps) {
     return (
         <div data-testid="one-graph">
-            <Line data={props.allData[props.layoutItem.i]} 
+            <Line data={props.allData} 
                 options={{
                     scales: {
                         x: {
@@ -30,7 +29,11 @@ export function LineChart(props: LineChartProps) {
                                 unit: 'second',
                             }
                         }
+                    },
+                    animation: {
+                        duration: 0
                     }
+
                 }}/>
         </div>)
 }
