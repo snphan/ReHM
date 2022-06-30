@@ -27,7 +27,6 @@ export interface LayoutObject {
     w: number,
     h: number,
     static?: boolean
-    deviceType: string,
     show: boolean
 }
 
@@ -140,7 +139,6 @@ export default function Dashboard() {
                                 w: gridLayoutData.w,
                                 h: gridLayoutData.h,
                                 static: gridLayoutData.static,
-                                deviceType: gridLayoutData.deviceType,
                                 show: gridLayoutData.show
                             }
                         )
@@ -153,7 +151,7 @@ export default function Dashboard() {
                     setGridIsLocked(cleanedLayout[0]?.static!);
                 });
             axios
-                .get(`/accounts/api/user_info/${currentProvider}/`)
+                .get(`/accounts/api/user_info/${currentProvider}/${currentPatient}/`)
                 .then((res) => {
                     setAllUserInfo(res.data);
                 })
@@ -179,10 +177,6 @@ export default function Dashboard() {
             let allDataSkeleton: ChartData = {};
             gridLayout.forEach((layoutItem) => {
                 let currentDataType = layoutItem.i;
-                let currentDeviceType = layoutItem.deviceType
-                    .split(' ')
-                    .map(word => word[0])
-                    .join('');
                 
                 if (!allDataSkeleton[currentDataType]) {
                     allDataSkeleton[currentDataType] = {datasets: []};
@@ -191,7 +185,7 @@ export default function Dashboard() {
                     let color = plotColors[allDataSkeleton[currentDataType]["datasets"].length]
                     allDataSkeleton[currentDataType]["datasets"]!.push(
                         {
-                            label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()) + `_${currentDeviceType}`,
+                            label: currentDataType + (axis === "none" ? '' : `_${axis}`.toUpperCase()),
                             borderColor: color,
                             backgroundColor: color + "80", // 50% transparency for hexadecimal
                             data: []
@@ -232,7 +226,7 @@ export default function Dashboard() {
         if (saveLayout) {
             if (allUserInfo.patients) {
                 gridLayout!.forEach(layout => {
-                    let layoutToSave: any = (({i, x, y, w, h, show, deviceType}) => ({i, x, y, w, h, show, deviceType}))(layout)
+                    let layoutToSave: any = (({i, x, y, w, h, show}) => ({i, x, y, w, h, show}))(layout)
                     layoutToSave['static'] = true; // static is reserved in JS language so we can't unpack
                     layoutToSave['patient'] = currentPatient;
                     layoutToSave['provider'] = currentProvider;
@@ -302,7 +296,6 @@ export default function Dashboard() {
                     w: layout.w,
                     h: layout.h,
                     static: layout.static,
-                    deviceType: gridLayout![index].deviceType, 
                     show: gridLayout![index].show
                 }
                 layoutToSet.push(layoutObj);
