@@ -276,21 +276,32 @@ export default function Dashboard() {
     return newLayout;
   }
 
-  // TODO: Add support for multiple devices that overlay on the graph. 
-  // (Maybe not data with x,y,z though because that's a mess).
   /**
-   * Add data to the graphs, currently only supports one device
+   * Add data to the graphs, data from different devices will overlay accordingly
    * @param dataPoints datapoints that conform to the DataPoint format
    */
   const addData = (dataPoints: Array<DataPoint>) => {
     const newData = JSON.parse(JSON.stringify(allData)); // Make a deep clone so that Chart Js Updates
+    const { available_datatypes } = allUserInfo;
 
+    // For each datapoint find the corresponding label and add to the dataset
+    // with the correct label. Scales with number of devices (which shouldn't be too many)
     dataPoints.forEach((dataPoint) => {
+      const { dataType, device } = dataPoint;
       dataPoint.dataValues.forEach((value, i) => {
-        // User should only see the data that there is a graph for.
-        if (dataPoint.dataType in newData) {
+        let axis = available_datatypes[dataType][i]
+        let label: string = dataType
+          + (axis === "none" ? '' : `_${axis}`.toUpperCase())
+          + "_"
+          + device.split(" ").map(word => word[0]).join('');
+
+        let datasetIndex = newData[dataType].datasets.findIndex((dataset: ChartDataset) => {
+          return dataset["label"] === label;
+        })
+
+        if (dataType in newData) {
           let oneDataPoint = { x: dataPoint.timestamp, y: value }
-          newData[dataPoint.dataType].datasets[i].data.push(oneDataPoint);
+          newData[dataPoint.dataType].datasets[datasetIndex].data.push(oneDataPoint);
         }
       })
     })
