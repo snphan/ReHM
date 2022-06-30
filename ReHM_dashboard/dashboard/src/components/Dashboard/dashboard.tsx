@@ -11,7 +11,7 @@ import "./react-resizeable-styles.css"
 import "./dashboard.scss";
 
 import { LineChart } from "../LineChart/linechart";
-import { DevicesBar } from "../DevicesBar/devicesbar";
+import { DataTypeSelectionBar } from "../DataTypeSelectionBar/datatypeselectionbar";
 import { NavBar } from "../NavBar/navbar"
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"; // so that post requests don't get rejected
@@ -403,10 +403,10 @@ export default function Dashboard() {
                 {gridLayout!.length == 0 ?
                 null
                 : 
-                <DevicesBar
+                <DataTypeSelectionBar
                     gridLayout={gridLayout}
                     setGridLayout={setGridLayout}
-                ></DevicesBar>
+                ></DataTypeSelectionBar>
                 }
             </div>
         </div>
