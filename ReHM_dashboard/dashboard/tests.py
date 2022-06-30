@@ -31,7 +31,6 @@ class DashboardViewTests(TestCase):
         self.gridlayout = account_models.GridLayout.objects.create(
                         provider=self.user, 
                         patient=self.user,
-                        deviceType=self.devicetype,
                         show=True,
                         i=self.datatype,
                         x=0,
