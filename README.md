@@ -32,7 +32,7 @@
 interface DataPoint {
     device: string,         // Apple Watch, Fitbit, Polar, Pozxy 
     dataType: string,       // HR, RR, ACCEL, GYRO, POS
-    timestamp: number,      // UNIX TIMESTAMP
+    timestamp: number,      // UNIX TIMESTAMP IN **Milliseconds** or UTC timestamp
     dataValues: Array<number>          // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
 }
 ```
