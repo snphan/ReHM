@@ -31,9 +31,6 @@ async def client(uri, post_host):
                     data = parsed_message["data"]
                     serial = data[0]["device_serial"]
 
-                    # Remove device_serial per DataPoint Interface
-                    for elem in data:
-                        del elem["device_serial"]
                     device_info = list(
                         filter(lambda x: x["serial"] == serial, allDevices_cache)
                     )
@@ -46,7 +43,7 @@ async def client(uri, post_host):
                         for elem in data:
                             elem["device"] = deviceType
 
-                        print(f"POST {data} to dashboard/add_data/{user_id}/")
+                        # print(f"POST {data} to dashboard/add_data/{user_id}/")
                         requests.post(
                             f"{post_host}/dashboard/add_data/{user_id}/",
                             json=data
