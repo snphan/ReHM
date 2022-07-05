@@ -11,6 +11,7 @@ router.register(r'devicetype', views.DeviceTypeAPIView, 'devicetype')
 router.register(r'datatype', views.DataTypeAPIView, 'datatype')
 router.register(r'gridlayout', views.GridLayoutAPIView, 'gridlayout')
 router.register(r'axes', views.AxesAPIView, 'axes')
+router.register(r'sensordata', views.SensorDataAPIView, 'sensordata')
 
 app_name = "accounts"
 

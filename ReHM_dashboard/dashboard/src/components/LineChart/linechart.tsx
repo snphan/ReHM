@@ -1,16 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useMeasure } from "react-use";
 import { Line } from "react-chartjs-2";
-import { CategoryScale } from "chart.js";
-import Chart from "chart.js/auto";
+import { Chart } from "chart.js";
+import zoomPlugin from "chartjs-plugin-zoom";
 import 'chartjs-adapter-moment';
 
-interface DataPoint {
-  device: string,             // Apple Watch, Fitbit, Polar, Pozxy 
-  dataType: string,           // HR, RR, ACCEL, GYRO, POS
-  timestamp: number,          // UNIX TIMESTAMP
-  dataValues: Array<number>   // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
-}
+Chart.register(zoomPlugin);
 
 interface LineChartProps {
   allData: any,
@@ -30,10 +24,43 @@ export function LineChart(props: LineChartProps) {
               }
             }
           },
-          animation: {
-            duration: 0
+          datasets: {
+            line: {
+              pointRadius: 0
+            }
+          },
+          elements: {
+            point: {
+              radius: 0
+            }
+          },
+          animation: false,
+          parsing: false,
+          plugins: {
+            zoom: {
+              pan: {
+                enabled: true,
+                modifierKey: 'alt',
+              },
+              zoom: {
+                wheel: {
+                  enabled: true,
+                  modifierKey: 'alt',
+                },
+                pinch: {
+                  enabled: true
+                },
+                mode: 'xy',
+                overScaleMode: 'xy',
+              }
+            },
+            decimation: {
+              enabled: true,
+              algorithm: 'lttb',
+              samples: 500,
+              threshold: 500
+            }
           }
-
         }} />
     </div>)
 }
