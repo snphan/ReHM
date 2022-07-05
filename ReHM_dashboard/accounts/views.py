@@ -149,8 +149,20 @@ class GridLayoutAPIView(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
 
 class AxesAPIView(viewsets.ModelViewSet):
-    serializer_class =serializers.AxesSerializer
+    serializer_class = serializers.AxesSerializer
     queryset = models.Axes.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
+    permission_classes = (IsAuthenticated, )
+
+# curl http://localhost:8000/accounts/api/sensordata/?timestamp__gte=2022-07-05+06:40:00&data_type=HR
+class SensorDataAPIView(viewsets.ModelViewSet):
+    serializer_class = serializers.SensorDataSerializer
+    # TODO: change the query set to only the current patient
+    queryset = models.SensorData.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'timestamp': ['gte', 'lte', 'gt', 'lt', 'exact'],
+        'data_type': ['exact']
+    }
     permission_classes = (IsAuthenticated, )

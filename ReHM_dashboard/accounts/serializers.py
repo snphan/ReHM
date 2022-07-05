@@ -92,3 +92,14 @@ class AxesSerializer(serializers.ModelSerializer):
         fields = (
             'name',
         )
+
+class SensorDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SensorData
+        fields = (
+            "patient",
+            "device",
+            "data_type",
+            "timestamp",
+            "val"
+        )

@@ -80,6 +80,9 @@ CORS_ORIGIN_WHITELIST = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
     ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
 }
 
 ROOT_URLCONF = "ReHM_dashboard.urls"
