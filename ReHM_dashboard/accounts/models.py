@@ -65,6 +65,7 @@ class Device(models.Model):
     def __str__(self):
         return f'{self.deviceType} | {self.serial}'
 
+# Also acts as an intermediary table to link provider to patient.
 class GridLayout(models.Model):
     provider = models.ForeignKey(ReHMUser, 
                                 on_delete=models.CASCADE,
@@ -72,7 +73,6 @@ class GridLayout(models.Model):
     patient = models.ForeignKey(ReHMUser, 
                                 on_delete=models.CASCADE,
                                 related_name="patient")
-    deviceType = models.ForeignKey(DeviceType, on_delete=models.SET_NULL, null=True)
     show = models.BooleanField()
     i = models.ForeignKey(DataType, on_delete=models.CASCADE)
     x = models.IntegerField()
@@ -84,7 +84,7 @@ class GridLayout(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["provider", "patient", "i", "deviceType"], 
+                fields=["provider", "patient", "i"], 
                 name="unique_provider_patient_combination"
             )
         ]

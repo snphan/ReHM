@@ -11,6 +11,7 @@ router.register(r'devicetype', views.DeviceTypeAPIView, 'devicetype')
 router.register(r'datatype', views.DataTypeAPIView, 'datatype')
 router.register(r'gridlayout', views.GridLayoutAPIView, 'gridlayout')
 router.register(r'axes', views.AxesAPIView, 'axes')
+router.register(r'sensordata', views.SensorDataAPIView, 'sensordata')
 
 app_name = "accounts"
 
@@ -19,5 +20,5 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(), name="logout"),
     path('', views.CustomLoginView.as_view(), name="index"),
     path('api/', include(router.urls)),
-    path('api/user_info/<int:user_id>/', views.get_user_info)
+    path('api/user_info/<int:provider_id>/<int:patient_id>/', views.get_user_info)
 ]

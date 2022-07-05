@@ -72,21 +72,23 @@ class CustomLogoutView(LogoutView):
 #      -X PUT http://localhost:8000/accounts/api/Devices/3/
 # 
 
+# TODO: Optimize the query, too many calls to the DB.
 @api_view(["GET"])
 @login_required
-def get_user_info(request, user_id):
+def get_user_info(request, provider_id, patient_id):
     if request.method != "GET":
         return Response({"status_code": "400", "detail": f"Method {request.method} Is not available."})
 
-    if request.user.id != user_id and not request.user.is_staff:
-        return Response({"status_code": "403", "detail": f"You do not have access to this user's information."})
-
     try:
-        user_info = serializers.UserSerializer(models.ReHMUser.objects.filter(id=user_id)[0]).data
+        patient_info = serializers.UserSerializer(models.ReHMUser.objects.filter(id=patient_id)[0]).data 
+        patient_layout = list(models.GridLayout.objects.filter(provider_id=provider_id).values())
+        patients = [layout['patient_id'] for layout in patient_layout]
 
-        patient_info = list(models.GridLayout.objects.filter(provider_id=user_id).values())
 
-        device_info = list(models.Device.objects.filter(user_id=user_id).values())
+        if patient_id not in patients and not request.user.is_staff:
+            return Response({"status_code": "403", "detail": f"You do not have access to this user's information."})
+
+        device_info = list(models.Device.objects.filter(user_id=patient_id).values())
 
         device_types = set([device['deviceType_id'] for device in device_info])
 
@@ -105,12 +107,13 @@ def get_user_info(request, user_id):
                             db_datatypes.filter(name=data_type)[0]).data['axes'] 
                                 for data_type in data_types}
 
-        user_info["patients"] = patient_info
-        user_info["available_datatypes"] = axes_info
+        patient_info["device_types"] = device_type_info
+        patient_info["available_patients"] = set(patients)
+        patient_info["available_datatypes"] = axes_info
 
-        return Response(user_info)
+        return Response(patient_info)
     except IndexError as e:
-        return Response({"status_code": "400", "detail": f"{e}. user_id = {user_id}."})
+        return Response({"status_code": "400", "detail": f"{e}. user_id = {provider_id}."})
 
 class ReHMUserAPIView(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
@@ -146,8 +149,20 @@ class GridLayoutAPIView(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
 
 class AxesAPIView(viewsets.ModelViewSet):
-    serializer_class =serializers.AxesSerializer
+    serializer_class = serializers.AxesSerializer
     queryset = models.Axes.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
+    permission_classes = (IsAuthenticated, )
+
+# curl http://localhost:8000/accounts/api/sensordata/?timestamp__gte=2022-07-05+06:40:00&data_type=HR
+class SensorDataAPIView(viewsets.ModelViewSet):
+    serializer_class = serializers.SensorDataSerializer
+    # TODO: change the query set to only the current patient
+    queryset = models.SensorData.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'timestamp': ['gte', 'lte', 'gt', 'lt', 'exact'],
+        'data_type': ['exact']
+    }
     permission_classes = (IsAuthenticated, )
