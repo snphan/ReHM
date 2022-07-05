@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useMeasure } from "react-use";
 import { Line } from "react-chartjs-2";
-import { CategoryScale } from "chart.js";
-import Chart from "chart.js/auto";
+import { Chart } from "chart.js";
+import zoomPlugin from "chartjs-plugin-zoom";
 import 'chartjs-adapter-moment';
+
+Chart.register(zoomPlugin);
 
 interface DataPoint {
   device: string,             // Apple Watch, Fitbit, Polar, Pozxy 
@@ -41,6 +42,25 @@ export function LineChart(props: LineChartProps) {
             }
           },
           animation: false,
+          plugins: {
+            zoom: {
+              pan: {
+                enabled: true,
+                modifierKey: 'ctrl',
+              },
+              zoom: {
+                wheel: {
+                  enabled: true,
+                  modifierKey: 'ctrl',
+                },
+                pinch: {
+                  enabled: true
+                },
+                mode: 'xy',
+                overScaleMode: 'xy',
+              }
+            }
+          }
         }} />
     </div>)
 }

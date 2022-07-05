@@ -52,6 +52,7 @@
     "canvas": "^2.9.1",
     "chart.js": "^3.8.0",
     "chartjs-adapter-moment": "^1.0.0",
+    "chartjs-plugin-zoom": "^1.2.1",
     "jest": "^28.1.1",
     "moment": "^2.29.3",
     "react": "^18.1.0",
