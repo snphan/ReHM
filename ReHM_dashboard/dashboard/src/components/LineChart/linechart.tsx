@@ -30,10 +30,17 @@ export function LineChart(props: LineChartProps) {
               }
             }
           },
-          animation: {
-            duration: 0
-          }
-
+          datasets: {
+            line: {
+              pointRadius: 0
+            }
+          },
+          elements: {
+            point: {
+              radius: 0
+            }
+          },
+          animation: false,
         }} />
     </div>)
 }
