@@ -6,13 +6,6 @@ import 'chartjs-adapter-moment';
 
 Chart.register(zoomPlugin);
 
-interface DataPoint {
-  device: string,             // Apple Watch, Fitbit, Polar, Pozxy 
-  dataType: string,           // HR, RR, ACCEL, GYRO, POS
-  timestamp: number,          // UNIX TIMESTAMP
-  dataValues: Array<number>   // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
-}
-
 interface LineChartProps {
   allData: any,
   addData: any
@@ -42,16 +35,17 @@ export function LineChart(props: LineChartProps) {
             }
           },
           animation: false,
+          parsing: false,
           plugins: {
             zoom: {
               pan: {
                 enabled: true,
-                modifierKey: 'ctrl',
+                modifierKey: 'alt',
               },
               zoom: {
                 wheel: {
                   enabled: true,
-                  modifierKey: 'ctrl',
+                  modifierKey: 'alt',
                 },
                 pinch: {
                   enabled: true
@@ -59,6 +53,12 @@ export function LineChart(props: LineChartProps) {
                 mode: 'xy',
                 overScaleMode: 'xy',
               }
+            },
+            decimation: {
+              enabled: true,
+              algorithm: 'lttb',
+              samples: 500,
+              threshold: 500
             }
           }
         }} />
