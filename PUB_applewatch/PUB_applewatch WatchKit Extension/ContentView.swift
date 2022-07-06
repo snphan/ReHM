@@ -16,6 +16,7 @@ struct ContentView: View {
             Text("a: 0.1, 0.1, 0.1")
         }.onAppear {
             workoutManager.requestAuthorization()
+            workoutManager.startWorkout()
         }
     }
 }
