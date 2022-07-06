@@ -9,6 +9,7 @@ env.js
 node_modules
 
 .DS_Store
+*.xcscheme
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
