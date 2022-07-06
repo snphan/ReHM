@@ -8,6 +8,13 @@
 import Foundation
 import HealthKit
 
+struct DataPoint {
+    let device_serial: String
+    let timestamp: Int
+    let dataType: String
+    let dataValues: Array<Double>
+}
+
 class WorkoutManager: NSObject, ObservableObject {
     let healthStore = HKHealthStore()
     var session: HKWorkoutSession?
@@ -87,7 +94,14 @@ class WorkoutManager: NSObject, ObservableObject {
                 // Retrieve the heartrate from the statistics and send it to our cloud broker.
                 let heartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
                 self.heartRate = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit) ?? 0
+                let data = DataPoint(device_serial: "12345APPLE",
+                                     timestamp: Int(NSDate().timeIntervalSince1970*1000),
+                                     dataType: "HR",
+                                     dataValues: [self.heartRate]
+                )
                 print(self.heartRate, "@ \(Int(NSDate().timeIntervalSince1970*1000))")
+                print(data)
+            
             default:
                 print("nothing.")
             }

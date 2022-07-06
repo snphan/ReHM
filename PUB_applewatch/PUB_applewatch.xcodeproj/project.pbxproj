@@ -577,7 +577,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "PUB_applewatch WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "PUB_applewatch WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = PUB_applewatch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This application will record your health data for research purposes.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This application will record your health data for research purposes.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -610,7 +612,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "PUB_applewatch WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "PUB_applewatch WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = PUB_applewatch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This application will record your health data for research purposes.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This application will record your health data for research purposes.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
