@@ -9,14 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var workoutManager: WorkoutManager
+    @EnvironmentObject var imuManager: IMUManager
     
     var body: some View {
-        VStack {
-            Text("Heart Rate: \(self.workoutManager.heartRate.formatted(.number.precision(.fractionLength(0)))) BPM").padding()
-            Text("a: 0.1, 0.1, 0.1")
-        }.onAppear {
-            workoutManager.requestAuthorization()
-            workoutManager.startWorkout()
+        ScrollView{
+            VStack {
+                Text("Heart Rate: \(self.workoutManager.heartRate.formatted(.number.precision(.fractionLength(0)))) BPM").padding()
+                Text("a: \(self.imuManager.accel.map{ String($0.formatted(.number.precision(.fractionLength(2)))) }.joined(separator: ", "))")
+            }.onAppear {
+                workoutManager.requestAuthorization()
+                workoutManager.startWorkout()
+                imuManager.startAccelerometers()
+            }
         }
     }
 }

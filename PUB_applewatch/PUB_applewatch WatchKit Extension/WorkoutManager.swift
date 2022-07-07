@@ -12,6 +12,7 @@ class WorkoutManager: NSObject, ObservableObject {
     let healthStore = HKHealthStore()
     var session: HKWorkoutSession?
     var builder: HKLiveWorkoutBuilder?
+    var HRDataHandler = DataHandler(frequency: 0.2, dataType: "HR", serial: "APPLE12345")
     
     @Published var heartRate: Double = 0
     @Published var running = false
@@ -87,7 +88,7 @@ class WorkoutManager: NSObject, ObservableObject {
                 // Retrieve the heartrate from the statistics and send it to our cloud broker.
                 let heartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
                 self.heartRate = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit) ?? 0
-                print(self.heartRate, "@ \(Int(NSDate().timeIntervalSince1970*1000))")
+                self.HRDataHandler.addData(val: [self.heartRate])
             default:
                 print("nothing.")
             }

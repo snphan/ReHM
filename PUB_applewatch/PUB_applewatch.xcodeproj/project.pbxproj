@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA12E74128767D3800839486 /* DataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E74028767D3800839486 /* DataHandler.swift */; };
+		EA12E74328767DBA00839486 /* env.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EA12E74228767DBA00839486 /* env.xcconfig */; };
+		EA12E7452876812700839486 /* IMUManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E7442876812700839486 /* IMUManager.swift */; };
 		EA4AE1982874E6BD000782A8 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA4AE1972874E6BD000782A8 /* HealthKit.framework */; };
 		EA4AE19A2874EA54000782A8 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4AE1992874EA53000782A8 /* WorkoutManager.swift */; };
 		EA5464F62874CAD400F49653 /* PUB_applewatch WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = EA5464F52874CAD400F49653 /* PUB_applewatch WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -81,6 +84,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EA12E74028767D3800839486 /* DataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHandler.swift; sourceTree = "<group>"; };
+		EA12E74228767DBA00839486 /* env.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = env.xcconfig; sourceTree = "<group>"; };
+		EA12E7442876812700839486 /* IMUManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMUManager.swift; sourceTree = "<group>"; };
 		EA4AE1952874E6BC000782A8 /* PUB_applewatch WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "PUB_applewatch WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		EA4AE1972874E6BD000782A8 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.5.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		EA4AE1992874EA53000782A8 /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
@@ -141,6 +147,7 @@
 		EA5464EA2874CAD300F49653 = {
 			isa = PBXGroup;
 			children = (
+				EA12E74228767DBA00839486 /* env.xcconfig */,
 				EA5464F92874CAD400F49653 /* PUB_applewatch WatchKit App */,
 				EA5465042874CADB00F49653 /* PUB_applewatch WatchKit Extension */,
 				EA54651D2874CADD00F49653 /* PUB_applewatchTests */,
@@ -173,6 +180,7 @@
 		EA5465042874CADB00F49653 /* PUB_applewatch WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				EA12E74028767D3800839486 /* DataHandler.swift */,
 				EA4AE1952874E6BC000782A8 /* PUB_applewatch WatchKit Extension.entitlements */,
 				EA5465052874CADB00F49653 /* PUB_applewatchApp.swift */,
 				EA5465072874CADB00F49653 /* ContentView.swift */,
@@ -184,6 +192,7 @@
 				EA5465152874CADD00F49653 /* PushNotificationPayload.apns */,
 				EA5465112874CADD00F49653 /* Preview Content */,
 				EA4AE1992874EA53000782A8 /* WorkoutManager.swift */,
+				EA12E7442876812700839486 /* IMUManager.swift */,
 			);
 			path = "PUB_applewatch WatchKit Extension";
 			sourceTree = "<group>";
@@ -376,6 +385,7 @@
 			files = (
 				EA5465132874CADD00F49653 /* Preview Assets.xcassets in Resources */,
 				EA5465102874CADD00F49653 /* Assets.xcassets in Resources */,
+				EA12E74328767DBA00839486 /* env.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,6 +411,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA54650A2874CADB00F49653 /* NotificationController.swift in Sources */,
+				EA12E7452876812700839486 /* IMUManager.swift in Sources */,
+				EA12E74128767D3800839486 /* DataHandler.swift in Sources */,
 				EA5465082874CADB00F49653 /* ContentView.swift in Sources */,
 				EA54650E2874CADB00F49653 /* ComplicationController.swift in Sources */,
 				EA5465062874CADB00F49653 /* PUB_applewatchApp.swift in Sources */,
@@ -566,6 +578,7 @@
 		};
 		EA54652F2874CADD00F49653 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA12E74228767DBA00839486 /* env.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "PUB_applewatch WatchKit Extension/PUB_applewatch WatchKit Extension.entitlements";
@@ -577,7 +590,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "PUB_applewatch WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "PUB_applewatch WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = PUB_applewatch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This application will record your health data for research purposes.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This application will record your health data for research purposes.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -599,6 +614,7 @@
 		};
 		EA5465302874CADD00F49653 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA12E74228767DBA00839486 /* env.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "PUB_applewatch WatchKit Extension/PUB_applewatch WatchKit Extension.entitlements";
@@ -610,7 +626,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "PUB_applewatch WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "PUB_applewatch WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = PUB_applewatch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This application will record your health data for research purposes.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This application will record your health data for research purposes.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
