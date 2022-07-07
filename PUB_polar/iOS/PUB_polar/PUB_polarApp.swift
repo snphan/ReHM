@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct PUB_polarApp: App {
+    @StateObject private var polarManager = PolarManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                ContentView()
+            }.environmentObject(polarManager)
         }
     }
 }
