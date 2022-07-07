@@ -1,0 +1,20 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'PUB_polar' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for PUB_polar
+  pod 'PolarBleSdk', '~> 3.2'
+
+  target 'PUB_polarTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'PUB_polarUITests' do
+    # Pods for testing
+  end
+
+end

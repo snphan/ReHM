@@ -1,0 +1,6 @@
+framework module Pods_PUB_polar_PUB_polarUITests {
+  umbrella header "Pods-PUB_polar-PUB_polarUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

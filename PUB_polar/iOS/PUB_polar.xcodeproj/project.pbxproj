@@ -1,0 +1,743 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0EA4445A22C5E22A2C008208 /* Pods_PUB_polarTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88C9C1BD1AF2D375B885C78C /* Pods_PUB_polarTests.framework */; };
+		21A4531C9CB80900D0AA0C89 /* Pods_PUB_polar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9622B25830382F1C59ABDE7 /* Pods_PUB_polar.framework */; };
+		380F3A2460413A1FA950CD16 /* Pods_PUB_polar_PUB_polarUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F58F30972D02CEB8C77B30E /* Pods_PUB_polar_PUB_polarUITests.framework */; };
+		EA12E75928773F9900839486 /* PUB_polarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E75828773F9900839486 /* PUB_polarApp.swift */; };
+		EA12E75B28773F9900839486 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E75A28773F9900839486 /* ContentView.swift */; };
+		EA12E75D28773F9D00839486 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA12E75C28773F9D00839486 /* Assets.xcassets */; };
+		EA12E76028773F9D00839486 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA12E75F28773F9D00839486 /* Preview Assets.xcassets */; };
+		EA12E76A28773F9D00839486 /* PUB_polarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E76928773F9D00839486 /* PUB_polarTests.swift */; };
+		EA12E77428773F9D00839486 /* PUB_polarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E77328773F9D00839486 /* PUB_polarUITests.swift */; };
+		EA12E77628773F9D00839486 /* PUB_polarUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E77528773F9D00839486 /* PUB_polarUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EA12E76628773F9D00839486 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA12E74D28773F9900839486 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA12E75428773F9900839486;
+			remoteInfo = PUB_polar;
+		};
+		EA12E77028773F9D00839486 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA12E74D28773F9900839486 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA12E75428773F9900839486;
+			remoteInfo = PUB_polar;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		032778434F4A1DEE3CE49834 /* Pods-PUB_polar-PUB_polarUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PUB_polar-PUB_polarUITests.debug.xcconfig"; path = "Target Support Files/Pods-PUB_polar-PUB_polarUITests/Pods-PUB_polar-PUB_polarUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		2C9B063F948445E6DDA3781D /* Pods-PUB_polarTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PUB_polarTests.release.xcconfig"; path = "Target Support Files/Pods-PUB_polarTests/Pods-PUB_polarTests.release.xcconfig"; sourceTree = "<group>"; };
+		42F52B4DB950B524B81112BC /* Pods-PUB_polarTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PUB_polarTests.debug.xcconfig"; path = "Target Support Files/Pods-PUB_polarTests/Pods-PUB_polarTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6D09AE28CE30052FE1CD8C5C /* Pods-PUB_polar-PUB_polarUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PUB_polar-PUB_polarUITests.release.xcconfig"; path = "Target Support Files/Pods-PUB_polar-PUB_polarUITests/Pods-PUB_polar-PUB_polarUITests.release.xcconfig"; sourceTree = "<group>"; };
+		6F58F30972D02CEB8C77B30E /* Pods_PUB_polar_PUB_polarUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PUB_polar_PUB_polarUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		708AC9EAF6A27B6A8FA20A09 /* Pods-PUB_polar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PUB_polar.debug.xcconfig"; path = "Target Support Files/Pods-PUB_polar/Pods-PUB_polar.debug.xcconfig"; sourceTree = "<group>"; };
+		88C9C1BD1AF2D375B885C78C /* Pods_PUB_polarTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PUB_polarTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9622B25830382F1C59ABDE7 /* Pods_PUB_polar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PUB_polar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA12E75528773F9900839486 /* PUB_polar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PUB_polar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA12E75828773F9900839486 /* PUB_polarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PUB_polarApp.swift; sourceTree = "<group>"; };
+		EA12E75A28773F9900839486 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EA12E75C28773F9D00839486 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EA12E75F28773F9D00839486 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		EA12E76528773F9D00839486 /* PUB_polarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PUB_polarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA12E76928773F9D00839486 /* PUB_polarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PUB_polarTests.swift; sourceTree = "<group>"; };
+		EA12E76F28773F9D00839486 /* PUB_polarUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PUB_polarUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA12E77328773F9D00839486 /* PUB_polarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PUB_polarUITests.swift; sourceTree = "<group>"; };
+		EA12E77528773F9D00839486 /* PUB_polarUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PUB_polarUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F5B387C675F5EBED25CB942D /* Pods-PUB_polar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PUB_polar.release.xcconfig"; path = "Target Support Files/Pods-PUB_polar/Pods-PUB_polar.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EA12E75228773F9900839486 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21A4531C9CB80900D0AA0C89 /* Pods_PUB_polar.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA12E76228773F9D00839486 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0EA4445A22C5E22A2C008208 /* Pods_PUB_polarTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA12E76C28773F9D00839486 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				380F3A2460413A1FA950CD16 /* Pods_PUB_polar_PUB_polarUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		925838C89563647E77711D11 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				708AC9EAF6A27B6A8FA20A09 /* Pods-PUB_polar.debug.xcconfig */,
+				F5B387C675F5EBED25CB942D /* Pods-PUB_polar.release.xcconfig */,
+				032778434F4A1DEE3CE49834 /* Pods-PUB_polar-PUB_polarUITests.debug.xcconfig */,
+				6D09AE28CE30052FE1CD8C5C /* Pods-PUB_polar-PUB_polarUITests.release.xcconfig */,
+				42F52B4DB950B524B81112BC /* Pods-PUB_polarTests.debug.xcconfig */,
+				2C9B063F948445E6DDA3781D /* Pods-PUB_polarTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CF7AE90D5B52C84867B37710 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E9622B25830382F1C59ABDE7 /* Pods_PUB_polar.framework */,
+				6F58F30972D02CEB8C77B30E /* Pods_PUB_polar_PUB_polarUITests.framework */,
+				88C9C1BD1AF2D375B885C78C /* Pods_PUB_polarTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EA12E74C28773F9900839486 = {
+			isa = PBXGroup;
+			children = (
+				EA12E75728773F9900839486 /* PUB_polar */,
+				EA12E76828773F9D00839486 /* PUB_polarTests */,
+				EA12E77228773F9D00839486 /* PUB_polarUITests */,
+				EA12E75628773F9900839486 /* Products */,
+				925838C89563647E77711D11 /* Pods */,
+				CF7AE90D5B52C84867B37710 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EA12E75628773F9900839486 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EA12E75528773F9900839486 /* PUB_polar.app */,
+				EA12E76528773F9D00839486 /* PUB_polarTests.xctest */,
+				EA12E76F28773F9D00839486 /* PUB_polarUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EA12E75728773F9900839486 /* PUB_polar */ = {
+			isa = PBXGroup;
+			children = (
+				EA12E75828773F9900839486 /* PUB_polarApp.swift */,
+				EA12E75A28773F9900839486 /* ContentView.swift */,
+				EA12E75C28773F9D00839486 /* Assets.xcassets */,
+				EA12E75E28773F9D00839486 /* Preview Content */,
+			);
+			path = PUB_polar;
+			sourceTree = "<group>";
+		};
+		EA12E75E28773F9D00839486 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				EA12E75F28773F9D00839486 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		EA12E76828773F9D00839486 /* PUB_polarTests */ = {
+			isa = PBXGroup;
+			children = (
+				EA12E76928773F9D00839486 /* PUB_polarTests.swift */,
+			);
+			path = PUB_polarTests;
+			sourceTree = "<group>";
+		};
+		EA12E77228773F9D00839486 /* PUB_polarUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EA12E77328773F9D00839486 /* PUB_polarUITests.swift */,
+				EA12E77528773F9D00839486 /* PUB_polarUITestsLaunchTests.swift */,
+			);
+			path = PUB_polarUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EA12E75428773F9900839486 /* PUB_polar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA12E77928773F9D00839486 /* Build configuration list for PBXNativeTarget "PUB_polar" */;
+			buildPhases = (
+				D97DC626204C017CCFE4CEB4 /* [CP] Check Pods Manifest.lock */,
+				EA12E75128773F9900839486 /* Sources */,
+				EA12E75228773F9900839486 /* Frameworks */,
+				EA12E75328773F9900839486 /* Resources */,
+				DC7308BC98C1C3B0C67B0F46 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PUB_polar;
+			productName = PUB_polar;
+			productReference = EA12E75528773F9900839486 /* PUB_polar.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EA12E76428773F9D00839486 /* PUB_polarTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA12E77C28773F9D00839486 /* Build configuration list for PBXNativeTarget "PUB_polarTests" */;
+			buildPhases = (
+				C5902314BF10F5D92861C440 /* [CP] Check Pods Manifest.lock */,
+				EA12E76128773F9D00839486 /* Sources */,
+				EA12E76228773F9D00839486 /* Frameworks */,
+				EA12E76328773F9D00839486 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EA12E76728773F9D00839486 /* PBXTargetDependency */,
+			);
+			name = PUB_polarTests;
+			productName = PUB_polarTests;
+			productReference = EA12E76528773F9D00839486 /* PUB_polarTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EA12E76E28773F9D00839486 /* PUB_polarUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA12E77F28773F9D00839486 /* Build configuration list for PBXNativeTarget "PUB_polarUITests" */;
+			buildPhases = (
+				97B6348C6AA15194E111755B /* [CP] Check Pods Manifest.lock */,
+				EA12E76B28773F9D00839486 /* Sources */,
+				EA12E76C28773F9D00839486 /* Frameworks */,
+				EA12E76D28773F9D00839486 /* Resources */,
+				4CAA44AABB79CCA31634007C /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EA12E77128773F9D00839486 /* PBXTargetDependency */,
+			);
+			name = PUB_polarUITests;
+			productName = PUB_polarUITests;
+			productReference = EA12E76F28773F9D00839486 /* PUB_polarUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EA12E74D28773F9900839486 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					EA12E75428773F9900839486 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+					EA12E76428773F9D00839486 = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = EA12E75428773F9900839486;
+					};
+					EA12E76E28773F9D00839486 = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = EA12E75428773F9900839486;
+					};
+				};
+			};
+			buildConfigurationList = EA12E75028773F9900839486 /* Build configuration list for PBXProject "PUB_polar" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EA12E74C28773F9900839486;
+			productRefGroup = EA12E75628773F9900839486 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EA12E75428773F9900839486 /* PUB_polar */,
+				EA12E76428773F9D00839486 /* PUB_polarTests */,
+				EA12E76E28773F9D00839486 /* PUB_polarUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EA12E75328773F9900839486 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA12E76028773F9D00839486 /* Preview Assets.xcassets in Resources */,
+				EA12E75D28773F9D00839486 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA12E76328773F9D00839486 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA12E76D28773F9D00839486 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4CAA44AABB79CCA31634007C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PUB_polar-PUB_polarUITests/Pods-PUB_polar-PUB_polarUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PUB_polar-PUB_polarUITests/Pods-PUB_polar-PUB_polarUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PUB_polar-PUB_polarUITests/Pods-PUB_polar-PUB_polarUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		97B6348C6AA15194E111755B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PUB_polar-PUB_polarUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C5902314BF10F5D92861C440 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PUB_polarTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D97DC626204C017CCFE4CEB4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PUB_polar-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DC7308BC98C1C3B0C67B0F46 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PUB_polar/Pods-PUB_polar-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PUB_polar/Pods-PUB_polar-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PUB_polar/Pods-PUB_polar-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EA12E75128773F9900839486 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA12E75B28773F9900839486 /* ContentView.swift in Sources */,
+				EA12E75928773F9900839486 /* PUB_polarApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA12E76128773F9D00839486 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA12E76A28773F9D00839486 /* PUB_polarTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA12E76B28773F9D00839486 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA12E77428773F9D00839486 /* PUB_polarUITests.swift in Sources */,
+				EA12E77628773F9D00839486 /* PUB_polarUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EA12E76728773F9D00839486 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA12E75428773F9900839486 /* PUB_polar */;
+			targetProxy = EA12E76628773F9D00839486 /* PBXContainerItemProxy */;
+		};
+		EA12E77128773F9D00839486 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA12E75428773F9900839486 /* PUB_polar */;
+			targetProxy = EA12E77028773F9D00839486 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		EA12E77728773F9D00839486 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EA12E77828773F9D00839486 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EA12E77A28773F9D00839486 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 708AC9EAF6A27B6A8FA20A09 /* Pods-PUB_polar.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PUB_polar/Preview Content\"";
+				DEVELOPMENT_TEAM = 3W4B69JZSD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "PATH.PUB-polar";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EA12E77B28773F9D00839486 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5B387C675F5EBED25CB942D /* Pods-PUB_polar.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PUB_polar/Preview Content\"";
+				DEVELOPMENT_TEAM = 3W4B69JZSD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "PATH.PUB-polar";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		EA12E77D28773F9D00839486 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42F52B4DB950B524B81112BC /* Pods-PUB_polarTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3W4B69JZSD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "PATH.PUB-polarTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PUB_polar.app/PUB_polar";
+			};
+			name = Debug;
+		};
+		EA12E77E28773F9D00839486 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C9B063F948445E6DDA3781D /* Pods-PUB_polarTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3W4B69JZSD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "PATH.PUB-polarTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PUB_polar.app/PUB_polar";
+			};
+			name = Release;
+		};
+		EA12E78028773F9D00839486 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 032778434F4A1DEE3CE49834 /* Pods-PUB_polar-PUB_polarUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3W4B69JZSD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "PATH.PUB-polarUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PUB_polar;
+			};
+			name = Debug;
+		};
+		EA12E78128773F9D00839486 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6D09AE28CE30052FE1CD8C5C /* Pods-PUB_polar-PUB_polarUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3W4B69JZSD;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "PATH.PUB-polarUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PUB_polar;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EA12E75028773F9900839486 /* Build configuration list for PBXProject "PUB_polar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA12E77728773F9D00839486 /* Debug */,
+				EA12E77828773F9D00839486 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA12E77928773F9D00839486 /* Build configuration list for PBXNativeTarget "PUB_polar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA12E77A28773F9D00839486 /* Debug */,
+				EA12E77B28773F9D00839486 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA12E77C28773F9D00839486 /* Build configuration list for PBXNativeTarget "PUB_polarTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA12E77D28773F9D00839486 /* Debug */,
+				EA12E77E28773F9D00839486 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA12E77F28773F9D00839486 /* Build configuration list for PBXNativeTarget "PUB_polarUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA12E78028773F9D00839486 /* Debug */,
+				EA12E78128773F9D00839486 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EA12E74D28773F9900839486 /* Project object */;
+}
