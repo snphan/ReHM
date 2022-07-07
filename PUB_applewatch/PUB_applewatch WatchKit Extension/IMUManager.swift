@@ -11,8 +11,14 @@ import CoreMotion
 class IMUManager: NSObject, ObservableObject {
     let motion = CMMotionManager()
     var timer: Timer?
-    var frequency = 10.0
+    var frequency = 3.0
     @Published var accel: Array<Double> = [0.0, 0.0, 0.0]
+    var AccelDataHandler: DataHandler
+    
+    override init() {
+        self.AccelDataHandler = DataHandler(frequency: self.frequency, dataType: "ACCEL", serial: "APPLE12345")
+        super.init()
+    }
     
     func startAccelerometers() {
         // Check if Hardware is available
@@ -23,11 +29,13 @@ class IMUManager: NSObject, ObservableObject {
             
             // Callback on record data event.
             let handler: CMAccelerometerHandler = {data, error in
-                let x = data!.acceleration.x * 9.81
-                let y = data!.acceleration.y * 9.81
-                let z = data!.acceleration.z * 9.81
+                // Match the accelerometer axis with Fitbit
+                let x = data!.acceleration.y * 9.81
+                let y = data!.acceleration.x * 9.81
+                let z = data!.acceleration.z * -9.81
                 
                 self.accel = [x, y, z]
+                self.AccelDataHandler.addData(val: self.accel)
             }
             motion.startAccelerometerUpdates(to: OperationQueue.current!, withHandler: handler)
         } else {
