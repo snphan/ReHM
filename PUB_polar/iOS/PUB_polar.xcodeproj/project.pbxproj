@@ -17,6 +17,9 @@
 		EA12E76A28773F9D00839486 /* PUB_polarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E76928773F9D00839486 /* PUB_polarTests.swift */; };
 		EA12E77428773F9D00839486 /* PUB_polarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E77328773F9D00839486 /* PUB_polarUITests.swift */; };
 		EA12E77628773F9D00839486 /* PUB_polarUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E77528773F9D00839486 /* PUB_polarUITestsLaunchTests.swift */; };
+		EA12E7832877528900839486 /* PolarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E7822877528900839486 /* PolarManager.swift */; };
+		EA12E785287759B000839486 /* DataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12E784287759B000839486 /* DataHandler.swift */; };
+		EA12E789287770D800839486 /* env.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EA12E788287770D800839486 /* env.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +58,10 @@
 		EA12E76F28773F9D00839486 /* PUB_polarUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PUB_polarUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA12E77328773F9D00839486 /* PUB_polarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PUB_polarUITests.swift; sourceTree = "<group>"; };
 		EA12E77528773F9D00839486 /* PUB_polarUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PUB_polarUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EA12E7822877528900839486 /* PolarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarManager.swift; sourceTree = "<group>"; };
+		EA12E784287759B000839486 /* DataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHandler.swift; sourceTree = "<group>"; };
+		EA12E788287770D800839486 /* env.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = env.xcconfig; sourceTree = "<group>"; };
+		EA12E78A2877719600839486 /* PUB-polar-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "PUB-polar-Info.plist"; sourceTree = SOURCE_ROOT; };
 		F5B387C675F5EBED25CB942D /* Pods-PUB_polar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PUB_polar.release.xcconfig"; path = "Target Support Files/Pods-PUB_polar/Pods-PUB_polar.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -96,7 +103,6 @@
 				42F52B4DB950B524B81112BC /* Pods-PUB_polarTests.debug.xcconfig */,
 				2C9B063F948445E6DDA3781D /* Pods-PUB_polarTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -113,6 +119,7 @@
 		EA12E74C28773F9900839486 = {
 			isa = PBXGroup;
 			children = (
+				EA12E788287770D800839486 /* env.xcconfig */,
 				EA12E75728773F9900839486 /* PUB_polar */,
 				EA12E76828773F9D00839486 /* PUB_polarTests */,
 				EA12E77228773F9D00839486 /* PUB_polarUITests */,
@@ -135,6 +142,9 @@
 		EA12E75728773F9900839486 /* PUB_polar */ = {
 			isa = PBXGroup;
 			children = (
+				EA12E78A2877719600839486 /* PUB-polar-Info.plist */,
+				EA12E7822877528900839486 /* PolarManager.swift */,
+				EA12E784287759B000839486 /* DataHandler.swift */,
 				EA12E75828773F9900839486 /* PUB_polarApp.swift */,
 				EA12E75A28773F9900839486 /* ContentView.swift */,
 				EA12E75C28773F9D00839486 /* Assets.xcassets */,
@@ -279,6 +289,7 @@
 			files = (
 				EA12E76028773F9D00839486 /* Preview Assets.xcassets in Resources */,
 				EA12E75D28773F9D00839486 /* Assets.xcassets in Resources */,
+				EA12E789287770D800839486 /* env.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,7 +417,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA12E785287759B000839486 /* DataHandler.swift in Sources */,
 				EA12E75B28773F9900839486 /* ContentView.swift in Sources */,
+				EA12E7832877528900839486 /* PolarManager.swift in Sources */,
 				EA12E75928773F9900839486 /* PUB_polarApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -446,6 +459,7 @@
 /* Begin XCBuildConfiguration section */
 		EA12E77728773F9D00839486 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA12E788287770D800839486 /* env.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -494,7 +508,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -506,6 +520,7 @@
 		};
 		EA12E77828773F9D00839486 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA12E788287770D800839486 /* env.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -548,7 +563,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -570,6 +585,8 @@
 				DEVELOPMENT_TEAM = 3W4B69JZSD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "PUB-polar-Info.plist";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We will use Bluetooth to connect to your Polar Device";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -600,6 +617,8 @@
 				DEVELOPMENT_TEAM = 3W4B69JZSD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "PUB-polar-Info.plist";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We will use Bluetooth to connect to your Polar Device";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
