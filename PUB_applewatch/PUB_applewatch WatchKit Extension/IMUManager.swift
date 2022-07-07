@@ -13,11 +13,12 @@ class IMUManager: NSObject, ObservableObject {
     var timer: Timer?
     var frequency = 3.0
     @Published var accel: Array<Double> = [0.0, 0.0, 0.0]
-    var AccelDataHandler: DataHandler
+    var AccelDataHandler: DataHandler?
+    var serial: String?
     
-    override init() {
-        self.AccelDataHandler = DataHandler(frequency: self.frequency, dataType: "ACCEL", serial: "APPLE12345")
-        super.init()
+    func setSerial(serial: String) {
+        self.serial = serial
+        self.AccelDataHandler = DataHandler(frequency: self.frequency, dataType: "ACCEL", serial: serial)
     }
     
     func startAccelerometers() {
@@ -35,7 +36,7 @@ class IMUManager: NSObject, ObservableObject {
                 let z = data!.acceleration.z * -9.81
                 
                 self.accel = [x, y, z]
-                self.AccelDataHandler.addData(val: self.accel)
+                self.AccelDataHandler?.addData(val: self.accel)
             }
             motion.startAccelerometerUpdates(to: OperationQueue.current!, withHandler: handler)
         } else {
