@@ -8,13 +8,36 @@
 import SwiftUI
 import RxSwift
 
+struct deviceInfo: Hashable, Identifiable {
+    let name: String
+    var deviceSerial: String
+    let id = UUID()
+}
+
 struct ContentView: View {
     @EnvironmentObject var polarManager: PolarManager
+    @State private var devicesFound: Array<deviceInfo> = []
     
     var body: some View {
-        VStack {
+        ScrollView {
+         VStack {
             Text("Heart Rate: \(polarManager.heartRate) BPM")
                 .padding()
+            }
+            ForEach($devicesFound, id: \.id) { $oneDevice in
+                let newSerial = $oneDevice.wrappedValue.deviceSerial
+                Button {
+                    print("\(newSerial) was tapped")
+                    do {
+                        try polarManager.api.connectToDevice(newSerial)
+                        polarManager.setSerial(serial: newSerial)
+                     } catch let err {
+                         print("error \(err)")
+                     }
+                } label: {
+                    Text("\(newSerial)")
+                }
+            }
         }.onAppear {
         polarManager.api.searchForDevice().observe(on: MainScheduler.instance).subscribe { e in
                 switch e {
@@ -24,13 +47,10 @@ struct ContentView: View {
                     print("search error \(err)")
                 case .next(let item):
                     print("Polar device found: \(item.name) connectable: \(item.connectable) address: \(item.address.uuidString)")
+                    let newDevice = deviceInfo(name: item.name, deviceSerial: item.name.components(separatedBy: (" "))[2])
+                    devicesFound.append(newDevice)
                 }
             }
-        do {
-            try polarManager.api.connectToDevice("AFCB3621")
-        } catch let err {
-            print("error \(err)")
-        }
     }
 
     }
