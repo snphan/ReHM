@@ -16,6 +16,7 @@ class PolarManager: NSObject, ObservableObject, PolarBleApiObserver, PolarBleApi
     var api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.hr.rawValue)
     var deviceId = "0A3BA92B"
     @Published var heartRate: UInt8 = 0
+    var HRDataHandler = DataHandler(frequency: 1, dataType: "HR", serial: "AFCB3621")
     
     override init() {
         super.init()
@@ -62,5 +63,6 @@ class PolarManager: NSObject, ObservableObject, PolarBleApiObserver, PolarBleApi
     func hrValueReceived(_ identifier: String, data: PolarHrData) {
         print("HR notification: \(data.hr) rrs: \(data.rrs)")
         self.heartRate = data.hr
+        self.HRDataHandler.addData(val: [Double(self.heartRate)])
     }
 }
