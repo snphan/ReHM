@@ -12,10 +12,16 @@ class WorkoutManager: NSObject, ObservableObject {
     let healthStore = HKHealthStore()
     var session: HKWorkoutSession?
     var builder: HKLiveWorkoutBuilder?
-    var HRDataHandler = DataHandler(frequency: 0.2, dataType: "HR", serial: "APPLE12345")
+    var HRDataHandler: DataHandler?
+    var serial: String?
     
     @Published var heartRate: Double = 0
     @Published var running = false
+    
+    func setSerial(serial: String) {
+        self.serial = serial
+        self.HRDataHandler = DataHandler(frequency: 0.2, dataType: "HR", serial: serial)
+    }
     
     func requestAuthorization() {
         let typesToShare: Set = [
@@ -88,7 +94,7 @@ class WorkoutManager: NSObject, ObservableObject {
                 // Retrieve the heartrate from the statistics and send it to our cloud broker.
                 let heartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
                 self.heartRate = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit) ?? 0
-                self.HRDataHandler.addData(val: [self.heartRate])
+                self.HRDataHandler?.addData(val: [self.heartRate])
             default:
                 print("nothing.")
             }
