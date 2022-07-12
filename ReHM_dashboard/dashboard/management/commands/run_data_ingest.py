@@ -60,5 +60,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         post_host = options['post_host']
         URL = f"wss://{os.environ.get('REHM_CLOUD_HOST')}/ws/data"
-        print(f"Connecting to websocket server {URL}")
         asyncio.run(client(URL, post_host))
