@@ -31,8 +31,8 @@ class IMUManager: NSObject, ObservableObject {
             // Callback on record data event.
             let handler: CMAccelerometerHandler = {data, error in
                 // Match the accelerometer axis with Fitbit
-                let x = data!.acceleration.y * 9.81
-                let y = data!.acceleration.x * 9.81
+                let x = data!.acceleration.x * -9.81
+                let y = data!.acceleration.y * -9.81
                 let z = data!.acceleration.z * -9.81
                 
                 self.accel = [x, y, z]
