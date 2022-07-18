@@ -25,7 +25,7 @@
 * The only communication that happens outside is through a websocket to some cloud host that can act as a message broker (may consider MQTT, or Kafka in the future for scalability).
 * Sensor data is sent to the cloud host and the cloud host cleans the input data. Once the data is cleaned, it is broadcast to listeners within the local network. The listeners will then send the "cleaned data" to the local server and data will be handled by updating a real-time chart or stored in a MongoDB database.
 
-![ReHM System Architecture (1)](https://user-images.githubusercontent.com/59156097/171967168-25459ab9-d5de-4487-8da5-d590f3bbe70c.jpg)
+![ReHM System Architecture-Initial Planning drawio (3)](https://user-images.githubusercontent.com/59156097/179628133-b6fb4833-e058-4937-a9f3-899469432f8b.png)
 
 ## Current JSON Data Format
 ```typescript
