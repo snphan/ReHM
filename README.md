@@ -69,6 +69,10 @@ interface DataPoint {
 
 1. Create a Redis (https://collabnix.com/how-to-setup-and-run-redis-in-a-docker-container/) and MongoDB container in Docker (https://medium.com/@anuradhs/how-to-start-a-mongo-database-with-authentication-using-docker-container-8ce63da47a71). 
 
+For a MongoDB Instance
+
+    docker run --name mongodb -v C:\Users\ML-3\Documents\MongoDBStorage:/data/db -d -e MONGO_INITDB_ROOT_USERNAME=<username> -e MONGO_INITDB_ROOT_PASSWORD=<password> mongo --auth -p 27017:27017
+
 1. Migrate the database and create a superuser with
 
         python manage.py makemigrations
