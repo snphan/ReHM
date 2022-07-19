@@ -71,7 +71,7 @@ interface DataPoint {
 
 For a MongoDB Instance
 
-    docker run --name mongodb -v C:\Users\ML-3\Documents\MongoDBStorage:/data/db -d -e MONGO_INITDB_ROOT_USERNAME=<username> -e MONGO_INITDB_ROOT_PASSWORD=<password> mongo --auth -p 27017:27017
+    docker run --name mongodb -p 27017:27017 -v C:\Users\ML-3\Documents\MongoDBStorage:/data/db -d -e MONGO_INITDB_ROOT_USERNAME=<username> -e MONGO_INITDB_ROOT_PASSWORD=<password> mongo --auth
 
 1. Migrate the database and create a superuser with
 
