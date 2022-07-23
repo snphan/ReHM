@@ -25,7 +25,7 @@
 * The only communication that happens outside is through a websocket to some cloud host that can act as a message broker (may consider MQTT, or Kafka in the future for scalability).
 * Sensor data is sent to the cloud host and the cloud host cleans the input data. Once the data is cleaned, it is broadcast to listeners within the local network. The listeners will then send the "cleaned data" to the local server and data will be handled by updating a real-time chart or stored in a MongoDB database.
 
-![ReHM System Architecture (1)](https://user-images.githubusercontent.com/59156097/171967168-25459ab9-d5de-4487-8da5-d590f3bbe70c.jpg)
+![ReHM System Architecture-Initial Planning drawio (3)](https://user-images.githubusercontent.com/59156097/179628133-b6fb4833-e058-4937-a9f3-899469432f8b.png)
 
 ## Current JSON Data Format
 ```typescript
@@ -69,6 +69,10 @@ interface DataPoint {
 
 1. Create a Redis (https://collabnix.com/how-to-setup-and-run-redis-in-a-docker-container/) and MongoDB container in Docker (https://medium.com/@anuradhs/how-to-start-a-mongo-database-with-authentication-using-docker-container-8ce63da47a71). 
 
+For a MongoDB Instance
+
+    docker run --name mongodb -p 27017:27017 -v C:\Users\ML-3\Documents\MongoDBStorage:/data/db -d -e MONGO_INITDB_ROOT_USERNAME=<username> -e MONGO_INITDB_ROOT_PASSWORD=<password> mongo --auth
+
 1. Migrate the database and create a superuser with
 
         python manage.py makemigrations
@@ -78,14 +82,14 @@ interface DataPoint {
 1. After Migrating the Database, upgrade the accounts_sensordata to a timeseries collection with metaField: "data_id"
 
 
-        docker exect -it mongodb bash
+        docker exec -it mongodb bash
         mongosh -u [username] -p
         
         // Enter your DB password
 
         use ReHMdb
         db.accounts_sensordata.drop()
-        db.createCollection("accounts_sensordata", {timeseries: {timeField: "timestamp", metaField: "data_id"})
+        db.createCollection("accounts_sensordata", {timeseries: {timeField: "timestamp", metaField: "data_id"}})
 
 1. Run the data ingestion script, replace <YOUR_HOST> with the host and port you will post incoming data to.
 
