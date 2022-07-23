@@ -89,7 +89,7 @@ For a MongoDB Instance
 
         use ReHMdb
         db.accounts_sensordata.drop()
-        db.createCollection("accounts_sensordata", {timeseries: {timeField: "timestamp", metaField: "data_id"})
+        db.createCollection("accounts_sensordata", {timeseries: {timeField: "timestamp", metaField: "data_id"}})
 
 1. Run the data ingestion script, replace <YOUR_HOST> with the host and port you will post incoming data to.
 
