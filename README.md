@@ -82,7 +82,7 @@ For a MongoDB Instance
 1. After Migrating the Database, upgrade the accounts_sensordata to a timeseries collection with metaField: "data_id"
 
 
-        docker exect -it mongodb bash
+        docker exec -it mongodb bash
         mongosh -u [username] -p
         
         // Enter your DB password
