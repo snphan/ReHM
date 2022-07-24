@@ -15,12 +15,11 @@ class BasicMathTest(TestCase):
 class AuthorizationTest(TestCase):
 
     def login(self, email='testinguser@gmail.com', password='password'):
-        self.user = models.ReHMUser.objects.get_or_create(email=email)
-        if self.user[1]:
-            self.user[0].set_password(password)
-            self.user[0].save()
+        self.user, created = models.ReHMUser.objects.get_or_create(email=email)
+        if created: # created?
+            self.user.set_password(password)
+            self.user.save()
 
-        self.user = self.user[0]
         response = self.client.post(reverse_lazy("accounts:login"), {
             'username': email,
             'password': password,
