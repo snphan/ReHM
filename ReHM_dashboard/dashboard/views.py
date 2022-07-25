@@ -51,6 +51,8 @@ SAVE_CNT = 100
 
 @csrf_exempt
 def insertData(request, patient_id):
+    global sensordata_to_save
+
     if request.method == "POST":
         data = json.loads(request.body)
         channel_layer = channels.layers.get_channel_layer()
