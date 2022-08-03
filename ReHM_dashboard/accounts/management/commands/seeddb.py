@@ -49,7 +49,7 @@ class Command(BaseCommand):
             last_name='admin'
         )
         if created:
-            new_user.set_password(os.environ.get("MONGO_DB_PWD"))
+            new_user.set_password(os.environ.get("REHM_DB_PWD"))
             new_user.is_staff = True
             new_user.is_superuser = True
             new_user.save()
