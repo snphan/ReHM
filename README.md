@@ -87,7 +87,6 @@ For a TimescaleDB Instance
 
         python manage.py makemigrations
         python manage.py migrate
-        python manage.py createsuperuser
 
 1. After Migrating the Database, upgrade the accounts_sensordata to a hypertable: 
 
@@ -105,6 +104,10 @@ For a TimescaleDB Instance
 
         // Create the hypertable on accounts_sensordata
         SELECT create_hypertable('accounts_sensordata', 'timestamp');
+
+1. Seed the database 
+
+        python manage.py seeddb --fresh <y/n> --gen_data <# of data>
 
 1. Run the data ingestion script, replace <YOUR_HOST> with the host and port you will post incoming data to.
 
