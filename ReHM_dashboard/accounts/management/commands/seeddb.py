@@ -107,12 +107,12 @@ class Command(BaseCommand):
 
 
         if options['gen_data']: 
-            START_TIME = int(time.time())
+            START_TIME = 1658721354
             DATA_NUM = options['gen_data']
             CHUNK_SIZE = 1000
             print(f"Generate {options['gen_data']} Data For Each Device")
             for device_obj in device_objs:
-                for datatype_obj in datatype_objs:
+                for datatype_obj in datatype_objs: # TODO: this adds datatypes from datatype list not the devicetype list.
                     data = [
                         models.SensorData(
                             patient=new_user,
