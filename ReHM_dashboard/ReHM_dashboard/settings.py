@@ -117,20 +117,16 @@ if sys.argv[1] == 'test':
         }
     }
 else: 
+    # Timescale
     DATABASES = {
-            'default': {
-                'ENGINE': 'djongo',
-                'NAME': 'ReHMdb',
-                'ENFORCE_SCHEMA': True,
-                'CLIENT': {
-                    'host': os.environ.get("MONGO_DB_ADDRESS").split(':')[0],
-                    'port': int(os.environ.get("MONGO_DB_ADDRESS").split(':')[1]),
-                    'username': os.environ.get("MONGO_DB_USER"),
-                    'password': os.environ.get("MONGO_DB_PWD"),
-                    'authSource': 'admin',
-                    'authMechanism': 'SCRAM-SHA-1'
-                }  
-            }
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'rehmdb',
+            'USER': os.environ.get("REHM_DB_USER"),
+            'PASSWORD': os.environ.get("REHM_DB_PWD"),
+            'HOST': os.environ.get("REHM_DB_ADDRESS").split(':')[0],
+            'PORT': os.environ.get("REHM_DB_ADDRESS").split(':')[1],
+        }
     }
 
 

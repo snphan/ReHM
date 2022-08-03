@@ -61,43 +61,61 @@ interface DataPoint {
 |----|-----|
 | SECRET_KEY | "somethingsup#)*&*)*secret" |
 | DJANGO_ALLOWED_HOSTS | "127.0.0.1,localhost" |
-| MONGO_DB_USER | "username" |
-| MONGO_DB_PWD | "password" |
-| MONGO_DB_ADDRESS | "127.0.0.1:27017" |
+| REHM_DB_USER | "username" |
+| REHM_DB_PWD | "password" |
+| REHM_DB_ADDRESS | "127.0.0.1:5432" |
 | REHM_CLOUD_HOST | "iceland-walrus-552423.herokuapp.com" |
 | REDIS_URL | "redis://localhost:6379" |
 
-1. Create a Redis (https://collabnix.com/how-to-setup-and-run-redis-in-a-docker-container/) and MongoDB container in Docker (https://medium.com/@anuradhs/how-to-start-a-mongo-database-with-authentication-using-docker-container-8ce63da47a71). 
+1. Create a Redis (https://collabnix.com/how-to-setup-and-run-redis-in-a-docker-container/) and TimescaleDB container in Docker. 
 
-For a MongoDB Instance
+For a TimescaleDB Instance
 
-    docker run --name mongodb -p 27017:27017 -v C:\Users\ML-3\Documents\MongoDBStorage:/data/db -d -e MONGO_INITDB_ROOT_USERNAME=<username> -e MONGO_INITDB_ROOT_PASSWORD=<password> mongo --auth
+    docker run -d --name timescaledb -p 5433:5432 -e POSTGRES_PASSWORD=password timescale/timescaledb:pg14-latest
+
+1. Create the rehmdb database: 
+
+        docker exec -it timescaledb bash
+        psql -U postgres -W
+        
+        // Enter your DB password
+
+        // Create the database
+        CREATE DATABASE rehmdb;
 
 1. Migrate the database and create a superuser with
 
         python manage.py makemigrations
         python manage.py migrate
-        python manage.py createsuperuser
 
-1. After Migrating the Database, upgrade the accounts_sensordata to a timeseries collection with metaField: "data_id"
+1. After Migrating the Database, upgrade the accounts_sensordata to a hypertable: 
 
-
-        docker exec -it mongodb bash
-        mongosh -u [username] -p
+        docker exec -it timescaledb bash
+        psql -U postgres -W
         
         // Enter your DB password
 
-        use ReHMdb
-        db.accounts_sensordata.drop()
-        db.createCollection("accounts_sensordata", {timeseries: {timeField: "timestamp", metaField: "data_id"}})
+        // Connect to the rehmdb database.
+        \c rehmdb
+
+        // Remove the primary index on the accounts_sensordata (necessary to make hypertable)
+        \d+ accounts_sensordata // Checks the constraints on the table
+        ALTER TABLE accounts_sensordata DROP CONSTRAINT accounts_sensordata_pkey;
+
+        // Create the hypertable on accounts_sensordata
+        SELECT create_hypertable('accounts_sensordata', 'timestamp');
+
+1. Seed the database 
+
+        python manage.py seeddb --fresh <y/n> --gen_data <# of data>
 
 1. Run the data ingestion script, replace <YOUR_HOST> with the host and port you will post incoming data to.
 
         python manage.py run_data_ingest http://<YOUR_HOST>
 
-1. Run the server with Daphne. Example:
+1. Run the server. Example:
 
-        daphne -b 0.0.0.0 -p 8001 django_project.asgi:application
+        python manage.py runserver <YOUR_HOST>
 
 # Debugging
 
