@@ -66,6 +66,8 @@ interface DataPoint {
 | REHM_DB_ADDRESS | "127.0.0.1:5432" |
 | REHM_CLOUD_HOST | "iceland-walrus-552423.herokuapp.com" |
 | REDIS_URL | "redis://localhost:6379" |
+| POZYX_CLOUD_API | "api key from your pozyx setup |
+| POZYX_CLOUD_TOPIC | "pozyx cloud topic" |
 
 1. Create a Redis (https://collabnix.com/how-to-setup-and-run-redis-in-a-docker-container/) and TimescaleDB container in Docker. 
 
