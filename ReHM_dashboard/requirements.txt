@@ -13,3 +13,5 @@ pymongo[srv]
 django-livereload-server
 fastapi==0.78.0
 uvicorn[standard]
+paho-mqtt==1.6.1
+asyncio-mqtt
