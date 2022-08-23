@@ -27,18 +27,56 @@
 
 ![ReHM System Architecture-Initial Planning drawio (3)](https://user-images.githubusercontent.com/59156097/179628133-b6fb4833-e058-4937-a9f3-899469432f8b.png)
 
-## Current JSON Data Format
+## Data Formats
+
+### Data Format Device Sends to Cloud
 ```typescript
-interface DataPoint {
-    device: string,         // Apple Watch, Fitbit, Polar, Pozxy 
-    dataType: string,       // HR, RR, ACCEL, GYRO, POS
-    timestamp: number,      // UNIX TIMESTAMP IN **Milliseconds** or UTC timestamp
-    dataValues: Array<number>          // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
+{
+  device_serial: string,       // Eg. APPLE12345
+  dataType: string,            // HR, RR, ACCEL, GYRO, POS
+  timestamp: number,           // UNIX TIMESTAMP IN **Milliseconds** or UTC timestamp
+  dataValues: Array<number>    // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
 }
 ```
+
+### Data after Processed by Run_data_ingest:
+```typescript
+{
+  device: string,              // Apple Watch, Fitbit, Polar, Pozxy 
+  device_serial: string,       // Eg. APPLE12345
+  dataType: string,            // HR, RR, ACCEL, GYRO, POS
+  timestamp: number,           // UNIX TIMESTAMP IN **Milliseconds** or UTC timestamp
+  dataValues: Array<number>    // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
+}
+```
+
+### Data in DB
+```typescript
+{
+  patient: number,             // patient id
+  device: string,              // Apple Watch, Fitbit, Polar, Pozxy 
+  dataType: string,            // HR, RR, ACCEL, GYRO, POS
+  timestamp: number,           // UNIX TIMESTAMP IN **Milliseconds** or UTC timestamp
+  dataValues: string           // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
+}
+```
+
+### Data Format sent to Dashboard Web App.
+```typescript
+interface DataPoint {
+    device: string,              // Apple Watch, Fitbit, Polar, Pozxy 
+    dataType: string,            // HR, RR, ACCEL, GYRO, POS
+    timestamp: number,           // UNIX TIMESTAMP IN **Milliseconds** or UTC timestamp
+    dataValues: Array<number>    // For data that comes as a pack (ACCEL) index 0 = x, 1 = y, 2 = z.
+}
+```
+
+
+
+
 ## Dashboard + DB Sequence Diagram
 
-![ReHM System Architecture-Dashboard App Interaction with Database (2)](https://user-images.githubusercontent.com/59156097/173128029-a7ee3f73-8a3d-4a78-b5ce-865a63177a4a.jpg)
+![ReHM System Architecture-Initial Planning drawio (1)](https://user-images.githubusercontent.com/59156097/186064372-d5e06747-0959-49f5-bfff-39322b950e42.png)
 
 # Apps/Services
 
