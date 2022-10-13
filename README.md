@@ -25,7 +25,7 @@
 * The only communication that happens outside is through a websocket to some cloud host that can act as a message broker (may consider MQTT, or Kafka in the future for scalability).
 * Sensor data is sent to the cloud host and the cloud host cleans the input data. Once the data is cleaned, it is broadcast to listeners within the local network. The listeners will then send the "cleaned data" to the local server and data will be handled by updating a real-time chart or stored in a MongoDB database.
 
-![ReHM System Architecture-Initial Planning drawio (3)](https://user-images.githubusercontent.com/59156097/179628133-b6fb4833-e058-4937-a9f3-899469432f8b.png)
+![ReHM System Architecture-Initial Planning drawio (1)](https://user-images.githubusercontent.com/59156097/186064372-d5e06747-0959-49f5-bfff-39322b950e42.png)
 
 ## Data Formats
 
@@ -71,25 +71,22 @@ interface DataPoint {
 }
 ```
 
-
-
-
 ## Dashboard + DB Sequence Diagram
 
-![ReHM System Architecture-Initial Planning drawio (1)](https://user-images.githubusercontent.com/59156097/186064372-d5e06747-0959-49f5-bfff-39322b950e42.png)
+![ReHM System Architecture-Dashboard App Interaction with Database drawio](https://user-images.githubusercontent.com/59156097/195622367-df81bb52-8a9a-48ec-995a-03f8317a48ed.png)
 
 # Apps/Services
 
 |      App      | Tech | Description|
 |---------------|-------------| ------|
-| Local WebApp  | Redis, MongoDB, Django Channels, Django, React | Serve the remote monitoring dashboard and handle storage and distribution of live data.|
+| Local WebApp  | Redis, TimescaleDB, Django Channels, Django, React | Serve the remote monitoring dashboard and handle storage and distribution of live data.|
 | Local Listeners | Python, Websockets/MQTT | Accept the data from the Cloud Message Broker |
-| Cloud Message Broker | Redis, Heroku, Django | Accept data from the sensors and process it into some standard format | 
+| Cloud Message Broker | Redis, Heroku, FastAPI | Accept data from the sensors and process it into some standard format | 
 |||
 | Apple Watch Raw Data | Swift, HealthKit, CoreMotion | Send raw data from the Apple Watch to the Cloud Message Broker |
 | PolarH10 Raw Data | Swift, Kotlin, Polar SDK | Send the raw data from the Polar Chest Strap to the Cloud Message Broker |
 | Fitbit Raw Data | Javascript, Fitbit SDK | Send the raw data from the fitbit to the Cloud Message Broker |
-| Pozyx Raw Data | ?????, Python, MQTT | Obtain the positional data from the Pozyx and send it to the cloud Message Broker | 
+| Pozyx Raw Data | Python, MQTT | Obtain the positional data from the Pozyx and send it to the cloud Message Broker, https://app.pozyx.io/login | 
 
 # Setup
 ## ReHM Dashboard
