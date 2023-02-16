@@ -162,3 +162,8 @@ Some data flow debugging curls. Replace <> with your version of the required par
 ### Send data to the Cloud Broker
 
     curl -d "{\"data\": [{\"device_serial\": \"Fitbit12334\", \"timestamp\": 1656356068080, \"dataType\": \"HR\", \"dataValues\": [65.0]}]}" -H "Content-Type: application/json" -X POST https://<HOST_ADDRESS>/data/add_data
+    
+    
+## Posts seem laggy?
+
+Check if you are sending data to localhost. If you are switch to 127.0.0.1.
